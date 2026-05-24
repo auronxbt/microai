@@ -2,34 +2,64 @@
 import { useState } from "react";
 import Link from "next/link";
 
+const ARC_CHAIN_ID = "0x4cef52";
+const USDC_CONTRACT = "0x3600000000000000000000000000000000000000";
+const RECEIVER = "0x9a318CD2BC533B5B2e96F7f5b499738732492b15";
+const EXPLORER = "https://testnet.arcscan.app/tx/";
+
 export default function Chat() {
-  const [messages, setMessages] = useState<{role: string, text: string}[]>([]);
+  const [messages, setMessages] = useState([]);
   const [input, setInput] = useState("");
-  const [balance, setBalance] = useState(0.050);
+  const [balance, setBalance] = useState(20.0);
   const [loading, setLoading] = useState(false);
+  const [wallet, setWallet] = useState(null);
+
+  const connectWallet = async () => {
+    if (!window.ethereum) { alert("MetaMask install করো!"); return; }
+    try {
+      await window.ethereum.request({
+        method: "wallet_switchEthereumChain",
+        params: [{ chainId: ARC_CHAIN_ID }],
+      });
+      const accounts = await window.ethereum.request({ method: "eth_requestAccounts" });
+      setWallet(accounts[0]);
+    } catch (err) {
+      console.error(err);
+    }
+  };
 
   const sendMessage = async () => {
-    if (!input.trim() || loading) return;
-    
+    if (!input.trim() || loading || !wallet) return;
     const userMessage = input;
     setInput("");
     setMessages(prev => [...prev, { role: "user", text: userMessage }]);
     setLoading(true);
-
     try {
+      const chainId = await window.ethereum.request({ method: "eth_chainId" });
+      if (chainId !== ARC_CHAIN_ID) {
+        await window.ethereum.request({
+          method: "wallet_switchEthereumChain",
+          params: [{ chainId: ARC_CHAIN_ID }],
+        });
+      }
+      const amount = (1000).toString(16).padStart(64, "0");
+      const receiverPadded = RECEIVER.slice(2).padStart(64, "0");
+      const data = "0xa9059cbb" + receiverPadded + amount;
+      const txHash = await window.ethereum.request({
+        method: "eth_sendTransaction",
+        params: [{ from: wallet, to: USDC_CONTRACT, data: data, gas: "0x186A0" }],
+      });
       const res = await fetch("/api/chat", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ message: userMessage }),
       });
-      const data = await res.json();
-      setMessages(prev => [...prev, { role: "ai", text: data.reply }]);
+      const aiData = await res.json();
+      setMessages(prev => [...prev, { role: "ai", text: aiData.reply, txHash: txHash }]);
       setBalance(prev => Math.max(0, prev - 0.001));
-    } catch {
-      setMessages(prev => [...prev, { role: "ai", text: "Error. Please try again." }]);
-    } finally {
-      setLoading(false);
-    }
+    } catch (err) {
+      setMessages(prev => [...prev, { role: "ai", text: "Transaction cancel হয়েছে।" }]);
+    } finally { setLoading(false); }
   };
 
   return (
@@ -37,31 +67,36 @@ export default function Chat() {
       <nav className="flex justify-between items-center px-8 py-4 border-b border-gray-800">
         <Link href="/" className="text-xl font-bold text-purple-400">μ MicroAI</Link>
         <div className="flex items-center gap-4">
-          <span className="bg-gray-900 border border-gray-700 px-4 py-2 rounded-lg text-sm">
-            Balance: <span className="text-purple-400 font-bold">{balance.toFixed(3)} USDC</span>
-          </span>
-          <button className="bg-purple-600 px-4 py-2 rounded-lg text-sm">
-            Connected ✓
+          {wallet && (
+            <span className="bg-gray-900 border border-gray-700 px-4 py-2 rounded-lg text-sm">
+              Balance: <span className="text-purple-400 font-bold">{balance.toFixed(3)} USDC</span>
+            </span>
+          )}
+          <button onClick={connectWallet} className="bg-purple-600 hover:bg-purple-700 px-4 py-2 rounded-lg text-sm">
+            {wallet ? wallet.slice(0,6) + "..." + wallet.slice(-4) + " ✓" : "Connect Wallet"}
           </button>
         </div>
       </nav>
-
       <div className="flex-1 overflow-y-auto px-8 py-6 space-y-4 max-w-3xl mx-auto w-full">
         {messages.length === 0 && (
           <div className="text-center text-gray-500 mt-20">
             <div className="text-5xl mb-4">μ</div>
-            <p>Ask anything. Each response costs $0.001 USDC.</p>
+            <p>Ask anything. Each response costs $0.001 USDC on Arc Testnet.</p>
+            {!wallet && (
+              <button onClick={connectWallet} className="mt-4 bg-purple-600 px-6 py-3 rounded-lg text-white text-sm">
+                Connect Wallet to Start
+              </button>
+            )}
           </div>
         )}
         {messages.map((msg, i) => (
-          <div key={i} className={`flex ${msg.role === "user" ? "justify-end" : "justify-start"}`}>
-            <div className={`max-w-xl px-4 py-3 rounded-xl text-sm ${
-              msg.role === "user"
-                ? "bg-purple-600 text-white"
-                : "bg-gray-900 border border-gray-700 text-gray-200"
-            }`}>
+          <div key={i} className={"flex " + (msg.role === "user" ? "justify-end" : "justify-start")}>
+            <div className={"max-w-xl px-4 py-3 rounded-xl text-sm " + (msg.role === "user" ? "bg-purple-600 text-white" : "bg-gray-900 border border-gray-700 text-gray-200")}>
               {msg.role === "ai" && (
-                <div className="text-xs text-gray-500 mb-1">$0.001 USDC deducted</div>
+                <div className="text-xs text-gray-500 mb-2">
+                  {"$0.001 USDC deducted • "}
+                  {msg.txHash && <a href={EXPLORER + msg.txHash} target="_blank" className="text-purple-400 underline">View TX on Arc</a>}
+                </div>
               )}
               {msg.text}
             </div>
@@ -69,31 +104,21 @@ export default function Chat() {
         ))}
         {loading && (
           <div className="flex justify-start">
-            <div className="bg-gray-900 border border-gray-700 px-4 py-3 rounded-xl text-sm text-gray-400">
-              Thinking... ⏳
-            </div>
+            <div className="bg-gray-900 border border-gray-700 px-4 py-3 rounded-xl text-sm text-gray-400">Processing payment + AI... ⏳</div>
           </div>
         )}
       </div>
-
       <div className="border-t border-gray-800 px-8 py-4 max-w-3xl mx-auto w-full">
         <div className="flex gap-3">
-          <input
-            value={input}
-            onChange={e => setInput(e.target.value)}
-            onKeyDown={e => e.key === "Enter" && sendMessage()}
-            placeholder="Ask anything..."
-            className="flex-1 bg-gray-900 border border-gray-700 rounded-lg px-4 py-3 text-sm outline-none focus:border-purple-500"
-          />
-          <button
-            onClick={sendMessage}
-            disabled={loading}
-            className="bg-purple-600 hover:bg-purple-700 disabled:opacity-50 px-6 py-3 rounded-lg text-sm font-medium"
-          >
-            {loading ? "..." : "Send →"}
+          <input value={input} onChange={e => setInput(e.target.value)} onKeyDown={e => e.key === "Enter" && sendMessage()}
+            placeholder={wallet ? "Ask anything..." : "Connect wallet first..."}
+            className="flex-1 bg-gray-900 border border-gray-700 rounded-lg px-4 py-3 text-sm outline-none focus:border-purple-500" />
+          <button onClick={sendMessage} disabled={loading || !wallet}
+            className="bg-purple-600 hover:bg-purple-700 disabled:opacity-50 px-6 py-3 rounded-lg text-sm font-medium">
+            {loading ? "..." : "Send"}
           </button>
         </div>
-        <p className="text-xs text-gray-600 mt-2 text-center">$0.001 USDC per response • Powered by Arc Chain</p>
+        <p className="text-xs text-gray-600 mt-2 text-center">$0.001 USDC per response • Powered by Arc Testnet</p>
       </div>
     </main>
   );
