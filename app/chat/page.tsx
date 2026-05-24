@@ -23,13 +23,13 @@ const MicroAILogo = () => (
 );
 
 export default function Chat() {
-  const [messages, setMessages] = useState([]);
+  const [messages, setMessages] = useState<{role: string, text: string, txHash?: string}[]>([]);
   const [input, setInput] = useState("");
   const [balance, setBalance] = useState(null);
   const [loading, setLoading] = useState(false);
-  const [wallet, setWallet] = useState(null);
+  const [wallet, setWallet] = useState<string | null>(null);
 
-  const getBalance = async (address) => {
+  const getBalance = async (address: string) => {
     try {
       const data = ERC20_ABI_BALANCE + address.slice(2).padStart(64, "0");
       const result = await window.ethereum.request({
