@@ -1,18 +1,33 @@
 "use client";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import Link from "next/link";
 
 const ARC_CHAIN_ID = "0x4cef52";
 const USDC_CONTRACT = "0x3600000000000000000000000000000000000000";
 const RECEIVER = "0x9a318CD2BC533B5B2e96F7f5b499738732492b15";
 const EXPLORER = "https://testnet.arcscan.app/tx/";
+const ERC20_ABI_BALANCE = "0x70a08231";
 
 export default function Chat() {
   const [messages, setMessages] = useState([]);
   const [input, setInput] = useState("");
-  const [balance, setBalance] = useState(20.0);
+  const [balance, setBalance] = useState(null);
   const [loading, setLoading] = useState(false);
   const [wallet, setWallet] = useState(null);
+
+  const getBalance = async (address) => {
+    try {
+      const data = ERC20_ABI_BALANCE + address.slice(2).padStart(64, "0");
+      const result = await window.ethereum.request({
+        method: "eth_call",
+        params: [{ to: USDC_CONTRACT, data }, "latest"],
+      });
+      const raw = parseInt(result, 16);
+      setBalance((raw / 1e6).toFixed(3));
+    } catch (err) {
+      console.error(err);
+    }
+  };
 
   const connectWallet = async () => {
     if (!window.ethereum) { alert("MetaMask install করো!"); return; }
@@ -23,9 +38,14 @@ export default function Chat() {
       });
       const accounts = await window.ethereum.request({ method: "eth_requestAccounts" });
       setWallet(accounts[0]);
-    } catch (err) {
-      console.error(err);
-    }
+      await getBalance(accounts[0]);
+    } catch (err) { console.error(err); }
+  };
+
+  const disconnectWallet = () => {
+    setWallet(null);
+    setBalance(null);
+    setMessages([]);
   };
 
   const sendMessage = async () => {
@@ -56,7 +76,7 @@ export default function Chat() {
       });
       const aiData = await res.json();
       setMessages(prev => [...prev, { role: "ai", text: aiData.reply, txHash: txHash }]);
-      setBalance(prev => Math.max(0, prev - 0.001));
+      await getBalance(wallet);
     } catch (err) {
       setMessages(prev => [...prev, { role: "ai", text: "Transaction cancel হয়েছে।" }]);
     } finally { setLoading(false); }
@@ -67,14 +87,25 @@ export default function Chat() {
       <nav className="flex justify-between items-center px-8 py-4 border-b border-gray-800">
         <Link href="/" className="text-xl font-bold text-purple-400">μ MicroAI</Link>
         <div className="flex items-center gap-4">
-          {wallet && (
+          {wallet && balance !== null && (
             <span className="bg-gray-900 border border-gray-700 px-4 py-2 rounded-lg text-sm">
-              Balance: <span className="text-purple-400 font-bold">{balance.toFixed(3)} USDC</span>
+              Balance: <span className="text-purple-400 font-bold">{balance} USDC</span>
             </span>
           )}
-          <button onClick={connectWallet} className="bg-purple-600 hover:bg-purple-700 px-4 py-2 rounded-lg text-sm">
-            {wallet ? wallet.slice(0,6) + "..." + wallet.slice(-4) + " ✓" : "Connect Wallet"}
-          </button>
+          {wallet ? (
+            <div className="flex items-center gap-2">
+              <span className="bg-gray-900 border border-gray-700 px-4 py-2 rounded-lg text-sm text-green-400">
+                {wallet.slice(0,6) + "..." + wallet.slice(-4)} ✓
+              </span>
+              <button onClick={disconnectWallet} className="border border-gray-700 hover:border-red-500 px-3 py-2 rounded-lg text-sm text-gray-400 hover:text-red-400">
+                Disconnect
+              </button>
+            </div>
+          ) : (
+            <button onClick={connectWallet} className="bg-purple-600 hover:bg-purple-700 px-4 py-2 rounded-lg text-sm">
+              Connect Wallet
+            </button>
+          )}
         </div>
       </nav>
       <div className="flex-1 overflow-y-auto px-8 py-6 space-y-4 max-w-3xl mx-auto w-full">
