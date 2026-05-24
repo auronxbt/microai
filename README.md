@@ -1,36 +1,58 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# μ MicroAI — Pay Per Question AI on Arc Testnet
 
-## Getting Started
+> The first pay-per-use AI powered by real USDC micropayments on Arc Testnet.
 
-First, run the development server:
+## 🎯 Problem
+Every AI tool today charges monthly subscriptions. Users pay even when they don't use it.
 
+## 💡 Solution
+MicroAI charges **$0.001 USDC per AI response** — nothing more, nothing less.
+Every payment is a real on-chain transaction on Arc Testnet.
+
+## ✅ Live Demo
+- **App:** https://microai-tan.vercel.app
+- **Real TX on Arc:** https://testnet.arcscan.app/tx/0x45edd50186498fd7b62b274bb25f4c7540fcc441ce71e92a57ebf5218dace2ce
+
+## 🔧 Circle Tools Used
+- **USDC** — native payment token on Arc Testnet
+- **Arc Testnet** — all transactions settled on-chain with USDC fees
+
+## 🏗️ Architecture
+User → Connect MetaMask (Arc Testnet)
+→ Type Question
+→ MetaMask Popup: Approve 0.001 USDC
+→ USDC Transfer on Arc (0x3600...0000)
+→ AI Response via Groq/Llama
+→ TX Hash shown → Verifiable on arcscan.app
+## 🚀 How to Run Locally
 ```bash
+git clone https://github.com/auronxbt/microai.git
+cd microai
+npm install
+# Create .env.local and add:
+# GROQ_API_KEY=your_key
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+## 💰 Payment Flow
+1. User connects MetaMask on Arc Testnet
+2. User asks a question
+3. MetaMask popup — approve 0.001 USDC transfer
+4. USDC sent on Arc Testnet
+5. AI response returned
+6. Real TX hash shown with Arc explorer link
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+## 🌍 Real World Use Case
+- Users who need occasional AI without subscriptions
+- AI agent-to-agent micropayments
+- Pay-per-inference for the agentic economy
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+## Circle Product Feedback
+**Why Arc + USDC:** Arc's native USDC gas model means users never need ETH. This makes onboarding dramatically simpler.
 
-## Learn More
+**What worked well:** Arc Testnet RPC was stable. USDC as native gas is a game-changer for UX.
 
-To learn more about Next.js, take a look at the following resources:
+**What could improve:** More MetaMask integration examples in Arc docs.
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
-
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+## 🏆 Track
+Track 4 — Best Agentic Economy Experience on Arc
