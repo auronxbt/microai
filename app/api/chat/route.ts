@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 
 export async function POST(req: NextRequest) {
-  const { message } = await req.json();
+  const { message, systemPrompt } = await req.json();
 
   const response = await fetch("https://api.groq.com/openai/v1/chat/completions", {
     method: "POST",
@@ -10,26 +10,19 @@ export async function POST(req: NextRequest) {
       "Content-Type": "application/json",
     },
     body: JSON.stringify({
-      model: "llama-3.1-8b-instant",
+      model: "llama-3.3-70b-versatile",
       messages: [
         {
           role: "system",
-          content: `You are a helpful AI assistant. Always format your responses beautifully using markdown:
-- Use **bold** for important terms
-- Use bullet points (- item) for lists
-- Use numbered lists (1. item) for steps
-- Use ## headings for sections
-- Use \`code\` for technical terms
-- Keep responses clear, concise and well-structured
-- Never write walls of text`
+          content: systemPrompt || "You are Aria, a helpful AI assistant."
         },
         { role: "user", content: message }
       ],
+      max_tokens: 1024,
     }),
   });
 
   const data = await response.json();
   const reply = data.choices[0].message.content;
-
   return NextResponse.json({ reply });
 }

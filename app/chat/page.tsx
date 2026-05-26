@@ -2,6 +2,9 @@
 import { useState } from "react";
 import Link from "next/link";
 import ReactMarkdown from "react-markdown";
+import dynamic from "next/dynamic";
+
+const Aria = dynamic(() => import("../components/Aria"), { ssr: false });
 
 const ARC_CHAIN_ID = "0x4cef52";
 const USDC_CONTRACT = "0x3600000000000000000000000000000000000000";
@@ -31,6 +34,7 @@ export default function Chat() {
   const [balance, setBalance] = useState<string | null>(null);
   const [loading, setLoading] = useState<boolean>(false);
   const [wallet, setWallet] = useState<string | null>(null);
+  const [lastAiMessage, setLastAiMessage] = useState<string>("");
 
   const getBalance = async (address: string) => {
     try {
@@ -55,11 +59,11 @@ export default function Chat() {
 
   const disconnectWallet = () => { setWallet(null); setBalance(null); setMessages([]); };
 
-  const sendMessage = async () => {
-    if (!input.trim() || loading || !wallet) return;
-    const userMessage = input;
+  const sendMessage = async (customMessage?: string) => {
+    const messageToSend = customMessage || input;
+    if (!messageToSend.trim() || loading || !wallet) return;
     setInput("");
-    setMessages(prev => [...prev, { role: "user", text: userMessage }]);
+    setMessages(prev => [...prev, { role: "user", text: messageToSend }]);
     setLoading(true);
     try {
       const chainId = await window.ethereum!.request({ method: "eth_chainId" }) as string;
@@ -75,10 +79,11 @@ export default function Chat() {
       const res = await fetch("/api/chat", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ message: userMessage }),
+        body: JSON.stringify({ message: messageToSend }),
       });
       const aiData = await res.json();
       setMessages(prev => [...prev, { role: "ai", text: aiData.reply, txHash }]);
+      setLastAiMessage(aiData.reply);
       await getBalance(wallet);
     } catch {
       setMessages(prev => [...prev, { role: "ai", text: "Transaction cancelled." }]);
@@ -137,7 +142,7 @@ export default function Chat() {
           <div key={i} className={"flex gap-3 " + (msg.role === "user" ? "justify-end" : "justify-start")}>
             {msg.role === "ai" && (
               <div className="flex-shrink-0 mt-1">
-                <svg width="32" height="32" viewBox="0 0 32 32" fill="none"><defs><linearGradient id="lg3" x1="0" y1="0" x2="32" y2="32" gradientUnits="userSpaceOnUse"><stop offset="0%" stopColor="#a855f7"/><stop offset="100%" stopColor="#3b82f6"/></linearGradient></defs><rect width="32" height="32" rx="9" fill="url(#lg3)"/><text x="16" y="22" textAnchor="middle" fontSize="16" fontWeight="bold" fill="white" fontFamily="serif">μ</text></svg>
+                <svg width="32" height="32" viewBox="0 0 36 36" fill="none"><defs><linearGradient id="lg3" x1="0" y1="0" x2="36" y2="36" gradientUnits="userSpaceOnUse"><stop offset="0%" stopColor="#a855f7"/><stop offset="100%" stopColor="#3b82f6"/></linearGradient></defs><rect width="36" height="36" rx="10" fill="url(#lg3)"/><text x="18" y="24" textAnchor="middle" fontSize="18" fontWeight="bold" fill="white" fontFamily="serif">μ</text></svg>
               </div>
             )}
             <div className="max-w-2xl">
@@ -163,7 +168,7 @@ export default function Chat() {
         ))}
         {loading && (
           <div className="flex gap-3 justify-start">
-            <svg width="32" height="32" viewBox="0 0 32 32" fill="none"><defs><linearGradient id="lg4" x1="0" y1="0" x2="32" y2="32" gradientUnits="userSpaceOnUse"><stop offset="0%" stopColor="#a855f7"/><stop offset="100%" stopColor="#3b82f6"/></linearGradient></defs><rect width="32" height="32" rx="9" fill="url(#lg4)"/><text x="16" y="22" textAnchor="middle" fontSize="16" fontWeight="bold" fill="white" fontFamily="serif">μ</text></svg>
+            <svg width="32" height="32" viewBox="0 0 36 36" fill="none"><defs><linearGradient id="lg4" x1="0" y1="0" x2="36" y2="36" gradientUnits="userSpaceOnUse"><stop offset="0%" stopColor="#a855f7"/><stop offset="100%" stopColor="#3b82f6"/></linearGradient></defs><rect width="36" height="36" rx="10" fill="url(#lg4)"/><text x="18" y="24" textAnchor="middle" fontSize="18" fontWeight="bold" fill="white" fontFamily="serif">μ</text></svg>
             <div className="bg-gray-900/80 border border-gray-700/50 px-5 py-4 rounded-2xl rounded-tl-sm">
               <div className="flex items-center gap-2 text-gray-400 text-sm">
                 <span className="w-2 h-2 bg-purple-400 rounded-full animate-bounce" style={{animationDelay:"0ms"}}></span>
@@ -186,7 +191,7 @@ export default function Chat() {
               placeholder={wallet ? "Ask anything... (Enter to send)" : "Connect wallet first..."}
               className="flex-1 bg-transparent px-3 py-2 text-sm text-white placeholder-gray-500 outline-none"
             />
-            <button onClick={sendMessage} disabled={loading || !wallet}
+            <button onClick={() => sendMessage()} disabled={loading || !wallet}
               className="bg-gradient-to-r from-purple-600 to-blue-600 hover:from-purple-500 hover:to-blue-500 disabled:opacity-40 px-5 py-2 rounded-xl text-sm font-medium text-white transition-all">
               {loading ? "..." : "Send →"}
             </button>
@@ -194,6 +199,14 @@ export default function Chat() {
           <p className="text-xs text-gray-600 mt-2 text-center">$0.001 USDC per response • Powered by Arc Testnet</p>
         </div>
       </div>
+
+      {/* Aria Companion */}
+      <Aria
+        onSendMessage={(msg) => { setInput(msg); sendMessage(msg); }}
+        lastAiMessage={lastAiMessage}
+        isProcessing={loading}
+        walletConnected={!!wallet}
+      />
     </main>
   );
 }
