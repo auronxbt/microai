@@ -12,75 +12,81 @@ export default function Aria({ onSendMessage, lastAiMessage, isProcessing, walle
   const [isOpen, setIsOpen] = useState(true);
   const [isSpeaking, setIsSpeaking] = useState(false);
   const [mood, setMood] = useState<"idle"|"happy"|"thinking"|"excited">("idle");
-  const [displayText, setDisplayText] = useState("");
-  const [isTyping, setIsTyping] = useState(false);
+  const [statusText, setStatusText] = useState("Hi! I'm Aria 👋 Connect your wallet to start!");
   const spokenRef = useRef("");
+  const intervalRef = useRef<ReturnType<typeof setInterval> | null>(null);
 
   const speak = (text: string) => {
     if (typeof window === "undefined" || !window.speechSynthesis) return;
     window.speechSynthesis.cancel();
     const utterance = new SpeechSynthesisUtterance(text);
-    utterance.rate = 1.1;
+    utterance.rate = 1.05;
     utterance.pitch = 1.4;
-    utterance.volume = 0.9;
-    const voices = window.speechSynthesis.getVoices();
-    const femaleVoice = voices.find(v =>
-      v.name.includes("Female") || v.name.includes("Samantha") ||
-      v.name.includes("Victoria") || v.name.includes("Karen") ||
-      v.name.includes("Zira") || v.name.includes("Google UK English Female")
-    );
-    if (femaleVoice) utterance.voice = femaleVoice;
+    utterance.volume = 1.0;
+    const loadVoices = () => {
+      const voices = window.speechSynthesis.getVoices();
+      const femaleVoice = voices.find(v =>
+        v.name.includes("Samantha") || v.name.includes("Victoria") ||
+        v.name.includes("Karen") || v.name.includes("Zira") ||
+        v.name.includes("Google UK English Female") || v.name.includes("Female")
+      );
+      if (femaleVoice) utterance.voice = femaleVoice;
+    };
+    loadVoices();
+    if (window.speechSynthesis.getVoices().length === 0) {
+      window.speechSynthesis.addEventListener("voiceschanged", loadVoices, { once: true });
+    }
     utterance.onstart = () => setIsSpeaking(true);
     utterance.onend = () => { setIsSpeaking(false); setMood("idle"); };
+    utterance.onerror = () => { setIsSpeaking(false); setMood("idle"); };
     window.speechSynthesis.speak(utterance);
   };
 
-  const typeText = (text: string) => {
-    setIsTyping(true);
-    setDisplayText("");
-    let i = 0;
-    const interval = setInterval(() => {
-      if (i < text.length) {
-        setDisplayText(prev => prev + text[i]);
-        i++;
-      } else {
-        clearInterval(interval);
-        setIsTyping(false);
-      }
-    }, 25);
-  };
-
-  const sayMessage = (text: string, newMood: "idle"|"happy"|"thinking"|"excited" = "happy") => {
+  const sayMessage = (text: string, newMood: "idle"|"happy"|"thinking"|"excited" = "happy", showStatus?: string) => {
+    if (intervalRef.current) clearInterval(intervalRef.current);
     setMood(newMood);
-    typeText(text);
+    if (showStatus) setStatusText(showStatus);
     speak(text);
   };
 
   useEffect(() => {
     const timer = setTimeout(() => {
-      sayMessage("Hi! I am Aria, your Arc Chain AI companion! Connect your wallet and ask me anything. Each response costs just 0.001 USDC on Arc Testnet!", "excited");
+      sayMessage(
+        "Hi! I am Aria, your Arc Chain AI companion! Connect your wallet and ask me anything. Each response costs just 0.001 USDC on Arc Testnet!",
+        "excited",
+        "Hi! I'm Aria 👋 Connect your wallet to start!"
+      );
     }, 1200);
     return () => clearTimeout(timer);
   }, []);
 
   useEffect(() => {
     if (!walletConnected) return;
-    sayMessage("Wallet connected! You are all set on Arc Testnet. Ask me anything, I will handle the USDC payment automatically!", "happy");
+    sayMessage(
+      "Wallet connected! You are all set on Arc Testnet. Ask me anything!",
+      "happy",
+      "✅ Wallet connected! Ready to answer!"
+    );
   }, [walletConnected]);
 
   useEffect(() => {
     if (!isProcessing) return;
     setMood("thinking");
-    typeText("Processing your payment on Arc Testnet and thinking of the best answer for you...");
+    setStatusText("⏳ Processing payment on Arc Testnet...");
+    window.speechSynthesis?.cancel();
+    setIsSpeaking(false);
   }, [isProcessing]);
 
   useEffect(() => {
     if (!lastAiMessage) return;
-    if (lastAiMessage === spokenRef.current) return;
-    spokenRef.current = lastAiMessage;
     const clean = String(lastAiMessage).replace(/[#*`[\]]/g, "").trim();
-    const short = clean.length > 150 ? clean.slice(0, 150) + "..." : clean;
-    sayMessage(short, "happy");
+    if (!clean || clean === spokenRef.current) return;
+    spokenRef.current = clean;
+    sayMessage(
+      clean,
+      "happy",
+      "🎙️ Speaking answer..."
+    );
   }, [lastAiMessage]);
 
   const quickQuestions = [
@@ -111,7 +117,9 @@ export default function Aria({ onSendMessage, lastAiMessage, isProcessing, walle
   return (
     <div className="fixed bottom-20 right-4 w-72 z-50">
       <div className="bg-gray-900/95 border border-purple-700/50 rounded-2xl shadow-2xl shadow-purple-900/30 overflow-hidden backdrop-blur-sm">
-        <div className="flex items-center justify-between px-4 py-3 border-b border-purple-800/30" style={{background:"linear-gradient(135deg,rgba(168,85,247,0.2),rgba(59,130,246,0.2))"}}>
+        {/* Header */}
+        <div className="flex items-center justify-between px-4 py-3 border-b border-purple-800/30"
+          style={{background:"linear-gradient(135deg,rgba(168,85,247,0.2),rgba(59,130,246,0.2))"}}>
           <div className="flex items-center gap-2">
             <div className="relative">
               <div className="w-8 h-8 rounded-full overflow-hidden border-2 border-purple-400">
@@ -131,13 +139,16 @@ export default function Aria({ onSendMessage, lastAiMessage, isProcessing, walle
             </div>
             <div>
               <div className="text-sm font-bold text-purple-300">Aria</div>
-              <div className="text-xs text-gray-500">Arc AI Companion</div>
+              <div className="text-xs text-gray-500">{isSpeaking ? "Speaking..." : "Arc AI Companion"}</div>
             </div>
           </div>
-          <button onClick={() => setIsOpen(false)} className="text-gray-500 hover:text-gray-300 text-xl">×</button>
+          <button onClick={() => { window.speechSynthesis?.cancel(); setIsOpen(false); }}
+            className="text-gray-500 hover:text-gray-300 text-xl">×</button>
         </div>
 
-        <div className="flex justify-center py-3" style={{background:"linear-gradient(180deg,rgba(109,40,217,0.1) 0%,transparent 100%)"}}>
+        {/* Character */}
+        <div className="flex justify-center py-3"
+          style={{background:"linear-gradient(180deg,rgba(109,40,217,0.1) 0%,transparent 100%)"}}>
           <div className={`transition-all duration-300 ${mood==="thinking"?"animate-pulse":""} ${isSpeaking?"scale-105":"scale-100"}`}>
             <svg viewBox="0 0 100 130" className="w-24 h-28">
               {isSpeaking && <circle cx="50" cy="50" r="38" fill="rgba(168,85,247,0.08)"/>}
@@ -147,11 +158,20 @@ export default function Aria({ onSendMessage, lastAiMessage, isProcessing, walle
               <ellipse cx="76" cy="48" rx="9" ry="22" fill="#6B21A8"/>
               <ellipse cx="38" cy="22" rx="8" ry="6" fill="#7C3AED"/>
               <ellipse cx="62" cy="22" rx="8" ry="6" fill="#7C3AED"/>
-              <ellipse cx="40" cy="46" rx={mood==="happy"||mood==="excited"?"5":"6"} ry={mood==="happy"||mood==="excited"?"4":"7"} fill="#1e1b4b"/>
-              <ellipse cx="60" cy="46" rx={mood==="happy"||mood==="excited"?"5":"6"} ry={mood==="happy"||mood==="excited"?"4":"7"} fill="#1e1b4b"/>
+              <ellipse cx="40" cy="46"
+                rx={mood==="happy"||mood==="excited"?"5":"6"}
+                ry={mood==="happy"||mood==="excited"?"4":"7"}
+                fill="#1e1b4b"/>
+              <ellipse cx="60" cy="46"
+                rx={mood==="happy"||mood==="excited"?"5":"6"}
+                ry={mood==="happy"||mood==="excited"?"4":"7"}
+                fill="#1e1b4b"/>
               <circle cx="42" cy="44" r="2" fill="white"/>
               <circle cx="62" cy="44" r="2" fill="white"/>
-              {mood==="excited"&&<><circle cx="44" cy="42" r="1" fill="white" opacity="0.8"/><circle cx="64" cy="42" r="1" fill="white" opacity="0.8"/></>}
+              {mood==="excited"&&<>
+                <circle cx="44" cy="42" r="1" fill="white" opacity="0.8"/>
+                <circle cx="64" cy="42" r="1" fill="white" opacity="0.8"/>
+              </>}
               <ellipse cx="32" cy="54" rx="6" ry="4" fill="#FFB6C1" opacity="0.5"/>
               <ellipse cx="68" cy="54" rx="6" ry="4" fill="#FFB6C1" opacity="0.5"/>
               {mood==="thinking"
@@ -175,15 +195,23 @@ export default function Aria({ onSendMessage, lastAiMessage, isProcessing, walle
           </div>
         </div>
 
+        {/* Status only — no typing animation */}
         <div className="px-4 pb-3">
-          <div className="bg-gray-800/60 border border-purple-800/30 rounded-xl p-3 min-h-14">
-            <p className="text-xs text-gray-200 leading-relaxed">
-              {displayText}
-              {isTyping && <span className="inline-block w-0.5 h-3 bg-purple-400 ml-0.5 animate-pulse"></span>}
+          <div className="bg-gray-800/60 border border-purple-800/30 rounded-xl p-3">
+            <p className="text-xs text-gray-300 leading-relaxed text-center">
+              {isSpeaking
+                ? <span className="flex items-center justify-center gap-2">
+                    <span className="w-1.5 h-1.5 bg-purple-400 rounded-full animate-bounce" style={{animationDelay:"0ms"}}></span>
+                    <span className="w-1.5 h-1.5 bg-purple-400 rounded-full animate-bounce" style={{animationDelay:"150ms"}}></span>
+                    <span className="w-1.5 h-1.5 bg-purple-400 rounded-full animate-bounce" style={{animationDelay:"300ms"}}></span>
+                  </span>
+                : statusText
+              }
             </p>
           </div>
         </div>
 
+        {/* Quick questions */}
         <div className="px-4 pb-4">
           <p className="text-xs text-gray-600 mb-2">Ask Aria:</p>
           <div className="grid grid-cols-2 gap-1">
