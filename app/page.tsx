@@ -1,5 +1,6 @@
 "use client";
 import Link from "next/link";
+import Stats from "./components/Stats";
 
 export default function Home() {
   return (
@@ -10,6 +11,7 @@ export default function Home() {
           <span className="text-lg font-bold bg-gradient-to-r from-purple-400 to-blue-400 bg-clip-text text-transparent">MicroAI</span>
         </div>
         <div className="flex items-center gap-3 md:gap-6">
+          <a href="#stats" className="hidden md:block text-sm text-gray-400 hover:text-white transition-colors">Stats</a>
           <a href="#features" className="hidden md:block text-sm text-gray-400 hover:text-white transition-colors">Features</a>
           <a href="#pricing" className="hidden md:block text-sm text-gray-400 hover:text-white transition-colors">Pricing</a>
           <a href="#how" className="hidden md:block text-sm text-gray-400 hover:text-white transition-colors">How it works</a>
@@ -45,6 +47,9 @@ export default function Home() {
           <div className="text-center"><div className="text-2xl md:text-3xl font-bold text-white">100%</div><div className="text-xs md:text-sm text-gray-500 mt-1">On-chain</div></div>
         </div>
       </section>
+
+      {/* Live Stats Section */}
+      <Stats />
 
       <section id="features" className="px-4 md:px-8 py-16 max-w-6xl mx-auto">
         <h2 className="text-2xl md:text-3xl font-bold text-center mb-4">Why MicroAI?</h2>
