@@ -138,13 +138,13 @@ export default function Chat() {
         params: [{ from: wallet, to: USDC_CONTRACT, data, gas: "0x186A0" }],
       }) as string;
 
-      // Formatting structured context array dynamically including previous history mapping
+      // 🔍 FIX 1: 'as const' যোগ করা হয়েছে যাতে টাইপ 'string' না হয়ে সুনির্দিষ্টভাবে 'user'/'assistant' হয়
       const historyPayload = [
         ...messages.map(msg => ({
-          role: msg.role,
+          role: msg.role as "user" | "assistant", 
           content: msg.text
         })),
-        { role: "user", content: messageToSend }
+        { role: "user" as const, content: messageToSend }
       ];
 
       const res = await fetch("/api/chat", {
@@ -152,7 +152,7 @@ export default function Chat() {
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ 
           message: messageToSend, 
-          messages: historyPayload, // Structured chat history payload sync
+          messages: historyPayload,
           fileName: currentFileName,
           fileData: currentFileDataBase64,
           fileType: currentFileType
@@ -163,8 +163,10 @@ export default function Chat() {
       await getBalance(wallet);
     } catch {
       setMessages(prev => [...prev, { role: "assistant", text: "Transaction cancelled." }]);
-    } finally { setLoading(false); } //  double 'l' (finally) করে দিন
-  };
+    } finally { 
+      // 🔍 FIX 2: নিশ্চিত করুন এখানে 'finally' (double l) বানানটি ঠিক আছে
+      setLoading(false); 
+    }
 
   return (
     <main className="min-h-screen flex flex-col bg-[#05030a]" style={{backgroundImage: "radial-gradient(circle at 50% -20%, #1a0b36 0%, #05030a 70%)"}}>
