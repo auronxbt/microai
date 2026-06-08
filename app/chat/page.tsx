@@ -171,7 +171,14 @@ export default function Chat() {
           <div className="relative">
             <select
               value={network}
-              onChange={(e) => setNetwork(e.target.value)}
+              onChange={(e) => {
+                const selectedValue = e.target.value;
+                if (selectedValue === "mainnet") {
+                  alert("Mainnet is coming soon! Please use Testnet for now.");
+                  return; // এটি স্টেট পরিবর্তন 'mainnet' হতে দেবে না, 'testnet'-এই লক রাখবে
+                }
+                setNetwork(selectedValue);
+              }}
               className="bg-purple-500/10 hover:bg-purple-500/15 text-purple-300 text-[11px] font-medium px-2.5 py-1.5 rounded-xl border border-purple-500/20 outline-none cursor-pointer appearance-none transition-all pr-7 font-sans shadow-md"
               style={{
                 backgroundImage: `url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%23d8b4fe' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'><polyline points='6 9 12 15 18 9'></polyline></svg>")`,
