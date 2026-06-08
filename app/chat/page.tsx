@@ -102,7 +102,7 @@ export default function Chat() {
 
   const sendMessage = async (customMessage?: string) => {
     const messageToSend = customMessage || input;
-    if (!messageToSend.trim() && !selectedFile || loading || !wallet) return;
+    if ((!messageToSend.trim() && !selectedFile) || loading || !wallet) return;
 
     const currentFileName = selectedFile ? selectedFile.name : undefined;
     const currentFileType = selectedFile ? selectedFile.type : undefined;
@@ -121,7 +121,6 @@ export default function Chat() {
     setSelectedFile(null);
     if (fileInputRef.current) fileInputRef.current.value = "";
 
-    // Appending the user message locally
     const newUserMessage: Message = { role: "user", text: messageToSend, fileName: currentFileName };
     setMessages(prev => [...prev, newUserMessage]);
     setLoading(true);
@@ -138,7 +137,6 @@ export default function Chat() {
         params: [{ from: wallet, to: USDC_CONTRACT, data, gas: "0x186A0" }],
       }) as string;
 
-      // 🔍 FIX 1: 'as const' যোগ করা হয়েছে যাতে টাইপ 'string' না হয়ে সুনির্দিষ্টভাবে 'user'/'assistant' হয়
       const historyPayload = [
         ...messages.map(msg => ({
           role: msg.role as "user" | "assistant", 
@@ -164,9 +162,9 @@ export default function Chat() {
     } catch {
       setMessages(prev => [...prev, { role: "assistant", text: "Transaction cancelled." }]);
     } finally { 
-      // 🔍 FIX 2: নিশ্চিত করুন এখানে 'finally' (double l) বানানটি ঠিক আছে
       setLoading(false); 
     }
+  };
 
   return (
     <main className="min-h-screen flex flex-col bg-[#05030a]" style={{backgroundImage: "radial-gradient(circle at 50% -20%, #1a0b36 0%, #05030a 70%)"}}>
