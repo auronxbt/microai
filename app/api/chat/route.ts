@@ -7,15 +7,7 @@ const apiKeys = [
   process.env.GEMINI_KEY_2 || "",
   process.env.GEMINI_KEY_3 || "",
   process.env.GEMINI_KEY_4 || "",
-].filter(key => key !== "");
-
-// লোড ব্যালেন্সিং বা কি пулিং মেকানিজম
-const getRandomAIInstance = () => {
-  if (apiKeys.length === 0) return null;
-  const randomIndex = Math.floor(Math.random() * apiKeys.length);
-  const selectedKey = apiKeys[randomIndex];
-  return new GoogleGenAI({ apiKey: selectedKey });
-};
+].filter(key => key.trim() !== ""); // খালি বা স্পেস থাকা কি-গুলো ফিল্টার করবে
 
 // কঠোর ও প্রফেশনাল সিস্টেম প্রম্পট (উন্নত ফরম্যাটিং সহ)
 const SYSTEM_INSTRUCTION = `
@@ -32,22 +24,19 @@ STRICT BEHAVIORAL RULES:
 
 export async function POST(req: Request) {
   try {
-    // ফ্রন্টএন্ড থেকে পাঠানো message, fileData এবং fileType রিসিভ করা হচ্ছে
     const { message, fileData, fileType } = await req.json();
 
     if (!message && !fileData) {
       return NextResponse.json({ error: "Message or File is required" }, { status: 400 });
     }
 
-    const ai = getRandomAIInstance();
-    if (!ai) {
+    if (apiKeys.length === 0) {
       return NextResponse.json({ reply: "Configuration error: No valid Gemini API Keys found." }, { status: 500 });
     }
 
-    // নতুন @google/genai SDK-র জন্য contents অ্যারে তৈরি করা হচ্ছে
+    // contents অ্যারে তৈরি করা হচ্ছে
     const contents: any[] = [];
 
-    // ১. যদি ফ্রন্টএন্ড থেকে ইমেজ ফাইলের Base64 ডাটা ও টাইপ আসে, তবে তা ইনলাইন পার্ট হিসেবে যুক্ত হবে
     if (fileData && fileType) {
       contents.push({
         inlineData: {
@@ -57,27 +46,46 @@ export async function POST(req: Request) {
       });
     }
 
-    // ২. ইউজারের টেক্সট মেসেজটি অ্যারেতে যোগ করা হচ্ছে (ফাইল থাকুক বা না থাকুক)
     if (message) {
       contents.push(message);
     }
 
-    // Gemini 2.5 Flash মডেল কল করা হচ্ছে মাল্টিমোডাল সাপোর্ট সহ
-    const response = await ai.models.generateContent({
-      model: "gemini-2.5-flash",
-      contents: contents, // এখানে আমাদের প্রসেস করা contents অ্যারে পাস করা হলো
-      config: {
-        systemInstruction: SYSTEM_INSTRUCTION,
-        temperature: 0.15, // ক্রিয়েটিভিটি কমিয়ে ১০০% অবজেক্টিভ রেসপন্স নিশ্চিত করতে
-        maxOutputTokens: 1000,
-      }
-    });
+    let lastError: any = null;
+    
+    // 🔄 Failover Loop: প্রতিটি API Key একে একে ট্রাই করবে যদি কোনো একটি ফেল করে
+    for (let i = 0; i < apiKeys.length; i++) {
+      const currentKey = apiKeys[i];
+      
+      try {
+        const ai = new GoogleGenAI({ apiKey: currentKey });
+        
+        const response = await ai.models.generateContent({
+          model: "gemini-2.5-flash",
+          contents: contents,
+          config: {
+            systemInstruction: SYSTEM_INSTRUCTION,
+            temperature: 0.15,
+            maxOutputTokens: 1000,
+          }
+        });
 
-    const reply = response.text || "I'm sorry, I couldn't process that response.";
-    return NextResponse.json({ reply });
+        // যদি রেসপন্স সফলভাবে চলে আসে, তবে লুপ এখানেই শেষ করে ডাটা রিটার্ন করবে
+        const reply = response.text || "I'm sorry, I couldn't process that response.";
+        return NextResponse.json({ reply });
+
+      } catch (err) {
+        console.warn(`Gemini Key ${i + 1} failed, trying next key...`);
+        lastError = err; // এররটি সেভ করে রাখছি পরে দেখার জন্য
+        continue; // লুপটি থামবে না, পরের কি (Key) দিয়ে ট্রাই করবে
+      }
+    }
+
+    // যদি ৪টি কি-এর একটিও কাজ না করে, তখনই কেবল শেষ এররটি শো করবে
+    console.error("All Gemini API Keys failed. Last Error Details:", lastError);
+    return NextResponse.json({ reply: "An error occurred while generating the response via Gemini." }, { status: 500 });
     
   } catch (error) {
-    console.error("Gemini Pool Error Details:", error);
-    return NextResponse.json({ reply: "An error occurred while generating the response via Gemini." }, { status: 500 });
+    console.error("Server Route Error:", error);
+    return NextResponse.json({ reply: "An error occurred while processing your request." }, { status: 500 });
   }
 }
