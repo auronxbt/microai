@@ -60,7 +60,7 @@ export async function POST(req: Request) {
         const ai = new GoogleGenAI({ apiKey: currentKey });
         
         const response = await ai.models.generateContent({
-          model: "gemini-2.5-flash",
+          model: "gemini-2.5-flash-lite",
           contents: contents,
           config: {
             systemInstruction: SYSTEM_INSTRUCTION,
