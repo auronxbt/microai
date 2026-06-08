@@ -1,15 +1,15 @@
 import { NextResponse } from "next/server";
 import { GoogleGenAI } from "@google/genai";
 
-// ৪টি এপিআই কি-এর অ্যারে
+// Array of 4 Gemini API Keys for failover
 const apiKeys = [
   process.env.GEMINI_KEY_1 || "",
   process.env.GEMINI_KEY_2 || "",
   process.env.GEMINI_KEY_3 || "",
   process.env.GEMINI_KEY_4 || "",
-].filter(key => key.trim() !== ""); // খালি বা স্পেস থাকা কি-গুলো ফিল্টার করবে
+].filter(key => key.trim() !== ""); // Filters out empty or whitespace-only keys
 
-// কঠোর ও প্রফেশনাল সিস্টেম প্রম্পট (উন্নত ফরম্যাটিং সহ)
+// Enterprise-grade system prompt
 const SYSTEM_INSTRUCTION = `
 You are MicroAI, a highly professional, enterprise-grade AI assistant integrated into a Web3 dApp.
 Your core directive is to provide direct, precise, and objective responses.
@@ -24,35 +24,59 @@ STRICT BEHAVIORAL RULES:
 
 export async function POST(req: Request) {
   try {
-    const { message, fileData, fileType } = await req.json();
+    const { message, messages, fileData, fileType } = await req.json();
 
-    if (!message && !fileData) {
-      return NextResponse.json({ error: "Message or File is required" }, { status: 400 });
+    if (!message && !messages && !fileData) {
+      return NextResponse.json({ error: "Message, Messages history or File is required" }, { status: 400 });
     }
 
     if (apiKeys.length === 0) {
       return NextResponse.json({ reply: "Configuration error: No valid Gemini API Keys found." }, { status: 500 });
     }
 
-    // contents অ্যারে তৈরি করা হচ্ছে
-    const contents: any[] = [];
+    // Initialize contents array structured for Gemini SDK
+    let contents: any[] = [];
 
-    if (fileData && fileType) {
+    // 1. Process chat history (messages) if provided by the frontend
+    if (messages && Array.isArray(messages)) {
+      contents = messages.map((msg: any) => ({
+        role: msg.role === "assistant" ? "model" : "user",
+        parts: [{ text: msg.content || msg.text || "" }]
+      }));
+    } 
+    // 2. Backward compatibility: Fallback if only a single message string is sent
+    else if (message) {
       contents.push({
+        role: "user",
+        parts: [{ text: message }]
+      });
+    }
+
+    // 3. Inject file or image data if present
+    if (fileData && fileType) {
+      const filePart = {
         inlineData: {
           data: fileData,
           mimeType: fileType
         }
-      });
-    }
-
-    if (message) {
-      contents.push(message);
+      };
+      
+      if (contents.length > 0) {
+        // Prepend file to the last user message part to maintain dynamic context
+        const lastMsg = contents[contents.length - 1];
+        if (lastMsg.role === "user") {
+          lastMsg.parts.unshift(filePart);
+        } else {
+          contents.push({ role: "user", parts: [filePart] });
+        }
+      } else {
+        contents.push({ role: "user", parts: [filePart] });
+      }
     }
 
     let lastError: any = null;
     
-    // 🔄 Failover Loop: প্রতিটি API Key একে একে ট্রাই করবে যদি কোনো একটি ফেল করে
+    // 🔄 Failover Loop: Iterates through keys sequentially if one fails
     for (let i = 0; i < apiKeys.length; i++) {
       const currentKey = apiKeys[i];
       
@@ -60,27 +84,27 @@ export async function POST(req: Request) {
         const ai = new GoogleGenAI({ apiKey: currentKey });
         
         const response = await ai.models.generateContent({
-          model: "gemini-2.5-flash-lite",
+          model: "gemini-2.5-flash",
           contents: contents,
           config: {
             systemInstruction: SYSTEM_INSTRUCTION,
-            temperature: 0.15,
-            maxOutputTokens: 1000,
+            temperature: 0.25,
+            maxOutputTokens: 2000,
           }
         });
 
-        // যদি রেসপন্স সফলভাবে চলে আসে, তবে লুপ এখানেই শেষ করে ডাটা রিটার্ন করবে
+        // Return early on successful response execution
         const reply = response.text || "I'm sorry, I couldn't process that response.";
         return NextResponse.json({ reply });
 
       } catch (err) {
         console.warn(`Gemini Key ${i + 1} failed, trying next key...`);
-        lastError = err; // এররটি সেভ করে রাখছি পরে দেখার জন্য
-        continue; // লুপটি থামবে না, পরের কি (Key) দিয়ে ট্রাই করবে
+        lastError = err; // Track last error state for diagnostics
+        continue; 
       }
     }
 
-    // যদি ৪টি কি-এর একটিও কাজ না করে, তখনই কেবল শেষ এররটি শো করবে
+    // Triggered only if all API keys fail loop verification
     console.error("All Gemini API Keys failed. Last Error Details:", lastError);
     return NextResponse.json({ reply: "An error occurred while generating the response via Gemini." }, { status: 500 });
     

@@ -21,7 +21,7 @@ declare global {
 }
 
 interface Message {
-  role: string;
+  role: "user" | "assistant";
   text: string;
   txHash?: string;
   fileName?: string;
@@ -63,7 +63,7 @@ export default function Chat() {
   const [loading, setLoading] = useState<boolean>(false);
   const [wallet, setWallet] = useState<string | null>(null);
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
-  const [network, setNetwork] = useState<string>("testnet"); // নেটওয়ার্ক স্টেট (Testnet/Mainnet)
+  const [network, setNetwork] = useState<string>("testnet");
   const fileInputRef = useRef<HTMLInputElement>(null);
 
   const getBalance = async (address: string) => {
@@ -121,7 +121,9 @@ export default function Chat() {
     setSelectedFile(null);
     if (fileInputRef.current) fileInputRef.current.value = "";
 
-    setMessages(prev => [...prev, { role: "user", text: messageToSend, fileName: currentFileName }]);
+    // Appending the user message locally
+    const newUserMessage: Message = { role: "user", text: messageToSend, fileName: currentFileName };
+    setMessages(prev => [...prev, newUserMessage]);
     setLoading(true);
 
     try {
@@ -136,28 +138,37 @@ export default function Chat() {
         params: [{ from: wallet, to: USDC_CONTRACT, data, gas: "0x186A0" }],
       }) as string;
 
+      // Formatting structured context array dynamically including previous history mapping
+      const historyPayload = [
+        ...messages.map(msg => ({
+          role: msg.role,
+          content: msg.text
+        })),
+        { role: "user", content: messageToSend }
+      ];
+
       const res = await fetch("/api/chat", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ 
           message: messageToSend, 
+          messages: historyPayload, // Structured chat history payload sync
           fileName: currentFileName,
           fileData: currentFileDataBase64,
           fileType: currentFileType
         }),
       });
       const aiData = await res.json();
-      setMessages(prev => [...prev, { role: "ai", text: aiData.reply, txHash }]);
+      setMessages(prev => [...prev, { role: "assistant", text: aiData.reply, txHash }]);
       await getBalance(wallet);
     } catch {
-      setMessages(prev => [...prev, { role: "ai", text: "Transaction cancelled." }]);
-    } finally { setLoading(false); }
+      setMessages(prev => [...prev, { role: "assistant", text: "Transaction cancelled." }]);
+    } finally { setLoading(false); } //  double 'l' (finally) করে দিন
   };
 
   return (
     <main className="min-h-screen flex flex-col bg-[#05030a]" style={{backgroundImage: "radial-gradient(circle at 50% -20%, #1a0b36 0%, #05030a 70%)"}}>
       
-      {/* নতুন এবং ফিক্সড নেভিগেশন বার */}
       <nav className="flex justify-between items-center px-4 md:px-8 py-3.5 border-b border-purple-950/40 sticky top-0 z-10 backdrop-blur-md bg-[#05030a]/75">
         <Link href="/" className="flex items-center gap-2.5 group">
           <UniqueLogo size={32} />
@@ -167,7 +178,6 @@ export default function Chat() {
         </Link>
         
         <div className="flex items-center gap-3">
-          {/* নেটওয়ার্ক সিলেক্টর ড্রপডাউন (Testnet / Mainnet) */}
           <div className="relative">
             <select
               value={network}
@@ -175,7 +185,7 @@ export default function Chat() {
                 const selectedValue = e.target.value;
                 if (selectedValue === "mainnet") {
                   alert("Mainnet is coming soon! Please use Testnet for now.");
-                  return; // এটি স্টেট পরিবর্তন 'mainnet' হতে দেবে না, 'testnet'-এই লক রাখবে
+                  return;
                 }
                 setNetwork(selectedValue);
               }}
@@ -243,14 +253,14 @@ export default function Chat() {
 
         {messages.map((msg, i) => (
           <div key={i} className={"flex gap-4 items-start w-full " + (msg.role === "user" ? "justify-end" : "justify-start")}>
-            {msg.role === "ai" && (
+            {msg.role !== "user" && (
               <div className="flex-shrink-0 mt-1">
                 <UniqueLogo size={28} />
               </div>
             )}
             
             <div className="max-w-[85%] sm:max-w-xl space-y-1.5">
-              {msg.role === "ai" && (
+              {msg.role !== "user" && (
                 <div className="flex items-center gap-2 px-1">
                   <span className="text-[10px] font-medium uppercase tracking-wider text-purple-400/90">MicroAI Agent</span>
                   {msg.txHash && (
@@ -272,7 +282,7 @@ export default function Chat() {
                   </div>
                 )}
 
-                {msg.role === "ai" ? (
+                {msg.role !== "user" ? (
                   <div className="space-y-3.5 text-zinc-300 
                     [&_strong]:text-purple-400 [&_strong]:font-semibold
                     [&_ul]:list-disc [&_ul]:pl-5 [&_ul]:space-y-1 [&_ul]:my-2
