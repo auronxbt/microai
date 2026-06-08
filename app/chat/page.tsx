@@ -228,14 +228,14 @@ export default function Chat() {
               <UniqueLogo size={64} />
             </div>
             <h2 className="text-2xl font-semibold text-zinc-100 tracking-tight mb-2">How can I help you today?</h2>
-            <p className="text-zinc-400 text-sm max-w-sm mb-8 leading-relaxed">Secure, instant AI computations running via peer-to-peer microtransactions.</p>
             
+            <p className="text-zinc-400 text-sm max-w-sm mb-8 leading-relaxed">Your Arc & Circle AI hub. Ask anything about the ecosystem — pay $0.001 USDC per answer.</p>
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 w-full max-w-xl text-left">
               {[
-                { title: "What is Arc Chain?", desc: "Learn about the Layer 1 performance protocol." },
-                { title: "Explain microtransactions", desc: "How cost-per-response models save money." },
-                { title: "Analyze Web3 Smart Contracts", desc: "Best safety practices for deployment." },
-                { title: "Write a React component", desc: "Generate modular UI utilizing Tailwind CSS." }
+                { title: "What is Arc Blockchain?", desc: "Learn about the Layer 1 stablecoin commerce chain." },
+{ title: "How does Circle USDC work?", desc: "Cross-chain transfers, CCTP, and Circle APIs." },
+{ title: "Deploy on Arc Testnet", desc: "Step-by-step guide to deploy your first contract." },
+{ title: "ERC-8004 AI Agents", desc: "Register your AI agent on Arc blockchain." }
               ].map((card, idx) => (
                 <button 
                   key={idx} 

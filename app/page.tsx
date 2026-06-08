@@ -5,373 +5,502 @@ import Stats from "./components/Stats";
 
 export default function Home() {
   const [mousePos, setMousePos] = useState({ x: 0, y: 0 });
-  const heroRef = useRef<HTMLDivElement>(null);
+  const [tick, setTick] = useState(0);
+  const canvasRef = useRef<HTMLCanvasElement>(null);
 
   useEffect(() => {
-    const handleMouse = (e: MouseEvent) => {
-      setMousePos({ x: e.clientX, y: e.clientY });
-    };
+    const handleMouse = (e: MouseEvent) => setMousePos({ x: e.clientX, y: e.clientY });
     window.addEventListener('mousemove', handleMouse);
     return () => window.removeEventListener('mousemove', handleMouse);
   }, []);
 
-  return (
-    <div className="min-h-screen bg-[#020010] text-white font-sans overflow-x-hidden">
+  useEffect(() => {
+    const id = setInterval(() => setTick(t => t + 1), 50);
+    return () => clearInterval(id);
+  }, []);
 
-      {/* Animated background */}
+  // Particle canvas
+  useEffect(() => {
+    const canvas = canvasRef.current;
+    if (!canvas) return;
+    const ctx = canvas.getContext('2d');
+    if (!ctx) return;
+    canvas.width = window.innerWidth;
+    canvas.height = window.innerHeight;
+
+    const particles: { x: number; y: number; vx: number; vy: number; size: number; opacity: number }[] = [];
+    for (let i = 0; i < 80; i++) {
+      particles.push({
+        x: Math.random() * canvas.width,
+        y: Math.random() * canvas.height,
+        vx: (Math.random() - 0.5) * 0.3,
+        vy: (Math.random() - 0.5) * 0.3,
+        size: Math.random() * 1.5 + 0.5,
+        opacity: Math.random() * 0.5 + 0.1,
+      });
+    }
+
+    let animId: number;
+    const animate = () => {
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+      particles.forEach(p => {
+        p.x += p.vx;
+        p.y += p.vy;
+        if (p.x < 0) p.x = canvas.width;
+        if (p.x > canvas.width) p.x = 0;
+        if (p.y < 0) p.y = canvas.height;
+        if (p.y > canvas.height) p.y = 0;
+        ctx.beginPath();
+        ctx.arc(p.x, p.y, p.size, 0, Math.PI * 2);
+        ctx.fillStyle = `rgba(139, 92, 246, ${p.opacity})`;
+        ctx.fill();
+      });
+      // draw lines between close particles
+      for (let i = 0; i < particles.length; i++) {
+        for (let j = i + 1; j < particles.length; j++) {
+          const dx = particles[i].x - particles[j].x;
+          const dy = particles[i].y - particles[j].y;
+          const dist = Math.sqrt(dx * dx + dy * dy);
+          if (dist < 100) {
+            ctx.beginPath();
+            ctx.moveTo(particles[i].x, particles[i].y);
+            ctx.lineTo(particles[j].x, particles[j].y);
+            ctx.strokeStyle = `rgba(139, 92, 246, ${0.1 * (1 - dist / 100)})`;
+            ctx.lineWidth = 0.5;
+            ctx.stroke();
+          }
+        }
+      }
+      animId = requestAnimationFrame(animate);
+    };
+    animate();
+    return () => cancelAnimationFrame(animId);
+  }, []);
+
+  const orbAngle = (tick * 0.02) % (Math.PI * 2);
+
+  return (
+    <div className="min-h-screen bg-[#03000f] text-white overflow-x-hidden" style={{ fontFamily: "'Rajdhani', 'Orbitron', monospace" }}>
+
+      {/* Particle canvas */}
+      <canvas ref={canvasRef} className="fixed inset-0 z-0 pointer-events-none opacity-60" />
+
+      {/* Background glows */}
       <div className="fixed inset-0 z-0 pointer-events-none">
-        <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_top,_#0d0030_0%,_#020010_60%)]" />
-        <div
-          className="absolute w-[600px] h-[600px] rounded-full opacity-10 blur-[120px] transition-transform duration-700 ease-out"
+        <div className="absolute inset-0" style={{ background: 'radial-gradient(ellipse 80% 50% at 50% -10%, #1a0050 0%, transparent 70%)' }} />
+        <div className="absolute bottom-0 left-0 right-0 h-1/2" style={{ background: 'radial-gradient(ellipse 100% 60% at 50% 100%, #000830 0%, transparent 70%)' }} />
+        {/* Mouse glow */}
+        <div className="absolute w-96 h-96 rounded-full pointer-events-none transition-all duration-500"
           style={{
-            background: 'radial-gradient(circle, #7c3aed, #3b82f6)',
-            left: mousePos.x - 300,
-            top: mousePos.y - 300,
-          }}
-        />
+            background: 'radial-gradient(circle, rgba(124,58,237,0.15), transparent 70%)',
+            left: mousePos.x - 192,
+            top: mousePos.y - 192,
+          }} />
+        {/* Grid */}
         <div className="absolute inset-0" style={{
-          backgroundImage: `linear-gradient(rgba(124,58,237,0.05) 1px, transparent 1px), linear-gradient(90deg, rgba(124,58,237,0.05) 1px, transparent 1px)`,
-          backgroundSize: '60px 60px'
+          backgroundImage: `linear-gradient(rgba(139,92,246,0.04) 1px, transparent 1px), linear-gradient(90deg, rgba(139,92,246,0.04) 1px, transparent 1px)`,
+          backgroundSize: '50px 50px',
+        }} />
+        {/* Scanlines */}
+        <div className="absolute inset-0 opacity-[0.015]" style={{
+          backgroundImage: 'repeating-linear-gradient(0deg, transparent, transparent 2px, rgba(255,255,255,1) 2px, rgba(255,255,255,1) 4px)',
         }} />
       </div>
 
       {/* Navbar */}
-      <nav className="fixed top-0 left-0 right-0 z-50 backdrop-blur-xl border-b border-purple-500/10 bg-[#020010]/80 px-6 py-4">
+      <nav className="fixed top-0 left-0 right-0 z-50 px-6 py-4" style={{ background: 'linear-gradient(180deg, rgba(3,0,15,0.95) 0%, transparent 100%)', backdropFilter: 'blur(20px)' }}>
         <div className="max-w-7xl mx-auto flex items-center justify-between">
           <div className="flex items-center gap-3">
-            <div className="relative w-9 h-9">
-              <div className="absolute inset-0 bg-gradient-to-tr from-violet-600 to-blue-500 rounded-xl blur-sm opacity-70" />
-              <div className="relative bg-gradient-to-tr from-violet-600 to-blue-500 rounded-xl w-9 h-9 flex items-center justify-center font-black text-sm">M</div>
+            {/* Logo */}
+            <div className="relative w-10 h-10 flex items-center justify-center">
+              <div className="absolute inset-0 rounded-xl" style={{ background: 'linear-gradient(135deg, #7c3aed, #3b82f6)', boxShadow: '0 0 20px rgba(124,58,237,0.6)' }} />
+              <span className="relative font-black text-base">M</span>
             </div>
-            <span className="text-lg font-bold tracking-tight">
-              <span className="text-white">Micro</span>
-              <span className="bg-gradient-to-r from-violet-400 to-blue-400 bg-clip-text text-transparent">AI</span>
-            </span>
+            <div>
+              <div className="text-lg font-black tracking-widest" style={{ letterSpacing: '0.15em' }}>
+                MICRO<span style={{ color: '#818cf8' }}>AI</span>
+              </div>
+              <div className="text-[8px] text-purple-400 tracking-[0.3em] -mt-1">ARC · CIRCLE HUB</div>
+            </div>
           </div>
-          <div className="hidden md:flex items-center gap-8 text-sm text-gray-400">
-            <a href="#ecosystem" className="hover:text-violet-300 transition-colors">Ecosystem</a>
-            <a href="#features" className="hover:text-violet-300 transition-colors">Features</a>
-            <a href="#how" className="hover:text-violet-300 transition-colors">How it works</a>
-            <a href="#pricing" className="hover:text-violet-300 transition-colors">Pricing</a>
+
+          <div className="hidden md:flex items-center gap-8 text-xs tracking-widest text-gray-400" style={{ letterSpacing: '0.15em' }}>
+            {['ECOSYSTEM', 'FEATURES', 'HOW IT WORKS', 'PRICING'].map(item => (
+              <a key={item} href={`#${item.toLowerCase().replace(/ /g, '-')}`}
+                className="hover:text-purple-300 transition-colors relative group">
+                {item}
+                <span className="absolute -bottom-1 left-0 w-0 h-px bg-purple-400 group-hover:w-full transition-all duration-300" />
+              </a>
+            ))}
           </div>
-          <Link href="/chat" className="relative group px-5 py-2.5 rounded-xl text-sm font-semibold overflow-hidden">
-            <div className="absolute inset-0 bg-gradient-to-r from-violet-600 to-blue-600 transition-opacity group-hover:opacity-90" />
-            <div className="absolute inset-0 bg-gradient-to-r from-violet-600 to-blue-600 blur-sm opacity-50 group-hover:opacity-70 transition-opacity" />
-            <span className="relative">Launch App →</span>
+
+          <Link href="/chat" className="relative px-6 py-2.5 text-xs font-black tracking-widest overflow-hidden group"
+            style={{ letterSpacing: '0.15em', border: '1px solid rgba(139,92,246,0.5)', background: 'rgba(139,92,246,0.1)' }}>
+            <div className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity" style={{ background: 'linear-gradient(135deg, rgba(124,58,237,0.4), rgba(59,130,246,0.4))' }} />
+            <span className="relative" style={{ color: '#c4b5fd' }}>LAUNCH APP →</span>
           </Link>
         </div>
       </nav>
 
-      {/* Hero */}
-      <section ref={heroRef} className="relative z-10 pt-36 pb-24 px-6 max-w-7xl mx-auto">
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
-          <div className="space-y-8">
-            <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full border border-violet-500/30 bg-violet-500/10 text-xs text-violet-300 font-medium">
-              <span className="flex h-2 w-2 rounded-full bg-emerald-400 animate-pulse" />
-              Live on Arc Testnet • Powered by USDC
+      {/* HERO */}
+      <section className="relative z-10 min-h-screen flex items-center justify-center px-6 pt-20">
+        <div className="max-w-7xl mx-auto w-full">
+
+          {/* Top badge */}
+          <div className="flex justify-center mb-8">
+            <div className="flex items-center gap-2 px-4 py-2 text-xs tracking-widest" style={{ border: '1px solid rgba(34,197,94,0.4)', background: 'rgba(34,197,94,0.05)', color: '#86efac', letterSpacing: '0.2em' }}>
+              <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse" />
+              LIVE ON ARC TESTNET · USDC PAYMENTS ACTIVE
             </div>
+          </div>
 
-            <div className="space-y-2">
-              <h1 className="text-5xl sm:text-6xl lg:text-7xl font-black tracking-tight leading-[0.9]">
-                <span className="text-white">The</span>{" "}
-                <span className="bg-gradient-to-r from-violet-400 via-blue-400 to-cyan-400 bg-clip-text text-transparent">Arc & Circle</span>
-              </h1>
-              <h1 className="text-5xl sm:text-6xl lg:text-7xl font-black tracking-tight leading-[0.9] text-white">
-                AI Hub
-              </h1>
-            </div>
+          {/* Main title */}
+          <div className="text-center mb-4">
+            <h1 className="font-black leading-none" style={{ fontSize: 'clamp(3rem, 10vw, 9rem)', letterSpacing: '-0.02em' }}>
+              <span style={{
+                background: 'linear-gradient(135deg, #fff 0%, #c4b5fd 40%, #818cf8 70%, #60a5fa 100%)',
+                WebkitBackgroundClip: 'text',
+                WebkitTextFillColor: 'transparent',
+                filter: 'drop-shadow(0 0 40px rgba(139,92,246,0.4))',
+              }}>ARC HUB</span>
+            </h1>
+            <div className="text-xs tracking-[0.5em] text-purple-400 mt-2" style={{ letterSpacing: '0.5em' }}>CONNECT · LEARN · INNOVATE</div>
+          </div>
 
-            <p className="text-gray-400 max-w-lg leading-relaxed text-lg">
-              Ask anything about <span className="text-violet-300 font-semibold">Arc Blockchain</span> and <span className="text-blue-300 font-semibold">Circle</span>. Build, learn, solve — powered by AI. Pay <span className="text-white font-bold">$0.001 USDC</span> per question. No subscription.
-            </p>
+          {/* 3-column hub layout */}
+          <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 mt-12 items-start">
 
-            <div className="flex flex-wrap gap-4">
-              <Link href="/chat" className="relative group px-7 py-4 rounded-xl font-semibold text-base overflow-hidden flex items-center gap-2">
-                <div className="absolute inset-0 bg-gradient-to-r from-violet-600 to-blue-600" />
-                <div className="absolute inset-0 bg-gradient-to-r from-violet-600 to-blue-600 blur-lg opacity-40 group-hover:opacity-60 transition-opacity" />
-                <span className="relative">Ask MicroAI</span>
-                <span className="relative">→</span>
-              </Link>
-              <a href="#ecosystem" className="px-7 py-4 rounded-xl font-semibold text-base border border-white/10 hover:border-violet-500/40 hover:bg-violet-500/5 transition-all text-gray-300 hover:text-white">
-                Explore Hub
-              </a>
-            </div>
-
-            <div className="grid grid-cols-3 gap-6 pt-6 border-t border-white/5">
-              {[
-                { val: "$0.001", label: "Per question" },
-                { val: "<3s", label: "Response time" },
-                { val: "100%", label: "On-chain" },
-              ].map((s) => (
-                <div key={s.label}>
-                  <div className="text-2xl font-black bg-gradient-to-r from-violet-400 to-blue-400 bg-clip-text text-transparent">{s.val}</div>
-                  <div className="text-xs text-gray-500 mt-1">{s.label}</div>
+            {/* LEFT — Arc Community */}
+            <div className="space-y-4">
+              <div className="relative p-6 rounded-2xl overflow-hidden" style={{ border: '1px solid rgba(139,92,246,0.3)', background: 'rgba(139,92,246,0.05)', backdropFilter: 'blur(20px)' }}>
+                <div className="absolute top-0 left-0 right-0 h-px" style={{ background: 'linear-gradient(90deg, transparent, #7c3aed, transparent)' }} />
+                <div className="flex items-center gap-3 mb-4">
+                  <div className="w-10 h-10 rounded-xl flex items-center justify-center text-xl" style={{ background: 'rgba(139,92,246,0.2)', border: '1px solid rgba(139,92,246,0.4)' }}>⬡</div>
+                  <div>
+                    <div className="font-black text-sm tracking-widest text-purple-300" style={{ letterSpacing: '0.15em' }}>ARC COMMUNITY</div>
+                    <div className="text-[10px] text-gray-500 tracking-widest">arc.io</div>
+                  </div>
                 </div>
+                <ul className="space-y-2">
+                  {['ERC-8004 AI Agents', 'ERC-8183 Job Settlement', 'Arc App Kit', 'USDC Native Gas', 'Testnet Explorer', 'Arc House'].map(item => (
+                    <li key={item} className="flex items-center gap-2 text-xs text-gray-400">
+                      <span className="text-purple-500 text-xs">◆</span> {item}
+                    </li>
+                  ))}
+                </ul>
+                <Link href="/chat" className="mt-4 block text-center py-2 text-xs font-black tracking-widest transition-all" style={{ border: '1px solid rgba(139,92,246,0.4)', color: '#c4b5fd', letterSpacing: '0.15em' }}>
+                  LEARN ON ARC →
+                </Link>
+              </div>
+
+              {/* Mini cards */}
+              {[
+                { icon: '⚙️', title: 'DEVELOPER TOOLS', desc: 'SDKs · APIs · CLIs' },
+                { icon: '📜', title: 'SMART CONTRACTS', desc: 'Deploy & verify' },
+              ].map(card => (
+                <Link href="/chat" key={card.title} className="flex items-center gap-3 p-4 rounded-xl transition-all hover:border-purple-500/40 group"
+                  style={{ border: '1px solid rgba(255,255,255,0.05)', background: 'rgba(255,255,255,0.02)' }}>
+                  <span className="text-2xl">{card.icon}</span>
+                  <div>
+                    <div className="text-xs font-black tracking-widest text-gray-300 group-hover:text-purple-300 transition-colors" style={{ letterSpacing: '0.1em' }}>{card.title}</div>
+                    <div className="text-[10px] text-gray-600 mt-0.5">{card.desc}</div>
+                  </div>
+                </Link>
+              ))}
+            </div>
+
+            {/* CENTER — Robot/AI Hub */}
+            <div className="flex flex-col items-center gap-6">
+
+              {/* Robot avatar */}
+              <div className="relative w-64 h-64 flex items-center justify-center">
+                {/* Orbital rings */}
+                <div className="absolute inset-0 rounded-full" style={{
+                  border: '1px solid rgba(139,92,246,0.2)',
+                  boxShadow: '0 0 40px rgba(139,92,246,0.1)',
+                  animation: 'spin 20s linear infinite',
+                }} />
+                <div className="absolute inset-4 rounded-full" style={{
+                  border: '1px solid rgba(59,130,246,0.2)',
+                  animation: 'spin 15s linear infinite reverse',
+                }} />
+                <div className="absolute inset-8 rounded-full" style={{
+                  border: '1px solid rgba(139,92,246,0.3)',
+                  animation: 'spin 10s linear infinite',
+                }} />
+
+                {/* Orbiting dot */}
+                <div className="absolute w-3 h-3 rounded-full" style={{
+                  background: '#7c3aed',
+                  boxShadow: '0 0 10px #7c3aed',
+                  top: '50%',
+                  left: '50%',
+                  transform: `translate(calc(-50% + ${Math.cos(orbAngle) * 110}px), calc(-50% + ${Math.sin(orbAngle) * 110}px))`,
+                }} />
+                <div className="absolute w-2 h-2 rounded-full" style={{
+                  background: '#3b82f6',
+                  boxShadow: '0 0 8px #3b82f6',
+                  top: '50%',
+                  left: '50%',
+                  transform: `translate(calc(-50% + ${Math.cos(orbAngle + 2) * 80}px), calc(-50% + ${Math.sin(orbAngle + 2) * 80}px))`,
+                }} />
+
+                {/* Center robot face */}
+                <div className="relative z-10 w-40 h-40 rounded-3xl flex flex-col items-center justify-center" style={{
+                  background: 'linear-gradient(135deg, #0a0020, #120030)',
+                  border: '2px solid rgba(139,92,246,0.6)',
+                  boxShadow: '0 0 60px rgba(139,92,246,0.3), inset 0 0 30px rgba(139,92,246,0.1)',
+                }}>
+                  {/* Eyes */}
+                  <div className="flex gap-4 mb-3">
+                    <div className="w-6 h-6 rounded-full flex items-center justify-center" style={{ background: 'rgba(139,92,246,0.2)', border: '1px solid rgba(139,92,246,0.6)' }}>
+                      <div className="w-3 h-3 rounded-full animate-pulse" style={{ background: '#818cf8', boxShadow: '0 0 8px #7c3aed' }} />
+                    </div>
+                    <div className="w-6 h-6 rounded-full flex items-center justify-center" style={{ background: 'rgba(139,92,246,0.2)', border: '1px solid rgba(139,92,246,0.6)' }}>
+                      <div className="w-3 h-3 rounded-full animate-pulse" style={{ background: '#818cf8', boxShadow: '0 0 8px #7c3aed', animationDelay: '0.3s' }} />
+                    </div>
+                  </div>
+                  {/* Mouth */}
+                  <div className="w-12 h-1 rounded-full" style={{ background: 'linear-gradient(90deg, transparent, #7c3aed, #3b82f6, transparent)' }} />
+                  <div className="mt-3 text-xs font-black tracking-widest text-purple-400" style={{ letterSpacing: '0.2em' }}>MicroAI</div>
+                </div>
+              </div>
+
+              {/* Center title */}
+              <div className="text-center space-y-2">
+                <h2 className="text-2xl font-black tracking-widest" style={{ letterSpacing: '0.2em', color: '#e2e8f0' }}>MicroAI</h2>
+                <p className="text-xs text-gray-400 tracking-wider">Your AI Assistant for the Arc & Circle Community</p>
+                <div className="flex flex-wrap justify-center gap-2 mt-4">
+                  {['AI & TECH', 'GUIDES', 'INSIGHTS', 'TRENDS', 'TUTORIALS', 'BEST PRACTICES'].map(tag => (
+                    <span key={tag} className="px-3 py-1 text-[10px] font-bold tracking-widest" style={{
+                      border: '1px solid rgba(139,92,246,0.3)',
+                      background: 'rgba(139,92,246,0.08)',
+                      color: '#a78bfa',
+                      letterSpacing: '0.15em',
+                    }}>{tag}</span>
+                  ))}
+                </div>
+              </div>
+
+              {/* CTA Button */}
+              <Link href="/chat" className="relative px-10 py-4 font-black text-sm tracking-widest overflow-hidden group w-full text-center"
+                style={{ letterSpacing: '0.2em', border: '2px solid rgba(139,92,246,0.8)', background: 'rgba(139,92,246,0.1)', boxShadow: '0 0 30px rgba(139,92,246,0.2)' }}>
+                <div className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity" style={{ background: 'linear-gradient(135deg, rgba(124,58,237,0.5), rgba(59,130,246,0.5))' }} />
+                <span className="relative" style={{ color: '#e2e8f0' }}>INSTANT ANSWERS →</span>
+              </Link>
+
+              {/* Chat preview mini */}
+              <div className="w-full rounded-xl overflow-hidden" style={{ border: '1px solid rgba(139,92,246,0.2)', background: 'rgba(0,0,0,0.4)', backdropFilter: 'blur(20px)' }}>
+                <div className="flex items-center gap-2 px-4 py-2.5 border-b" style={{ borderColor: 'rgba(139,92,246,0.15)' }}>
+                  <div className="w-5 h-5 rounded-lg flex items-center justify-center text-[10px] font-black" style={{ background: 'linear-gradient(135deg, #7c3aed, #3b82f6)' }}>M</div>
+                  <span className="text-xs text-gray-400 tracking-widest" style={{ letterSpacing: '0.1em' }}>MICROAI ASSISTANT</span>
+                </div>
+                <div className="p-4 space-y-3">
+                  <div className="text-xs text-gray-400 italic">"Hello! How can I assist you with Arc & Circle today?"</div>
+                  <div className="flex gap-2">
+                    <div className="flex-1 px-3 py-2 text-[10px] text-gray-600 rounded-lg" style={{ border: '1px solid rgba(255,255,255,0.05)', background: 'rgba(255,255,255,0.02)' }}>
+                      Ask anything...
+                    </div>
+                    <div className="px-3 py-2 text-[10px] rounded-lg" style={{ background: 'rgba(139,92,246,0.3)', color: '#c4b5fd' }}>→</div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            {/* RIGHT — Circle Community */}
+            <div className="space-y-4">
+              <div className="relative p-6 rounded-2xl overflow-hidden" style={{ border: '1px solid rgba(59,130,246,0.3)', background: 'rgba(59,130,246,0.05)', backdropFilter: 'blur(20px)' }}>
+                <div className="absolute top-0 left-0 right-0 h-px" style={{ background: 'linear-gradient(90deg, transparent, #3b82f6, transparent)' }} />
+                <div className="flex items-center gap-3 mb-4">
+                  <div className="w-10 h-10 rounded-xl flex items-center justify-center text-xl" style={{ background: 'rgba(59,130,246,0.2)', border: '1px solid rgba(59,130,246,0.4)' }}>◎</div>
+                  <div>
+                    <div className="font-black text-sm tracking-widest text-blue-300" style={{ letterSpacing: '0.15em' }}>CIRCLE COMMUNITY</div>
+                    <div className="text-[10px] text-gray-500 tracking-widest">circle.com</div>
+                  </div>
+                </div>
+                <ul className="space-y-2">
+                  {['USDC Stablecoin', 'CCTP Cross-Chain', 'Circle Wallets API', 'Developer Console', 'Circle Contracts', 'Payments & Payouts'].map(item => (
+                    <li key={item} className="flex items-center gap-2 text-xs text-gray-400">
+                      <span className="text-blue-500 text-xs">◆</span> {item}
+                    </li>
+                  ))}
+                </ul>
+                <Link href="/chat" className="mt-4 block text-center py-2 text-xs font-black tracking-widest transition-all" style={{ border: '1px solid rgba(59,130,246,0.4)', color: '#93c5fd', letterSpacing: '0.15em' }}>
+                  LEARN ON CIRCLE →
+                </Link>
+              </div>
+
+              {/* Mini cards */}
+              {[
+                { icon: '🤖', title: 'AI AGENTS', desc: 'ERC-8004 standard' },
+                { icon: '💱', title: 'DEFI & PAYMENTS', desc: 'Swap · Bridge · Pay' },
+              ].map(card => (
+                <Link href="/chat" key={card.title} className="flex items-center gap-3 p-4 rounded-xl transition-all hover:border-blue-500/40 group"
+                  style={{ border: '1px solid rgba(255,255,255,0.05)', background: 'rgba(255,255,255,0.02)' }}>
+                  <span className="text-2xl">{card.icon}</span>
+                  <div>
+                    <div className="text-xs font-black tracking-widest text-gray-300 group-hover:text-blue-300 transition-colors" style={{ letterSpacing: '0.1em' }}>{card.title}</div>
+                    <div className="text-[10px] text-gray-600 mt-0.5">{card.desc}</div>
+                  </div>
+                </Link>
               ))}
             </div>
           </div>
-
-          {/* Chat Preview */}
-          <div className="relative">
-            <div className="absolute inset-0 bg-gradient-to-tr from-violet-600/20 to-blue-600/20 rounded-3xl blur-2xl" />
-            <div className="relative rounded-3xl border border-white/10 bg-[#060318]/90 backdrop-blur-xl overflow-hidden shadow-2xl">
-              <div className="flex items-center justify-between px-5 py-4 border-b border-white/5">
-                <div className="flex gap-2">
-                  <div className="w-3 h-3 rounded-full bg-red-500/80" />
-                  <div className="w-3 h-3 rounded-full bg-yellow-500/80" />
-                  <div className="w-3 h-3 rounded-full bg-emerald-500/80" />
-                </div>
-                <div className="text-xs text-gray-500 font-mono">microai — arc+circle hub</div>
-                <div className="text-xs text-emerald-400 font-medium flex items-center gap-1">
-                  <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse inline-block" />
-                  LIVE
-                </div>
-              </div>
-
-              <div className="p-5 space-y-4">
-                <div className="flex justify-end">
-                  <div className="bg-violet-600/20 border border-violet-500/30 text-violet-200 px-4 py-3 rounded-2xl rounded-tr-sm text-sm max-w-[85%]">
-                    What is Arc Blockchain and how does USDC work on it?
-                  </div>
-                </div>
-                <div className="flex justify-start gap-3">
-                  <div className="w-7 h-7 rounded-lg bg-gradient-to-tr from-violet-600 to-blue-500 flex items-center justify-center text-xs font-bold flex-shrink-0">M</div>
-                  <div className="bg-white/5 border border-white/10 text-gray-300 px-4 py-3 rounded-2xl rounded-tl-sm text-sm max-w-[85%] space-y-2">
-                    <p>Arc is a high-performance L1 blockchain optimized for stablecoin commerce. USDC is Arc's native gas token — every tx fee is paid in USDC via Circle's infrastructure.</p>
-                    <div className="flex items-center gap-2 flex-wrap">
-                      <span className="text-[10px] bg-emerald-500/10 text-emerald-400 border border-emerald-500/20 px-2 py-1 rounded">✓ Verified on-chain</span>
-                      <span className="text-[10px] bg-blue-500/10 text-blue-400 border border-blue-500/20 px-2 py-1 rounded">Arc Testnet</span>
-                    </div>
-                  </div>
-                </div>
-
-                <div className="flex justify-end">
-                  <div className="bg-blue-600/20 border border-blue-500/30 text-blue-200 px-4 py-3 rounded-2xl rounded-tr-sm text-sm max-w-[85%]">
-                    How do I deploy a contract using Circle SDK?
-                  </div>
-                </div>
-                <div className="flex justify-start gap-3">
-                  <div className="w-7 h-7 rounded-lg bg-gradient-to-tr from-violet-600 to-blue-500 flex items-center justify-center text-xs font-bold flex-shrink-0">M</div>
-                  <div className="bg-white/5 border border-white/10 text-gray-300 px-4 py-3 rounded-2xl rounded-tl-sm text-sm max-w-[85%]">
-                    <code className="text-xs text-violet-300 block font-mono bg-black/30 p-2 rounded">npm install @circle-fin/developer-controlled-wallets</code>
-                  </div>
-                </div>
-              </div>
-
-              <div className="px-5 pb-5">
-                <div className="flex gap-2 bg-white/5 border border-white/10 rounded-xl px-4 py-3">
-                  <input disabled placeholder="Connect wallet to ask anything about Arc & Circle..." className="flex-1 bg-transparent text-xs text-gray-500 outline-none cursor-not-allowed" />
-                  <div className="w-7 h-7 rounded-lg bg-violet-600/50 flex items-center justify-center text-xs">→</div>
-                </div>
-                <p className="text-center text-[10px] text-gray-600 mt-2">Cost: 0.001 USDC per question • Powered by Arc Network</p>
-              </div>
-            </div>
-          </div>
         </div>
       </section>
 
-      {/* Ecosystem Section */}
-      <section id="ecosystem" className="relative z-10 py-24 px-6">
-        <div className="max-w-7xl mx-auto">
-          <div className="text-center space-y-3 mb-16">
-            <div className="text-xs font-bold tracking-widest text-violet-400 uppercase">Knowledge Hub</div>
-            <h2 className="text-4xl md:text-5xl font-black">Arc & Circle Ecosystem</h2>
-            <p className="text-gray-400 max-w-xl mx-auto">Everything you need to know about building on Arc and Circle — ask MicroAI anything.</p>
-          </div>
-
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-            {/* Arc Card */}
-            <div className="relative group rounded-3xl border border-violet-500/20 bg-gradient-to-br from-violet-900/20 to-[#060318] p-8 overflow-hidden hover:border-violet-500/40 transition-all">
-              <div className="absolute top-0 right-0 w-64 h-64 bg-violet-600/10 rounded-full blur-3xl group-hover:bg-violet-600/20 transition-all" />
-              <div className="relative space-y-5">
-                <div className="flex items-center gap-3">
-                  <div className="w-12 h-12 rounded-2xl bg-violet-600/20 border border-violet-500/30 flex items-center justify-center text-2xl">⬡</div>
-                  <div>
-                    <h3 className="text-xl font-black text-violet-300">Arc Blockchain</h3>
-                    <p className="text-xs text-gray-500">arc.io</p>
-                  </div>
-                </div>
-                <p className="text-gray-400 text-sm leading-relaxed">High-performance Layer 1 built for stablecoin commerce and the Agentic Economy. Native USDC gas, ERC-8004, ERC-8183 standards.</p>
-                <div className="grid grid-cols-2 gap-2">
-                  {["ERC-8004 AI Agents", "ERC-8183 Job Settlement", "Arc App Kit", "USDC Native Gas", "Arc House Community", "Testnet Explorer"].map((item) => (
-                    <div key={item} className="flex items-center gap-2 text-xs text-gray-400">
-                      <span className="text-violet-400">▸</span> {item}
-                    </div>
-                  ))}
-                </div>
-                <Link href="/chat" className="inline-flex items-center gap-2 text-sm text-violet-400 hover:text-violet-300 font-medium transition-colors">
-                  Ask about Arc →
-                </Link>
-              </div>
-            </div>
-
-            {/* Circle Card */}
-            <div className="relative group rounded-3xl border border-blue-500/20 bg-gradient-to-br from-blue-900/20 to-[#060318] p-8 overflow-hidden hover:border-blue-500/40 transition-all">
-              <div className="absolute top-0 right-0 w-64 h-64 bg-blue-600/10 rounded-full blur-3xl group-hover:bg-blue-600/20 transition-all" />
-              <div className="relative space-y-5">
-                <div className="flex items-center gap-3">
-                  <div className="w-12 h-12 rounded-2xl bg-blue-600/20 border border-blue-500/30 flex items-center justify-center text-2xl">◎</div>
-                  <div>
-                    <h3 className="text-xl font-black text-blue-300">Circle</h3>
-                    <p className="text-xs text-gray-500">circle.com</p>
-                  </div>
-                </div>
-                <p className="text-gray-400 text-sm leading-relaxed">The issuer of USDC — the world's leading regulated digital dollar. APIs, wallets, CCTP cross-chain transfers, and developer tools.</p>
-                <div className="grid grid-cols-2 gap-2">
-                  {["USDC Stablecoin", "CCTP Cross-Chain", "Circle Wallets API", "Developer Console", "Circle Contracts", "Payments & Payouts"].map((item) => (
-                    <div key={item} className="flex items-center gap-2 text-xs text-gray-400">
-                      <span className="text-blue-400">▸</span> {item}
-                    </div>
-                  ))}
-                </div>
-                <Link href="/chat" className="inline-flex items-center gap-2 text-sm text-blue-400 hover:text-blue-300 font-medium transition-colors">
-                  Ask about Circle →
-                </Link>
-              </div>
-            </div>
-          </div>
-
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mt-6">
-            {[
-              { icon: "⚙️", title: "Developer Tools", desc: "SDKs, APIs, CLIs" },
-              { icon: "📜", title: "Smart Contracts", desc: "Deploy & audit" },
-              { icon: "🤖", title: "AI Agents", desc: "ERC-8004 standard" },
-              { icon: "💱", title: "DeFi & Payments", desc: "Swap, bridge, pay" },
-            ].map((card) => (
-              <Link href="/chat" key={card.title} className="rounded-2xl border border-white/5 bg-white/2 p-5 hover:border-white/10 hover:bg-white/5 transition-all">
-                <div className="text-2xl mb-3">{card.icon}</div>
-                <h4 className="font-bold text-sm text-white">{card.title}</h4>
-                <p className="text-xs text-gray-500 mt-1">{card.desc}</p>
-              </Link>
-            ))}
-          </div>
+      {/* Bottom nav bar like image */}
+      <div className="relative z-10 border-t py-4 px-6" style={{ borderColor: 'rgba(139,92,246,0.2)', background: 'rgba(3,0,15,0.9)', backdropFilter: 'blur(20px)' }}>
+        <div className="max-w-7xl mx-auto flex justify-center gap-12">
+          {[
+            { icon: '👥', label: 'Community' },
+            { icon: '📚', label: 'Knowledge' },
+            { icon: '🛠️', label: 'Support' },
+            { icon: '💡', label: 'Innovation' },
+            { icon: '📈', label: 'Progress' },
+          ].map(item => (
+            <Link href="/chat" key={item.label} className="flex flex-col items-center gap-1 group">
+              <span className="text-xl group-hover:scale-110 transition-transform">{item.icon}</span>
+              <span className="text-[10px] text-gray-500 group-hover:text-purple-400 transition-colors tracking-widest" style={{ letterSpacing: '0.15em' }}>{item.label}</span>
+            </Link>
+          ))}
         </div>
-      </section>
+      </div>
 
-      {/* Live Stats */}
+      {/* Stats */}
       <section id="stats" className="relative z-10 py-20 px-6 max-w-7xl mx-auto">
-        <div className="text-center space-y-2 mb-12">
-          <div className="text-xs font-bold tracking-widest text-violet-400 uppercase">Live Metrics</div>
-          <h2 className="text-3xl md:text-4xl font-black">Real Usage. Real Transactions.</h2>
+        <div className="text-center mb-12">
+          <div className="text-xs tracking-widest text-purple-400 mb-2" style={{ letterSpacing: '0.3em' }}>LIVE METRICS</div>
+          <h2 className="text-3xl font-black tracking-widest" style={{ letterSpacing: '0.1em' }}>REAL-TIME Q&A STATS</h2>
         </div>
         <Stats />
       </section>
 
       {/* Features */}
       <section id="features" className="relative z-10 py-20 px-6 max-w-7xl mx-auto">
-        <div className="text-center space-y-3 mb-16">
-          <div className="text-xs font-bold tracking-widest text-violet-400 uppercase">Why MicroAI</div>
-          <h2 className="text-4xl font-black">Your Arc & Circle Command Center</h2>
+        <div className="text-center mb-16">
+          <div className="text-xs tracking-widest text-purple-400 mb-2" style={{ letterSpacing: '0.3em' }}>CAPABILITIES</div>
+          <h2 className="text-3xl font-black tracking-widest" style={{ letterSpacing: '0.1em' }}>WHY MICROAI HUB</h2>
         </div>
-
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5">
           {[
-            { icon: "🧠", title: "Arc & Circle Expert", desc: "Deep knowledge of Arc docs, Circle APIs, USDC mechanics, ERC standards, and the full ecosystem.", border: "border-violet-500/20", grad: "from-violet-500/10 to-violet-500/5" },
-            { icon: "⚡", title: "Instant Settlement", desc: "Every $0.001 USDC payment settles on Arc Testnet in seconds. No waiting, no intermediaries.", border: "border-blue-500/20", grad: "from-blue-500/10 to-blue-500/5" },
-            { icon: "🔍", title: "Smart Answers", desc: "Code examples, deployment guides, API references, and troubleshooting for Arc and Circle.", border: "border-cyan-500/20", grad: "from-cyan-500/10 to-cyan-500/5" },
-            { icon: "🌐", title: "Any Web3 Wallet", desc: "Connect MetaMask or any EVM wallet on Arc Testnet. No account or sign-up required.", border: "border-emerald-500/20", grad: "from-emerald-500/10 to-emerald-500/5" },
-            { icon: "📊", title: "On-Chain Proof", desc: "Every transaction is fully verifiable on testnet.arcscan.app. 100% transparent.", border: "border-pink-500/20", grad: "from-pink-500/10 to-pink-500/5" },
-            { icon: "🏗️", title: "Builder First", desc: "From your first contract to a full dApp — MicroAI guides you through the Arc ecosystem.", border: "border-yellow-500/20", grad: "from-yellow-500/10 to-yellow-500/5" },
-          ].map((f) => (
-            <div key={f.title} className={`rounded-2xl border ${f.border} bg-gradient-to-br ${f.grad} p-6 space-y-3 hover:scale-[1.02] transition-transform`}>
+            { icon: '🧠', title: 'ARC & CIRCLE EXPERT', desc: 'Deep knowledge of Arc docs, Circle APIs, USDC mechanics, ERC-8004, ERC-8183 and the full ecosystem.', color: 'rgba(139,92,246,0.3)' },
+            { icon: '⚡', title: 'INSTANT SETTLEMENT', desc: 'Every $0.001 USDC payment settles on Arc in seconds. No intermediaries, fully on-chain.', color: 'rgba(59,130,246,0.3)' },
+            { icon: '🔍', title: 'SMART ANSWERS', desc: 'Code examples, deployment guides, API references and troubleshooting for Arc & Circle.', color: 'rgba(6,182,212,0.3)' },
+            { icon: '🌐', title: 'ANY WEB3 WALLET', desc: 'Connect MetaMask or any EVM wallet on Arc Testnet. No account or sign-up required.', color: 'rgba(34,197,94,0.3)' },
+            { icon: '📊', title: 'ON-CHAIN PROOF', desc: 'Every transaction is fully verifiable on testnet.arcscan.app. 100% transparent.', color: 'rgba(236,72,153,0.3)' },
+            { icon: '🏗️', title: 'BUILDER FIRST', desc: 'From deploying your first contract to launching a full dApp — MicroAI guides you.', color: 'rgba(245,158,11,0.3)' },
+          ].map(f => (
+            <div key={f.title} className="p-6 rounded-2xl space-y-3 hover:scale-[1.02] transition-transform group"
+              style={{ border: `1px solid ${f.color}`, background: `${f.color.replace('0.3', '0.05')}` }}>
               <div className="text-3xl">{f.icon}</div>
-              <h3 className="font-bold text-base">{f.title}</h3>
-              <p className="text-gray-400 text-sm leading-relaxed">{f.desc}</p>
+              <div className="font-black text-sm tracking-widest" style={{ letterSpacing: '0.1em' }}>{f.title}</div>
+              <p className="text-gray-400 text-xs leading-relaxed">{f.desc}</p>
             </div>
           ))}
         </div>
       </section>
 
       {/* How it works */}
-      <section id="how" className="relative z-10 py-20 px-6 max-w-7xl mx-auto">
-        <div className="text-center space-y-3 mb-16">
-          <div className="text-xs font-bold tracking-widest text-violet-400 uppercase">Workflow</div>
-          <h2 className="text-4xl font-black">Four steps. Instant answers.</h2>
+      <section id="how-it-works" className="relative z-10 py-20 px-6 max-w-7xl mx-auto">
+        <div className="text-center mb-16">
+          <div className="text-xs tracking-widest text-purple-400 mb-2" style={{ letterSpacing: '0.3em' }}>WORKFLOW</div>
+          <h2 className="text-3xl font-black tracking-widest" style={{ letterSpacing: '0.1em' }}>FOUR STEPS. INSTANT ANSWERS.</h2>
         </div>
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 max-w-5xl mx-auto">
           {[
-            { n: "01", title: "Connect Wallet", desc: "Connect any EVM wallet on Arc Testnet." },
-            { n: "02", title: "Ask Anything", desc: "Ask about Arc, Circle, USDC, contracts, APIs — anything." },
-            { n: "03", title: "Pay $0.001 USDC", desc: "Approve a tiny USDC payment on Arc. Instant, secure." },
-            { n: "04", title: "Get Answer", desc: "AI responds instantly. TX proof saved on Arc blockchain." },
-          ].map((step) => (
+            { n: '01', title: 'CONNECT WALLET', desc: 'Connect any EVM wallet on Arc Testnet.' },
+            { n: '02', title: 'ASK ANYTHING', desc: 'Ask about Arc, Circle, USDC, contracts, APIs.' },
+            { n: '03', title: 'PAY $0.001 USDC', desc: 'Approve a tiny USDC payment. Instant, secure.' },
+            { n: '04', title: 'GET ANSWER', desc: 'AI responds. TX proof saved on Arc blockchain.' },
+          ].map(step => (
             <div key={step.n} className="space-y-3">
-              <div className="w-10 h-10 rounded-xl bg-gradient-to-tr from-violet-600 to-blue-600 flex items-center justify-center text-xs font-black">{step.n}</div>
-              <h4 className="font-bold text-base">{step.title}</h4>
-              <p className="text-gray-400 text-sm leading-relaxed">{step.desc}</p>
+              <div className="w-12 h-12 rounded-xl flex items-center justify-center font-black text-sm" style={{
+                background: 'linear-gradient(135deg, rgba(124,58,237,0.3), rgba(59,130,246,0.3))',
+                border: '1px solid rgba(139,92,246,0.4)',
+                letterSpacing: '0.1em',
+              }}>{step.n}</div>
+              <div className="font-black text-xs tracking-widest" style={{ letterSpacing: '0.15em' }}>{step.title}</div>
+              <p className="text-gray-400 text-xs leading-relaxed">{step.desc}</p>
             </div>
           ))}
         </div>
         <div className="text-center mt-12">
-          <Link href="/chat" className="inline-flex items-center gap-2 bg-gradient-to-r from-violet-600 to-blue-600 hover:opacity-90 px-8 py-4 rounded-xl font-bold text-base transition-all">
-            Try MicroAI Now →
+          <Link href="/chat" className="inline-flex items-center gap-3 px-10 py-4 font-black text-sm tracking-widest"
+            style={{ letterSpacing: '0.2em', border: '2px solid rgba(139,92,246,0.6)', background: 'rgba(139,92,246,0.1)', boxShadow: '0 0 30px rgba(139,92,246,0.2)', color: '#e2e8f0' }}>
+            TRY MICROAI NOW →
           </Link>
         </div>
       </section>
 
       {/* Pricing */}
       <section id="pricing" className="relative z-10 py-20 px-6 text-center">
-        <div className="max-w-md mx-auto space-y-8">
-          <div className="space-y-2">
-            <div className="text-xs font-bold tracking-widest text-violet-400 uppercase">Pricing</div>
-            <h2 className="text-4xl font-black">Simple. Fair. On-chain.</h2>
-            <p className="text-gray-400 text-sm">No plans. No tiers. Just pay per question.</p>
+        <div className="max-w-sm mx-auto space-y-8">
+          <div>
+            <div className="text-xs tracking-widest text-purple-400 mb-2" style={{ letterSpacing: '0.3em' }}>PRICING</div>
+            <h2 className="text-3xl font-black tracking-widest" style={{ letterSpacing: '0.1em' }}>SIMPLE. FAIR. ON-CHAIN.</h2>
           </div>
-          <div className="relative rounded-3xl overflow-hidden">
-            <div className="absolute inset-0 bg-gradient-to-b from-violet-900/30 to-blue-900/20" />
-            <div className="absolute inset-0 border border-violet-500/20 rounded-3xl" />
-            <div className="relative p-8 space-y-6">
-              <div>
-                <div className="text-6xl font-black bg-gradient-to-r from-violet-400 to-blue-400 bg-clip-text text-transparent">$0.001</div>
-                <div className="text-xs text-gray-400 mt-1 font-medium tracking-wider">USDC per AI response</div>
-              </div>
-              <hr className="border-white/10" />
-              <ul className="text-left space-y-3 text-sm text-gray-300">
-                {["No monthly fees", "No account required", "Instant settlement on Arc", "On-chain TX proof", "Any ERC-20 wallet", "Arc & Circle expert AI"].map((item) => (
-                  <li key={item} className="flex items-center gap-3">
-                    <span className="text-emerald-400 text-base">✓</span> {item}
-                  </li>
-                ))}
-              </ul>
-              <Link href="/chat" className="block w-full bg-gradient-to-r from-violet-600 to-blue-600 hover:opacity-90 py-4 rounded-xl font-bold transition-all">
-                Start for free →
-              </Link>
+          <div className="relative rounded-2xl overflow-hidden p-8 space-y-6" style={{
+            border: '1px solid rgba(139,92,246,0.4)',
+            background: 'linear-gradient(135deg, rgba(124,58,237,0.1), rgba(59,130,246,0.05))',
+            boxShadow: '0 0 60px rgba(139,92,246,0.1)',
+          }}>
+            <div className="absolute top-0 left-0 right-0 h-px" style={{ background: 'linear-gradient(90deg, transparent, #7c3aed, #3b82f6, transparent)' }} />
+            <div>
+              <div className="text-6xl font-black" style={{
+                background: 'linear-gradient(135deg, #c4b5fd, #93c5fd)',
+                WebkitBackgroundClip: 'text',
+                WebkitTextFillColor: 'transparent',
+              }}>$0.001</div>
+              <div className="text-xs text-gray-400 mt-2 tracking-widest" style={{ letterSpacing: '0.2em' }}>USDC PER AI RESPONSE</div>
             </div>
+            <hr style={{ borderColor: 'rgba(255,255,255,0.05)' }} />
+            <ul className="text-left space-y-3">
+              {['No monthly fees', 'No account required', 'Instant settlement on Arc', 'On-chain TX proof', 'Any ERC-20 wallet', 'Arc & Circle expert AI'].map(item => (
+                <li key={item} className="flex items-center gap-3 text-xs text-gray-300">
+                  <span className="text-emerald-400">✓</span> {item}
+                </li>
+              ))}
+            </ul>
+            <Link href="/chat" className="block w-full py-4 font-black text-xs tracking-widest text-center"
+              style={{ background: 'linear-gradient(135deg, #7c3aed, #3b82f6)', letterSpacing: '0.2em', boxShadow: '0 0 20px rgba(139,92,246,0.4)' }}>
+              START FOR FREE →
+            </Link>
           </div>
-        </div>
-      </section>
-
-      {/* CTA */}
-      <section className="relative z-10 py-24 px-6 text-center">
-        <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
-          <div className="w-[500px] h-[200px] bg-violet-600/10 rounded-full blur-3xl" />
-        </div>
-        <div className="relative max-w-3xl mx-auto space-y-6">
-          <h2 className="text-4xl sm:text-5xl font-black">Your Arc & Circle questions.<br /><span className="bg-gradient-to-r from-violet-400 to-blue-400 bg-clip-text text-transparent">Answered instantly.</span></h2>
-          <p className="text-gray-400 max-w-md mx-auto">Connect your wallet and ask your first question for just $0.001 USDC</p>
-          <Link href="/chat" className="inline-flex items-center gap-2 bg-gradient-to-r from-violet-600 to-blue-600 hover:opacity-90 px-10 py-5 rounded-xl font-bold text-lg transition-all">
-            Launch MicroAI →
-          </Link>
         </div>
       </section>
 
       {/* Footer */}
-      <footer className="relative z-10 border-t border-white/5 bg-[#020010] px-6 py-12">
+      <footer className="relative z-10 border-t px-6 py-10" style={{ borderColor: 'rgba(139,92,246,0.15)', background: 'rgba(3,0,15,0.95)' }}>
         <div className="max-w-6xl mx-auto flex flex-col sm:flex-row justify-between items-center gap-4">
-          <div className="flex items-center gap-2">
-            <div className="w-7 h-7 bg-gradient-to-tr from-violet-600 to-blue-500 rounded-lg flex items-center justify-center text-xs font-black">M</div>
-            <span className="text-sm text-gray-500">MicroAI — Arc & Circle Hub</span>
+          <div className="flex items-center gap-3">
+            <div className="w-8 h-8 rounded-xl flex items-center justify-center font-black text-xs" style={{ background: 'linear-gradient(135deg, #7c3aed, #3b82f6)' }}>M</div>
+            <div>
+              <div className="text-sm font-black tracking-widest" style={{ letterSpacing: '0.15em' }}>MICROAI</div>
+              <div className="text-[9px] text-purple-400 tracking-widest" style={{ letterSpacing: '0.3em' }}>BUILT ON ARC · POWERED BY USDC</div>
+            </div>
           </div>
-          <div className="flex gap-6 text-sm text-gray-500">
-            <a href="https://arc.io" target="_blank" rel="noopener noreferrer" className="hover:text-violet-400 transition-colors">Arc</a>
-            <a href="https://circle.com" target="_blank" rel="noopener noreferrer" className="hover:text-blue-400 transition-colors">Circle</a>
-            <a href="https://github.com/sahmedonchain/microai" target="_blank" rel="noopener noreferrer" className="hover:text-white transition-colors">GitHub</a>
-            <a href="https://testnet.arcscan.app" target="_blank" rel="noopener noreferrer" className="hover:text-white transition-colors">Explorer</a>
-            <Link href="/chat" className="hover:text-white transition-colors">Launch App</Link>
+          <div className="flex gap-6 text-xs text-gray-500 tracking-widest" style={{ letterSpacing: '0.1em' }}>
+            {[
+              { label: 'ARC', href: 'https://arc.io' },
+              { label: 'CIRCLE', href: 'https://circle.com' },
+              { label: 'GITHUB', href: 'https://github.com/sahmedonchain/microai' },
+              { label: 'EXPLORER', href: 'https://testnet.arcscan.app' },
+            ].map(link => (
+              <a key={link.label} href={link.href} target="_blank" rel="noopener noreferrer" className="hover:text-purple-400 transition-colors">{link.label}</a>
+            ))}
+            <Link href="/chat" className="hover:text-white transition-colors">LAUNCH APP</Link>
           </div>
         </div>
       </footer>
 
+      <style>{`
+        @keyframes spin {
+          from { transform: rotate(0deg); }
+          to { transform: rotate(360deg); }
+        }
+        @import url('https://fonts.googleapis.com/css2?family=Rajdhani:wght@400;500;600;700&family=Orbitron:wght@400;700;900&display=swap');
+      `}</style>
     </div>
   );
 }
