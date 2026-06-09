@@ -125,7 +125,7 @@ export default function Home() {
           </div>
 
           <div className="hidden md:flex items-center gap-8 text-xs tracking-widest text-gray-400" style={{ letterSpacing: '0.15em' }}>
-            {['ECOSYSTEM', 'FEATURES', 'HOW IT WORKS', 'PRICING'].map(item => (
+            {['FEATURES', 'HOW IT WORKS', 'PRICING'].map(item => (
               <a key={item} href={`#${item.toLowerCase().replace(/ /g, '-')}`}
                 className="hover:text-purple-300 transition-colors relative group">
                 {item}
