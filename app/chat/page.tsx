@@ -206,7 +206,7 @@ export default function Chat() {
               <div className="w-14 h-14 rounded-2xl bg-gradient-to-br from-emerald-400 to-emerald-600 flex items-center justify-center font-black text-xl text-black shadow-[0_0_30px_rgba(16,185,129,0.3)] mb-6">M</div>
 
               <h2 className="text-xl md:text-2xl font-black text-white tracking-wide mb-2">The ultimate hub for Arc and Circle</h2>
-              <p className="text-xs text-slate-400 max-w-sm leading-relaxed mb-1">Ask anything on Arc & Circle. Settled on-chain for 0.001 USDC per query</p>
+              <p className="text-xs text-slate-400 max-w-sm leading-relaxed mb-1">Ask Arc & Circle. 0.001 USDC per query</p>
 
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 w-full max-w-lg">
                 {SUGGESTIONS.map((s, i) => (
