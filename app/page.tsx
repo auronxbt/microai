@@ -1,11 +1,11 @@
 "use client";
 import React, { useEffect, useRef, useState } from 'react';
 import Link from 'next/link';
-import Stats from "./components/Stats";
 
 export default function Home() {
   const [mousePos, setMousePos] = useState({ x: 0, y: 0 });
-  const [tick, setTick] = useState(0);
+  const [chatInput, setChatInput] = useState('');
+  const [chatResponse, setChatResponse] = useState('Ask me anything about Arc Chain deployment or Circle USDC integrations...');
   const canvasRef = useRef<HTMLCanvasElement>(null);
 
   useEffect(() => {
@@ -14,12 +14,7 @@ export default function Home() {
     return () => window.removeEventListener('mousemove', handleMouse);
   }, []);
 
-  useEffect(() => {
-    const id = setInterval(() => setTick(t => t + 1), 50);
-    return () => clearInterval(id);
-  }, []);
-
-  // Particle canvas
+  // Cryptix Animated Dynamic Grid Mesh
   useEffect(() => {
     const canvas = canvasRef.current;
     if (!canvas) return;
@@ -29,14 +24,14 @@ export default function Home() {
     canvas.height = window.innerHeight;
 
     const particles: { x: number; y: number; vx: number; vy: number; size: number; opacity: number }[] = [];
-    for (let i = 0; i < 80; i++) {
+    for (let i = 0; i < 65; i++) {
       particles.push({
         x: Math.random() * canvas.width,
         y: Math.random() * canvas.height,
-        vx: (Math.random() - 0.5) * 0.3,
-        vy: (Math.random() - 0.5) * 0.3,
+        vx: (Math.random() - 0.5) * 0.2,
+        vy: (Math.random() - 0.5) * 0.2,
         size: Math.random() * 1.5 + 0.5,
-        opacity: Math.random() * 0.5 + 0.1,
+        opacity: Math.random() * 0.25 + 0.1,
       });
     }
 
@@ -52,20 +47,20 @@ export default function Home() {
         if (p.y > canvas.height) p.y = 0;
         ctx.beginPath();
         ctx.arc(p.x, p.y, p.size, 0, Math.PI * 2);
-        ctx.fillStyle = `rgba(139, 92, 246, ${p.opacity})`;
+        ctx.fillStyle = `rgba(16, 185, 129, ${p.opacity})`;
         ctx.fill();
       });
-      // draw lines between close particles
+      
       for (let i = 0; i < particles.length; i++) {
         for (let j = i + 1; j < particles.length; j++) {
           const dx = particles[i].x - particles[j].x;
           const dy = particles[i].y - particles[j].y;
           const dist = Math.sqrt(dx * dx + dy * dy);
-          if (dist < 100) {
+          if (dist < 140) {
             ctx.beginPath();
             ctx.moveTo(particles[i].x, particles[i].y);
             ctx.lineTo(particles[j].x, particles[j].y);
-            ctx.strokeStyle = `rgba(139, 92, 246, ${0.1 * (1 - dist / 100)})`;
+            ctx.strokeStyle = `rgba(16, 185, 129, ${0.05 * (1 - dist / 140)})`;
             ctx.lineWidth = 0.5;
             ctx.stroke();
           }
@@ -77,429 +72,301 @@ export default function Home() {
     return () => cancelAnimationFrame(animId);
   }, []);
 
-  const orbAngle = (tick * 0.02) % (Math.PI * 2);
+  const handlePresetQuery = (query: string, response: string) => {
+    setChatInput(query);
+    setChatResponse(response);
+  };
 
   return (
-    <div className="min-h-screen bg-[#03000f] text-white overflow-x-hidden" style={{ fontFamily: "'Rajdhani', 'Orbitron', monospace" }}>
+    <div className="min-h-screen bg-[#010503] text-[#e2e8f0] overflow-x-hidden relative" style={{ fontFamily: "'Plus Jakarta Sans', sans-serif" }}>
+      
+      {/* Background Interactive Mesh */}
+      <canvas ref={canvasRef} className="fixed inset-0 z-0 pointer-events-none opacity-40" />
 
-      {/* Particle canvas */}
-      <canvas ref={canvasRef} className="fixed inset-0 z-0 pointer-events-none opacity-60" />
-
-      {/* Background glows */}
+      {/* Ambient Lighting & Cyber Overlay Grid */}
       <div className="fixed inset-0 z-0 pointer-events-none">
-        <div className="absolute inset-0" style={{ background: 'radial-gradient(ellipse 80% 50% at 50% -10%, #1a0050 0%, transparent 70%)' }} />
-        <div className="absolute bottom-0 left-0 right-0 h-1/2" style={{ background: 'radial-gradient(ellipse 100% 60% at 50% 100%, #000830 0%, transparent 70%)' }} />
-        {/* Mouse glow */}
-        <div className="absolute w-96 h-96 rounded-full pointer-events-none transition-all duration-500"
+        <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[85%] h-[60%] rounded-full bg-emerald-500/[0.06] blur-[140px]" />
+        <div className="absolute top-1/3 left-1/4 w-[500px] h-[500px] rounded-full bg-emerald-600/[0.02] blur-[120px]" />
+        
+        {/* Mouse Light Aura */}
+        <div className="absolute w-[600px] h-[600px] rounded-full pointer-events-none transition-all duration-300 mix-blend-screen opacity-40"
           style={{
-            background: 'radial-gradient(circle, rgba(124,58,237,0.15), transparent 70%)',
-            left: mousePos.x - 192,
-            top: mousePos.y - 192,
+            background: 'radial-gradient(circle, rgba(16, 185, 129, 0.08), transparent 70%)',
+            left: mousePos.x - 300,
+            top: mousePos.y - 300,
           }} />
-        {/* Grid */}
-        <div className="absolute inset-0" style={{
-          backgroundImage: `linear-gradient(rgba(139,92,246,0.04) 1px, transparent 1px), linear-gradient(90deg, rgba(139,92,246,0.04) 1px, transparent 1px)`,
-          backgroundSize: '50px 50px',
-        }} />
-        {/* Scanlines */}
-        <div className="absolute inset-0 opacity-[0.015]" style={{
-          backgroundImage: 'repeating-linear-gradient(0deg, transparent, transparent 2px, rgba(255,255,255,1) 2px, rgba(255,255,255,1) 4px)',
+
+        {/* FIXED: Tailwind string background pattern template literal wrapper */}
+        <div className="absolute inset-0 opacity-[0.012]" style={{
+          backgroundImage: "linear-gradient(rgba(16,185,129,0.2) 1px, transparent 1px), linear-gradient(90deg, rgba(16,185,129,0.2) 1px, transparent 1px)",
+          backgroundSize: "55px 55px",
         }} />
       </div>
 
-      {/* Navbar */}
-      <nav className="fixed top-0 left-0 right-0 z-50 px-6 py-4" style={{ background: 'linear-gradient(180deg, rgba(3,0,15,0.95) 0%, transparent 100%)', backdropFilter: 'blur(20px)' }}>
-        <div className="max-w-7xl mx-auto flex items-center justify-between">
-          <div className="flex items-center gap-3">
-            {/* Logo */}
-            <div className="relative w-10 h-10 flex items-center justify-center">
-              <div className="absolute inset-0 rounded-xl" style={{ background: 'linear-gradient(135deg, #7c3aed, #3b82f6)', boxShadow: '0 0 20px rgba(124,58,237,0.6)' }} />
-              <span className="relative font-black text-base">M</span>
-            </div>
-            <div>
-              <div className="text-lg font-black tracking-widest" style={{ letterSpacing: '0.15em' }}>
-                MICRO<span style={{ color: '#818cf8' }}>AI</span>
-              </div>
-              <div className="text-[8px] text-purple-400 tracking-[0.3em] -mt-1">ARC · CIRCLE HUB</div>
-            </div>
+      {/* NAVIGATION BAR */}
+      <nav className="fixed top-4 left-1/2 -translate-x-1/2 z-50 w-[94%] max-w-7xl px-6 py-3 bg-[#03120a]/50 backdrop-blur-xl border border-emerald-500/10 rounded-2xl shadow-[0_10px_35px_rgba(0,0,0,0.5)] flex items-center justify-between">
+        <div className="flex items-center gap-3">
+          <div className="w-8 h-8 rounded-xl bg-gradient-to-br from-emerald-400 to-emerald-600 flex items-center justify-center font-black text-xs text-black shadow-[0_0_15px_rgba(16,185,129,0.3)]">
+            M
           </div>
-
-          <div className="hidden md:flex items-center gap-8 text-xs tracking-widest text-gray-400" style={{ letterSpacing: '0.15em' }}>
-            {['FEATURES', 'HOW IT WORKS', 'PRICING'].map(item => (
-              <a key={item} href={`#${item.toLowerCase().replace(/ /g, '-')}`}
-                className="hover:text-purple-300 transition-colors relative group">
-                {item}
-                <span className="absolute -bottom-1 left-0 w-0 h-px bg-purple-400 group-hover:w-full transition-all duration-300" />
-              </a>
-            ))}
+          <div>
+            <div className="text-sm font-bold tracking-wider text-white">
+              MICRO<span className="text-emerald-400 font-extrabold">AI</span>
+            </div>
+            <div className="text-[7px] text-emerald-500/60 tracking-[0.25em] font-mono -mt-0.5">THE KNOWLEDGE HUB</div>
           </div>
-
-          <Link href="/chat" className="relative px-6 py-2.5 text-xs font-black tracking-widest overflow-hidden group"
-            style={{ letterSpacing: '0.15em', border: '1px solid rgba(139,92,246,0.5)', background: 'rgba(139,92,246,0.1)' }}>
-            <div className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity" style={{ background: 'linear-gradient(135deg, rgba(124,58,237,0.4), rgba(59,130,246,0.4))' }} />
-            <span className="relative" style={{ color: '#c4b5fd' }}>LAUNCH APP →</span>
-          </Link>
         </div>
+
+        <div className="hidden md:flex items-center bg-[#010805]/90 border border-emerald-950/80 rounded-full px-6 py-1.5 gap-8 text-[10px] font-bold tracking-widest text-gray-400">
+          <a href="#hub-sectors" className="hover:text-emerald-400 transition-colors">ECOSYSTEM HUB</a>
+          <a href="#features" className="hover:text-emerald-400 transition-colors">AI CAPABILITIES</a>
+          <a href="#how-it-works" className="hover:text-emerald-400 transition-colors">HOW IT WORKS</a>
+          <a href="#pricing" className="hover:text-emerald-400 transition-colors">MICRO-PAYMENTS</a>
+        </div>
+
+        <Link href="/chat" className="px-5 py-1.5 text-[11px] font-bold tracking-wider rounded-xl bg-emerald-500/10 border border-emerald-400/20 text-emerald-400 hover:bg-gradient-to-r hover:from-emerald-400 hover:to-emerald-500 hover:text-black transition-all duration-300">
+          LAUNCH ENGINE →
+        </Link>
       </nav>
 
-      {/* HERO */}
-      <section className="relative z-10 min-h-screen flex items-center justify-center px-6 pt-20">
-        <div className="max-w-7xl mx-auto w-full">
+      {/* HERO SECTION */}
+      <header className="relative z-10 pt-36 pb-16 px-6 max-w-7xl mx-auto w-full text-center">
+        <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full border border-emerald-500/15 bg-[#03110a]/60 text-[9px] font-bold text-emerald-400 tracking-widest mb-6 shadow-[0_0_15px_rgba(16,185,129,0.05)]">
+          <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse shadow-[0_0_8px_#10b981]" />
+          UNIVERSAL KNOWLEDGE LAYER FOR ARC & CIRCLE WEBSITES LIVE
+        </div>
 
-          {/* Top badge */}
-          <div className="flex justify-center mb-8">
-            <div className="flex items-center gap-2 px-4 py-2 text-xs tracking-widest" style={{ border: '1px solid rgba(34,197,94,0.4)', background: 'rgba(34,197,94,0.05)', color: '#86efac', letterSpacing: '0.2em' }}>
-              <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse" />
-              LIVE ON ARC TESTNET · USDC PAYMENTS ACTIVE
-            </div>
-          </div>
+        <h1 className="text-4xl sm:text-6xl md:text-8xl font-black tracking-tight leading-[1.05] max-w-5xl mx-auto text-transparent bg-clip-text bg-gradient-to-b from-white via-slate-200 to-slate-400/40">
+          The Crypto Hub for All Arc & Circle Intel
+        </h1>
+        
+        <p className="text-sm sm:text-base text-slate-400 max-w-2xl mx-auto mt-6 font-medium leading-relaxed">
+          One unified AI engine built to ingest, organize, and solve every single inquiry across Arc Chain mechanics and Circle infrastructure instantly.
+        </p>
+      </header>
 
-          {/* Main title */}
-          <div className="text-center mb-4">
-            <h1 className="font-black leading-none" style={{ fontSize: 'clamp(3rem, 10vw, 9rem)', letterSpacing: '-0.02em' }}>
-              <span style={{
-                background: 'linear-gradient(135deg, #fff 0%, #c4b5fd 40%, #818cf8 70%, #60a5fa 100%)',
-                WebkitBackgroundClip: 'text',
-                WebkitTextFillColor: 'transparent',
-                filter: 'drop-shadow(0 0 40px rgba(139,92,246,0.4))',
-              }}>ARC HUB</span>
-            </h1>
-            <div className="text-xs tracking-[0.5em] text-purple-400 mt-2" style={{ letterSpacing: '0.5em' }}>CONNECT · LEARN · INNOVATE</div>
-          </div>
+      {/* CORE HUB INTERACTION (CENTRAL HERO WIDGET) */}
+      <section className="relative z-10 max-w-5xl mx-auto px-6 mb-24">
+        <div className="bg-[#03130b]/20 backdrop-blur-2xl border border-emerald-500/15 rounded-3xl p-6 sm:p-8 shadow-[0_20px_50px_rgba(0,0,0,0.5)] relative overflow-hidden">
+          <div className="absolute top-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-emerald-400/30 to-transparent" />
+          
+          <div className="grid grid-cols-1 md:grid-cols-12 gap-6 items-center">
+            
+            {/* Simulation Interface Information */}
+            <div className="md:col-span-5 space-y-4">
+              <div className="text-[10px] font-mono font-bold text-emerald-400 tracking-widest uppercase">🧠 AI Training Preset Matrix</div>
+              <h3 className="text-xl font-bold text-white tracking-wide">Test the Hub In Realtime</h3>
+              <p className="text-xs text-slate-400 leading-relaxed font-medium">
+                Our Knowledge Hub is completely optimized for all user brackets. Click on any stakeholder category below to see how the engine handles real ecosystem issues:
+              </p>
 
-          {/* 3-column hub layout */}
-          <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 mt-12 items-start">
-
-            {/* LEFT — Arc Community */}
-            <div className="space-y-4">
-              <div className="relative p-6 rounded-2xl overflow-hidden" style={{ border: '1px solid rgba(139,92,246,0.3)', background: 'rgba(139,92,246,0.05)', backdropFilter: 'blur(20px)' }}>
-                <div className="absolute top-0 left-0 right-0 h-px" style={{ background: 'linear-gradient(90deg, transparent, #7c3aed, transparent)' }} />
-                <div className="flex items-center gap-3 mb-4">
-                  <div className="w-10 h-10 rounded-xl flex items-center justify-center text-xl" style={{ background: 'rgba(139,92,246,0.2)', border: '1px solid rgba(139,92,246,0.4)' }}>⬡</div>
-                  <div>
-                    <div className="font-black text-sm tracking-widest text-purple-300" style={{ letterSpacing: '0.15em' }}>ARC COMMUNITY</div>
-                    <div className="text-[10px] text-gray-500 tracking-widest">arc.io</div>
-                  </div>
-                </div>
-                <ul className="space-y-2">
-                  {['ERC-8004 AI Agents', 'ERC-8183 Job Settlement', 'Arc App Kit', 'USDC Native Gas', 'Testnet Explorer', 'Arc House'].map(item => (
-                    <li key={item} className="flex items-center gap-2 text-xs text-gray-400">
-                      <span className="text-purple-500 text-xs">◆</span> {item}
-                    </li>
-                  ))}
-                </ul>
-                <Link href="/chat" className="mt-4 block text-center py-2 text-xs font-black tracking-widest transition-all" style={{ border: '1px solid rgba(139,92,246,0.4)', color: '#c4b5fd', letterSpacing: '0.15em' }}>
-                  LEARN ON ARC →
-                </Link>
-              </div>
-
-              {/* Mini cards */}
-              {[
-                { icon: '⚙️', title: 'DEVELOPER TOOLS', desc: 'SDKs · APIs · CLIs' },
-                { icon: '📜', title: 'SMART CONTRACTS', desc: 'Deploy & verify' },
-              ].map(card => (
-                <Link href="/chat" key={card.title} className="flex items-center gap-3 p-4 rounded-xl transition-all hover:border-purple-500/40 group"
-                  style={{ border: '1px solid rgba(255,255,255,0.05)', background: 'rgba(255,255,255,0.02)' }}>
-                  <span className="text-2xl">{card.icon}</span>
-                  <div>
-                    <div className="text-xs font-black tracking-widest text-gray-300 group-hover:text-purple-300 transition-colors" style={{ letterSpacing: '0.1em' }}>{card.title}</div>
-                    <div className="text-[10px] text-gray-600 mt-0.5">{card.desc}</div>
-                  </div>
-                </Link>
-              ))}
-            </div>
-
-            {/* CENTER — Robot/AI Hub */}
-            <div className="flex flex-col items-center gap-6">
-
-              {/* Robot avatar */}
-              <div className="relative w-64 h-64 flex items-center justify-center">
-                {/* Orbital rings */}
-                <div className="absolute inset-0 rounded-full" style={{
-                  border: '1px solid rgba(139,92,246,0.2)',
-                  boxShadow: '0 0 40px rgba(139,92,246,0.1)',
-                  animation: 'spin 20s linear infinite',
-                }} />
-                <div className="absolute inset-4 rounded-full" style={{
-                  border: '1px solid rgba(59,130,246,0.2)',
-                  animation: 'spin 15s linear infinite reverse',
-                }} />
-                <div className="absolute inset-8 rounded-full" style={{
-                  border: '1px solid rgba(139,92,246,0.3)',
-                  animation: 'spin 10s linear infinite',
-                }} />
-
-                {/* Orbiting dot */}
-                <div className="absolute w-3 h-3 rounded-full" style={{
-                  background: '#7c3aed',
-                  boxShadow: '0 0 10px #7c3aed',
-                  top: '50%',
-                  left: '50%',
-                  transform: `translate(calc(-50% + ${Math.cos(orbAngle) * 110}px), calc(-50% + ${Math.sin(orbAngle) * 110}px))`,
-                }} />
-                <div className="absolute w-2 h-2 rounded-full" style={{
-                  background: '#3b82f6',
-                  boxShadow: '0 0 8px #3b82f6',
-                  top: '50%',
-                  left: '50%',
-                  transform: `translate(calc(-50% + ${Math.cos(orbAngle + 2) * 80}px), calc(-50% + ${Math.sin(orbAngle + 2) * 80}px))`,
-                }} />
-
-                {/* Center robot face */}
-                <div className="relative z-10 w-40 h-40 rounded-3xl flex flex-col items-center justify-center" style={{
-                  background: 'linear-gradient(135deg, #0a0020, #120030)',
-                  border: '2px solid rgba(139,92,246,0.6)',
-                  boxShadow: '0 0 60px rgba(139,92,246,0.3), inset 0 0 30px rgba(139,92,246,0.1)',
-                }}>
-                  {/* Eyes */}
-                  <div className="flex gap-4 mb-3">
-                    <div className="w-6 h-6 rounded-full flex items-center justify-center" style={{ background: 'rgba(139,92,246,0.2)', border: '1px solid rgba(139,92,246,0.6)' }}>
-                      <div className="w-3 h-3 rounded-full animate-pulse" style={{ background: '#818cf8', boxShadow: '0 0 8px #7c3aed' }} />
-                    </div>
-                    <div className="w-6 h-6 rounded-full flex items-center justify-center" style={{ background: 'rgba(139,92,246,0.2)', border: '1px solid rgba(139,92,246,0.6)' }}>
-                      <div className="w-3 h-3 rounded-full animate-pulse" style={{ background: '#818cf8', boxShadow: '0 0 8px #7c3aed', animationDelay: '0.3s' }} />
-                    </div>
-                  </div>
-                  {/* Mouth */}
-                  <div className="w-12 h-1 rounded-full" style={{ background: 'linear-gradient(90deg, transparent, #7c3aed, #3b82f6, transparent)' }} />
-                  <div className="mt-3 text-xs font-black tracking-widest text-purple-400" style={{ letterSpacing: '0.2em' }}>MicroAI</div>
-                </div>
-              </div>
-
-              {/* Center title */}
-              <div className="text-center space-y-2">
-                <h2 className="text-2xl font-black tracking-widest" style={{ letterSpacing: '0.2em', color: '#e2e8f0' }}>MicroAI</h2>
-                <p className="text-xs text-gray-400 tracking-wider">Your AI Assistant for the Arc & Circle Community</p>
-                <div className="flex flex-wrap justify-center gap-2 mt-4">
-                  {['AI & TECH', 'GUIDES', 'INSIGHTS', 'TRENDS', 'TUTORIALS', 'BEST PRACTICES'].map(tag => (
-                    <span key={tag} className="px-3 py-1 text-[10px] font-bold tracking-widest" style={{
-                      border: '1px solid rgba(139,92,246,0.3)',
-                      background: 'rgba(139,92,246,0.08)',
-                      color: '#a78bfa',
-                      letterSpacing: '0.15em',
-                    }}>{tag}</span>
-                  ))}
-                </div>
-              </div>
-
-              {/* CTA Button */}
-              <Link href="/chat" className="relative px-10 py-4 font-black text-sm tracking-widest overflow-hidden group w-full text-center"
-                style={{ letterSpacing: '0.2em', border: '2px solid rgba(139,92,246,0.8)', background: 'rgba(139,92,246,0.1)', boxShadow: '0 0 30px rgba(139,92,246,0.2)' }}>
-                <div className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity" style={{ background: 'linear-gradient(135deg, rgba(124,58,237,0.5), rgba(59,130,246,0.5))' }} />
-                <span className="relative" style={{ color: '#e2e8f0' }}>INSTANT ANSWERS →</span>
-              </Link>
-
-              {/* Chat preview mini */}
-              <div className="w-full rounded-xl overflow-hidden" style={{ border: '1px solid rgba(139,92,246,0.2)', background: 'rgba(0,0,0,0.4)', backdropFilter: 'blur(20px)' }}>
-                <div className="flex items-center gap-2 px-4 py-2.5 border-b" style={{ borderColor: 'rgba(139,92,246,0.15)' }}>
-                  <div className="w-5 h-5 rounded-lg flex items-center justify-center text-[10px] font-black" style={{ background: 'linear-gradient(135deg, #7c3aed, #3b82f6)' }}>M</div>
-                  <span className="text-xs text-gray-400 tracking-widest" style={{ letterSpacing: '0.1em' }}>MICROAI ASSISTANT</span>
-                </div>
-                <div className="p-4 space-y-3">
-                  <div className="text-xs text-gray-400 italic">"Hello! How can I assist you with Arc & Circle today?"</div>
-                  <div className="flex gap-2">
-                    <div className="flex-1 px-3 py-2 text-[10px] text-gray-600 rounded-lg" style={{ border: '1px solid rgba(255,255,255,0.05)', background: 'rgba(255,255,255,0.02)' }}>
-                      Ask anything...
-                    </div>
-                    <div className="px-3 py-2 text-[10px] rounded-lg" style={{ background: 'rgba(139,92,246,0.3)', color: '#c4b5fd' }}>→</div>
-                  </div>
-                </div>
+              {/* Selector Tabs */}
+              <div className="space-y-2 pt-2">
+                <button 
+                  onClick={() => handlePresetQuery("How do I implement ERC-8004 AI Agent specifications on Arc Chain?", "To deploy ERC-8004 on Arc, initialize your contract with the Arc Agent Core SDK, specify your runtime constraints, and ensure gas calculations utilize the native USDC gas settlement architecture.")}
+                  className={`w-full text-left p-3 rounded-xl border text-xs transition-all flex items-center justify-between ${chatInput.includes("ERC-8004") ? 'bg-emerald-500/10 border-emerald-400/40 text-emerald-400 font-bold' : 'bg-black/20 border-emerald-500/5 text-slate-400 hover:border-emerald-500/20'}`}
+                >
+                  <span>💻 For Developers & Deployers</span>
+                  <span className="text-[9px] font-mono opacity-60">Try Intel</span>
+                </button>
+                <button 
+                  onClick={() => handlePresetQuery("How can we leverage Circle CCTP for cross-chain liquidity marketing?", "Circle CCTP allows your marketing campaigns to target multi-chain native onboarding. Users burn USDC on source chains and mint natively on Arc without third-party wrap risk.")}
+                  className={`w-full text-left p-3 rounded-xl border text-xs transition-all flex items-center justify-between ${chatInput.includes("CCTP") ? 'bg-emerald-500/10 border-emerald-400/40 text-emerald-400 font-bold' : 'bg-black/20 border-emerald-500/5 text-slate-400 hover:border-emerald-500/20'}`}
+                >
+                  <span>📈 For Marketers & Teams</span>
+                  <span className="text-[9px] font-mono opacity-60">Try Intel</span>
+                </button>
+                <button 
+                  onClick={() => handlePresetQuery("What is the easiest protocol to settle secure USDC trades on Arc?", "Traders use the Native Arc Liquidity Hub. Transactions take advantage of sub-second settlement directly using Circle's native APIs, ensuring 100% security with near-zero slippage.")}
+                  className={`w-full text-left p-3 rounded-xl border text-xs transition-all flex items-center justify-between ${chatInput.includes("trades") ? 'bg-emerald-500/10 border-emerald-400/40 text-emerald-400 font-bold' : 'bg-black/20 border-emerald-500/5 text-slate-400 hover:border-emerald-500/20'}`}
+                >
+                  <span>💱 For Buyers, Sellers & Traders</span>
+                  <span className="text-[9px] font-mono opacity-60">Try Intel</span>
+                </button>
               </div>
             </div>
 
-            {/* RIGHT — Circle Community */}
-            <div className="space-y-4">
-              <div className="relative p-6 rounded-2xl overflow-hidden" style={{ border: '1px solid rgba(59,130,246,0.3)', background: 'rgba(59,130,246,0.05)', backdropFilter: 'blur(20px)' }}>
-                <div className="absolute top-0 left-0 right-0 h-px" style={{ background: 'linear-gradient(90deg, transparent, #3b82f6, transparent)' }} />
-                <div className="flex items-center gap-3 mb-4">
-                  <div className="w-10 h-10 rounded-xl flex items-center justify-center text-xl" style={{ background: 'rgba(59,130,246,0.2)', border: '1px solid rgba(59,130,246,0.4)' }}>◎</div>
-                  <div>
-                    <div className="font-black text-sm tracking-widest text-blue-300" style={{ letterSpacing: '0.15em' }}>CIRCLE COMMUNITY</div>
-                    <div className="text-[10px] text-gray-500 tracking-widest">circle.com</div>
+            {/* Dynamic Simulated Terminal Screen */}
+            <div className="md:col-span-7 bg-black/40 border border-emerald-500/10 rounded-2xl overflow-hidden flex flex-col h-72 shadow-inner">
+              <div className="bg-[#03100a]/80 px-4 py-2.5 border-b border-emerald-950/60 flex items-center justify-between">
+                <div className="flex items-center gap-2">
+                  <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse" />
+                  <span className="text-[9px] font-mono text-emerald-500 font-bold tracking-wider">MICRO_HUB_CORE_V1.9</span>
+                </div>
+                <span className="text-[8px] font-mono text-slate-500">SECURE SHELL</span>
+              </div>
+              
+              <div className="p-4 flex-1 flex flex-col justify-between overflow-y-auto space-y-4 font-mono">
+                <div className="space-y-1">
+                  <div className="text-[10px] text-slate-500">&gt; USER_QUERY_INPUT:</div>
+                  <div className="text-xs text-white font-medium bg-emerald-950/20 p-2 rounded border border-emerald-900/30">
+                    {chatInput || "Select a training preset from the left panel or type custom query..."}
                   </div>
                 </div>
-                <ul className="space-y-2">
-                  {['USDC Stablecoin', 'CCTP Cross-Chain', 'Circle Wallets API', 'Developer Console', 'Circle Contracts', 'Payments & Payouts'].map(item => (
-                    <li key={item} className="flex items-center gap-2 text-xs text-gray-400">
-                      <span className="text-blue-500 text-xs">◆</span> {item}
-                    </li>
-                  ))}
-                </ul>
-                <Link href="/chat" className="mt-4 block text-center py-2 text-xs font-black tracking-widest transition-all" style={{ border: '1px solid rgba(59,130,246,0.4)', color: '#93c5fd', letterSpacing: '0.15em' }}>
-                  LEARN ON CIRCLE →
-                </Link>
+
+                <div className="space-y-1 flex-1 pt-2">
+                  <div className="text-[10px] text-emerald-500/60">&gt; CORE_MICROAI_RESPONSE:</div>
+                  <div className="text-[11px] text-emerald-300 leading-relaxed italic">
+                    {chatResponse}
+                  </div>
+                </div>
               </div>
 
-              {/* Mini cards */}
-              {[
-                { icon: '🤖', title: 'AI AGENTS', desc: 'ERC-8004 standard' },
-                { icon: '💱', title: 'DEFI & PAYMENTS', desc: 'Swap · Bridge · Pay' },
-              ].map(card => (
-                <Link href="/chat" key={card.title} className="flex items-center gap-3 p-4 rounded-xl transition-all hover:border-blue-500/40 group"
-                  style={{ border: '1px solid rgba(255,255,255,0.05)', background: 'rgba(255,255,255,0.02)' }}>
-                  <span className="text-2xl">{card.icon}</span>
-                  <div>
-                    <div className="text-xs font-black tracking-widest text-gray-300 group-hover:text-blue-300 transition-colors" style={{ letterSpacing: '0.1em' }}>{card.title}</div>
-                    <div className="text-[10px] text-gray-600 mt-0.5">{card.desc}</div>
-                  </div>
+              <div className="p-2 bg-[#020a05] border-t border-emerald-950/60 flex gap-2">
+                <input 
+                  type="text" 
+                  value={chatInput}
+                  onChange={(e) => setChatInput(e.target.value)}
+                  placeholder="Ask MicroAI Hub something..." 
+                  className="bg-black/40 border border-emerald-900/50 rounded-lg px-3 py-1.5 text-xs text-white flex-1 focus:outline-none focus:border-emerald-400 font-mono"
+                />
+                <Link href="/chat" className="px-4 py-1.5 bg-emerald-500 text-black text-xs font-black rounded-lg hover:opacity-90 transition font-mono">
+                  EXECUTE
                 </Link>
-              ))}
+              </div>
             </div>
+
           </div>
         </div>
       </section>
 
-      {/* Bottom nav bar like image */}
-      <div className="relative z-10 border-t py-4 px-6" style={{ borderColor: 'rgba(139,92,246,0.2)', background: 'rgba(3,0,15,0.9)', backdropFilter: 'blur(20px)' }}>
-        <div className="max-w-7xl mx-auto flex justify-center gap-12">
-          {[
-            { icon: '👥', label: 'Community' },
-            { icon: '📚', label: 'Knowledge' },
-            { icon: '🛠️', label: 'Support' },
-            { icon: '💡', label: 'Innovation' },
-            { icon: '📈', label: 'Progress' },
-          ].map(item => (
-            <Link href="/chat" key={item.label} className="flex flex-col items-center gap-1 group">
-              <span className="text-xl group-hover:scale-110 transition-transform">{item.icon}</span>
-              <span className="text-[10px] text-gray-500 group-hover:text-purple-400 transition-colors tracking-widest" style={{ letterSpacing: '0.15em' }}>{item.label}</span>
-            </Link>
-          ))}
-        </div>
-      </div>
-
-      {/* Stats */}
-      <section id="stats" className="relative z-10 py-20 px-6 max-w-7xl mx-auto">
-        <div className="text-center mb-12">
-          <div className="text-xs tracking-widest text-purple-400 mb-2" style={{ letterSpacing: '0.3em' }}>LIVE METRICS</div>
-          <h2 className="text-3xl font-black tracking-widest" style={{ letterSpacing: '0.1em' }}>REAL-TIME Q&A STATS</h2>
-        </div>
-        <Stats />
-      </section>
-
-      {/* Features */}
-      <section id="features" className="relative z-10 py-20 px-6 max-w-7xl mx-auto">
+      {/* HUB SECTORS */}
+      <section id="hub-sectors" className="relative z-10 py-16 px-6 max-w-7xl mx-auto">
         <div className="text-center mb-16">
-          <div className="text-xs tracking-widest text-purple-400 mb-2" style={{ letterSpacing: '0.3em' }}>CAPABILITIES</div>
-          <h2 className="text-3xl font-black tracking-widest" style={{ letterSpacing: '0.1em' }}>WHY MICROAI HUB</h2>
+          <div className="text-[9px] font-mono font-bold tracking-[0.3em] text-emerald-400 mb-2 uppercase">Ecosystem Map</div>
+          <h2 className="text-2xl sm:text-4xl font-black text-white tracking-tight">One Hub. Every Stakeholder Role.</h2>
+          <p className="text-xs sm:text-sm text-slate-400 max-w-xl mx-auto mt-3">Whether you write smart contracts or bootstrap communities, MicroAI has ingested the exact documentation you need.</p>
         </div>
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5">
+
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
           {[
-            { icon: '🧠', title: 'ARC & CIRCLE EXPERT', desc: 'Deep knowledge of Arc docs, Circle APIs, USDC mechanics, ERC-8004, ERC-8183 and the full ecosystem.', color: 'rgba(139,92,246,0.3)' },
-            { icon: '⚡', title: 'INSTANT SETTLEMENT', desc: 'Every $0.001 USDC payment settles on Arc in seconds. No intermediaries, fully on-chain.', color: 'rgba(59,130,246,0.3)' },
-            { icon: '🔍', title: 'SMART ANSWERS', desc: 'Code examples, deployment guides, API references and troubleshooting for Arc & Circle.', color: 'rgba(6,182,212,0.3)' },
-            { icon: '🌐', title: 'ANY WEB3 WALLET', desc: 'Connect MetaMask or any EVM wallet on Arc Testnet. No account or sign-up required.', color: 'rgba(34,197,94,0.3)' },
-            { icon: '📊', title: 'ON-CHAIN PROOF', desc: 'Every transaction is fully verifiable on testnet.arcscan.app. 100% transparent.', color: 'rgba(236,72,153,0.3)' },
-            { icon: '🏗️', title: 'BUILDER FIRST', desc: 'From deploying your first contract to launching a full dApp — MicroAI guides you.', color: 'rgba(245,158,11,0.3)' },
-          ].map(f => (
-            <div key={f.title} className="p-6 rounded-2xl space-y-3 hover:scale-[1.02] transition-transform group"
-              style={{ border: `1px solid ${f.color}`, background: `${f.color.replace('0.3', '0.05')}` }}>
-              <div className="text-3xl">{f.icon}</div>
-              <div className="font-black text-sm tracking-widest" style={{ letterSpacing: '0.1em' }}>{f.title}</div>
-              <p className="text-gray-400 text-xs leading-relaxed">{f.desc}</p>
+            { title: "Developers & Architects", points: ["ERC-8004 & ERC-8183 templates", "Circle Programmable Wallets APIs", "Arc App Kit integration steps", "Sub-second gas optimization"] },
+            { title: "Marketers & Project Teams", points: ["Circle CCTP launch frameworks", "Cross-chain onboarding tactics", "Arc Testnet deployment narrative", "Native USDC distribution flows"] },
+            { title: "Buyers, Sellers & Traders", points: ["USDC atomic swap structures", "Arc Liquidity Pool mechanics", "Secure payment tracking steps", "Zero-slippage path routing"] },
+            { title: "New Users & Community", points: ["Arc Chain basic setup guides", "Frictionless faucet instructions", "Ecosystem project directory", "Troubleshooting basic wallet errors"] }
+          ].map((sector, idx) => (
+            <div key={idx} className="p-6 rounded-2xl bg-[#03110a]/20 backdrop-blur-md border border-emerald-500/10 hover:border-emerald-500/20 transition-all duration-300 flex flex-col justify-between group">
+              <div>
+                <div className="w-8 h-8 rounded-lg bg-emerald-500/5 border border-emerald-500/15 flex items-center justify-center text-emerald-400 font-bold font-mono text-xs mb-4">
+                  0{idx + 1}
+                </div>
+                <h4 className="font-bold text-sm text-white tracking-wide mb-4 group-hover:text-emerald-400 transition-colors">{sector.title}</h4>
+                <ul className="space-y-2.5">
+                  {sector.points.map((p, pIdx) => (
+                    <li key={pIdx} className="text-xs text-slate-400 flex items-start gap-2 font-medium">
+                      <span className="text-emerald-500 mt-0.5">▪</span>
+                      <span>{p}</span>
+                    </li>
+                  ))}
+                </ul>
+              </div>
+              <Link href="/chat" className="mt-6 text-[10px] font-mono font-black text-emerald-500 tracking-wider hover:text-emerald-400 flex items-center gap-1">
+                ACCESS SUB-DATA MODULE →
+              </Link>
             </div>
           ))}
         </div>
       </section>
 
-      {/* How it works */}
+      {/* AI TRAINING & CAPABILITIES */}
+      <section id="features" className="relative z-10 py-16 bg-[#020b06]/40 border-y border-emerald-500/5 px-6">
+        <div className="max-w-7xl mx-auto">
+          <div className="text-center mb-16">
+            <div className="text-[9px] font-mono font-bold tracking-[0.3em] text-emerald-400 mb-2 uppercase">Deep Training Layer</div>
+            <h2 className="text-2xl sm:text-4xl font-black text-white tracking-tight">Engine Capabilities & Solutions</h2>
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+            {[
+              { icon: "🛡️", title: "Complete Protocol Ingestion", desc: "Every single page of official Arc Chain code bases, Circle developer documentation, and ecosystem manuals are compiled natively into our memory vector map." },
+              { icon: "⚡", title: "Instantaneous Error Resolution", desc: "Stuck on a failed transaction hash or code compilation issue? Input the trace logs into MicroAI for custom, context-aware debugging feedback instantly." },
+              { icon: "🔮", title: "Cross-Chain Architecture Advice", desc: "Master how Circle's native minting mechanics cooperate perfectly with Arc's rapid network infrastructure to build frictionless web3 payment dApps." }
+            ].map((f, i) => (
+              <div key={i} className="p-6 rounded-2xl bg-[#010604] border border-emerald-500/5 hover:border-emerald-500/15 transition-all">
+                <div className="text-xl mb-4 p-2.5 w-fit rounded-xl bg-emerald-500/5 border border-emerald-500/10">{f.icon}</div>
+                <h3 className="font-bold text-xs text-white tracking-wider mb-2">{f.title}</h3>
+                <p className="text-slate-400 text-xs leading-relaxed font-medium">{f.desc}</p>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* HOW IT WORKS */}
       <section id="how-it-works" className="relative z-10 py-20 px-6 max-w-7xl mx-auto">
         <div className="text-center mb-16">
-          <div className="text-xs tracking-widest text-purple-400 mb-2" style={{ letterSpacing: '0.3em' }}>WORKFLOW</div>
-          <h2 className="text-3xl font-black tracking-widest" style={{ letterSpacing: '0.1em' }}>FOUR STEPS. INSTANT ANSWERS.</h2>
+          <div className="text-[9px] font-mono font-bold tracking-[0.3em] text-emerald-400 mb-2 uppercase">Frictionless Workflow</div>
+          <h2 className="text-2xl sm:text-4xl font-black text-white tracking-tight">Four Steps to Supreme Clarity</h2>
         </div>
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 max-w-5xl mx-auto">
+
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 max-w-5xl mx-auto relative">
           {[
-            { n: '01', title: 'CONNECT WALLET', desc: 'Connect any EVM wallet on Arc Testnet.' },
-            { n: '02', title: 'ASK ANYTHING', desc: 'Ask about Arc, Circle, USDC, contracts, APIs.' },
-            { n: '03', title: 'PAY $0.001 USDC', desc: 'Approve a tiny USDC payment. Instant, secure.' },
-            { n: '04', title: 'GET ANSWER', desc: 'AI responds. TX proof saved on Arc blockchain.' },
-          ].map(step => (
-            <div key={step.n} className="space-y-3">
-              <div className="w-12 h-12 rounded-xl flex items-center justify-center font-black text-sm" style={{
-                background: 'linear-gradient(135deg, rgba(124,58,237,0.3), rgba(59,130,246,0.3))',
-                border: '1px solid rgba(139,92,246,0.4)',
-                letterSpacing: '0.1em',
-              }}>{step.n}</div>
-              <div className="font-black text-xs tracking-widest" style={{ letterSpacing: '0.15em' }}>{step.title}</div>
-              <p className="text-gray-400 text-xs leading-relaxed">{step.desc}</p>
+            { step: "01", name: "Connect EVM Wallet", desc: "Link your favorite non-custodial wallet instantly on the safe Arc Testnet channel." },
+            { step: "02", name: "State Your Ecosystem Issue", desc: "Ask queries regarding Arc SDK parameters, Circle smart assets, or contract verification." },
+            { step: "03", name: "Approve Micro-Settle", desc: "Authorize a fraction of a cent ($0.001) in native testnet USDC directly on-chain." },
+            { step: "04", name: "Deploy Prescriptive Solutions", desc: "Receive highly trained responses alongside immutably compiled network transaction hashes." }
+          ].map((s, idx) => (
+            <div key={idx} className="p-5 rounded-2xl bg-[#03110a]/10 border border-emerald-500/5 relative">
+              <div className="text-xs font-mono font-black text-emerald-400 mb-3 bg-emerald-500/5 w-8 h-8 rounded-lg flex items-center justify-center border border-emerald-500/10">{s.step}</div>
+              <div className="font-bold text-xs text-white tracking-wide mb-1.5">{s.name}</div>
+              <p className="text-slate-400 text-[11px] leading-relaxed font-medium">{s.desc}</p>
             </div>
           ))}
         </div>
-        <div className="text-center mt-12">
-          <Link href="/chat" className="inline-flex items-center gap-3 px-10 py-4 font-black text-sm tracking-widest"
-            style={{ letterSpacing: '0.2em', border: '2px solid rgba(139,92,246,0.6)', background: 'rgba(139,92,246,0.1)', boxShadow: '0 0 30px rgba(139,92,246,0.2)', color: '#e2e8f0' }}>
-            TRY MICROAI NOW →
-          </Link>
-        </div>
       </section>
 
-      {/* Pricing */}
-      <section id="pricing" className="relative z-10 py-20 px-6 text-center">
-        <div className="max-w-sm mx-auto space-y-8">
-          <div>
-            <div className="text-xs tracking-widest text-purple-400 mb-2" style={{ letterSpacing: '0.3em' }}>PRICING</div>
-            <h2 className="text-3xl font-black tracking-widest" style={{ letterSpacing: '0.1em' }}>SIMPLE. FAIR. ON-CHAIN.</h2>
-          </div>
-          <div className="relative rounded-2xl overflow-hidden p-8 space-y-6" style={{
-            border: '1px solid rgba(139,92,246,0.4)',
-            background: 'linear-gradient(135deg, rgba(124,58,237,0.1), rgba(59,130,246,0.05))',
-            boxShadow: '0 0 60px rgba(139,92,246,0.1)',
-          }}>
-            <div className="absolute top-0 left-0 right-0 h-px" style={{ background: 'linear-gradient(90deg, transparent, #7c3aed, #3b82f6, transparent)' }} />
-            <div>
-              <div className="text-6xl font-black" style={{
-                background: 'linear-gradient(135deg, #c4b5fd, #93c5fd)',
-                WebkitBackgroundClip: 'text',
-                WebkitTextFillColor: 'transparent',
-              }}>$0.001</div>
-              <div className="text-xs text-gray-400 mt-2 tracking-widest" style={{ letterSpacing: '0.2em' }}>USDC PER AI RESPONSE</div>
-            </div>
-            <hr style={{ borderColor: 'rgba(255,255,255,0.05)' }} />
-            <ul className="text-left space-y-3">
-              {['No monthly fees', 'No account required', 'Instant settlement on Arc', 'On-chain TX proof', 'Any ERC-20 wallet', 'Arc & Circle expert AI'].map(item => (
-                <li key={item} className="flex items-center gap-3 text-xs text-gray-300">
-                  <span className="text-emerald-400">✓</span> {item}
-                </li>
-              ))}
+      {/* MICRO-PAYMENTS PRICING MATRIX */}
+      <section id="pricing" className="relative z-10 py-16 px-6 text-center max-w-7xl mx-auto">
+        <div className="max-w-sm mx-auto">
+          <div className="text-[9px] font-mono font-bold tracking-[0.3em] text-emerald-400 mb-2 uppercase">Frictionless Costs</div>
+          <h2 className="text-2xl sm:text-3xl font-black text-white tracking-tight mb-8">Zero Subscriptions. Per-Query Only.</h2>
+          
+          <div className="bg-gradient-to-b from-[#03130c] to-[#010604]/95 backdrop-blur-2xl border-2 border-emerald-500/15 p-8 rounded-[28px] shadow-2xl relative">
+            <div className="absolute top-0 left-1/4 right-1/4 h-px bg-gradient-to-r from-transparent via-emerald-400/40 to-transparent" />
+            
+            <div className="text-5xl font-black text-white font-mono tracking-tighter shadow-sm">$0.001</div>
+            <div className="text-[8px] text-emerald-400 font-bold tracking-[0.2em] font-mono mt-2.5 uppercase">USDC per AI Engine call</div>
+            
+            <div className="h-px bg-emerald-500/10 my-6" />
+            
+            <ul className="text-left space-y-3.5 text-xs text-slate-300 font-medium">
+              <li className="flex items-center gap-2.5"><span className="text-emerald-400 font-bold">✓</span> No monthly platform locking</li>
+              <li className="flex items-center gap-2.5"><span className="text-emerald-400 font-bold">✓</span> Direct wallet-to-contract gas speed</li>
+              <li className="flex items-center gap-2.5"><span className="text-emerald-400 font-bold">✓</span> Full access to all 4 stakeholder data pipelines</li>
+              <li className="flex items-center gap-2.5"><span className="text-emerald-400 font-bold">✓</span> 100% on-chain audit log</li>
             </ul>
-            <Link href="/chat" className="block w-full py-4 font-black text-xs tracking-widest text-center"
-              style={{ background: 'linear-gradient(135deg, #7c3aed, #3b82f6)', letterSpacing: '0.2em', boxShadow: '0 0 20px rgba(139,92,246,0.4)' }}>
-              START FOR FREE →
+            
+            <Link href="/chat" className="block w-full text-center bg-gradient-to-r from-emerald-400 to-emerald-500 text-black font-black py-3 rounded-xl shadow-md hover:opacity-95 transition mt-8 text-xs tracking-widest">
+              LAUNCH CHAT TERMINAL →
             </Link>
           </div>
         </div>
       </section>
 
-      {/* Footer */}
-      <footer className="relative z-10 border-t px-6 py-10" style={{ borderColor: 'rgba(139,92,246,0.15)', background: 'rgba(3,0,15,0.95)' }}>
-        <div className="max-w-6xl mx-auto flex flex-col sm:flex-row justify-between items-center gap-4">
-          <div className="flex items-center gap-3">
-            <div className="w-8 h-8 rounded-xl flex items-center justify-center font-black text-xs" style={{ background: 'linear-gradient(135deg, #7c3aed, #3b82f6)' }}>M</div>
-            <div>
-              <div className="text-sm font-black tracking-widest" style={{ letterSpacing: '0.15em' }}>MICROAI</div>
-              <div className="text-[9px] text-purple-400 tracking-widest" style={{ letterSpacing: '0.3em' }}>BUILT ON ARC · POWERED BY USDC</div>
-            </div>
+      {/* FOOTER */}
+      <footer className="relative z-10 border-t border-emerald-500/10 bg-[#010402] px-6 py-8">
+        <div className="max-w-7xl mx-auto flex flex-col sm:flex-row justify-between items-center gap-4 text-[10px] text-slate-500 font-medium">
+          <div className="flex items-center gap-2.5">
+            <div className="w-6 h-6 rounded-lg bg-emerald-500/5 border border-emerald-500/20 flex items-center justify-center font-bold text-xs text-emerald-400">M</div>
+            <div>MICROAI NETWORK · CENTRAL INTEL HUB FOR ARC CHAIN & CIRCLE SOLUTIONS</div>
           </div>
-          <div className="flex gap-6 text-xs text-gray-500 tracking-widest" style={{ letterSpacing: '0.1em' }}>
-            {[
-              { label: 'ARC', href: 'https://arc.io' },
-              { label: 'CIRCLE', href: 'https://circle.com' },
-              { label: 'GITHUB', href: 'https://github.com/sahmedonchain/microai' },
-              { label: 'EXPLORER', href: 'https://testnet.arcscan.app' },
-            ].map(link => (
-              <a key={link.label} href={link.href} target="_blank" rel="noopener noreferrer" className="hover:text-purple-400 transition-colors">{link.label}</a>
-            ))}
-            <Link href="/chat" className="hover:text-white transition-colors">LAUNCH APP</Link>
+          <div className="flex gap-6 font-bold tracking-wider font-mono">
+            <a href="https://arc.io" target="_blank" rel="noreferrer" className="hover:text-emerald-400 transition-colors">ARC.NET</a>
+            <a href="https://circle.com" target="_blank" rel="noreferrer" className="hover:text-emerald-400 transition-colors">CIRCLE.COM</a>
+            <a href="https://testnet.arcscan.app" target="_blank" rel="noreferrer" className="hover:text-emerald-400 transition-colors">ARCSCAN</a>
           </div>
         </div>
       </footer>
 
-      <style>{`
-        @keyframes spin {
-          from { transform: rotate(0deg); }
-          to { transform: rotate(360deg); }
+      {/* FIXED GLOBAL FONTS/BACKGROUND */}
+      <style jsx global>{`
+        @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800;900&display=swap');
+        html {
+          scroll-behavior: smooth;
         }
-        @import url('https://fonts.googleapis.com/css2?family=Rajdhani:wght@400;500;600;700&family=Orbitron:wght@400;700;900&display=swap');
+        body {
+          background-color: #010503;
+        }
       `}</style>
     </div>
   );
