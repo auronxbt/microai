@@ -121,11 +121,11 @@ export default function Home() {
           <a href="#hub-sectors" className="hover:text-emerald-400 transition-colors">ECOSYSTEM HUB</a>
           <a href="#features" className="hover:text-emerald-400 transition-colors">AI CAPABILITIES</a>
           <a href="#how-it-works" className="hover:text-emerald-400 transition-colors">HOW IT WORKS</a>
-          <a href="#pricing" className="hover:text-emerald-400 transition-colors">MICRO-PAYMENTS</a>
+          <a href="#pricing" className="hover:text-emerald-400 transition-colors">MICRO PAYMENTS</a>
         </div>
 
         <Link href="/chat" className="px-5 py-1.5 text-[11px] font-bold tracking-wider rounded-xl bg-emerald-500/10 border border-emerald-400/20 text-emerald-400 hover:bg-gradient-to-r hover:from-emerald-400 hover:to-emerald-500 hover:text-black transition-all duration-300">
-          LAUNCH ENGINE →
+          Try MicroAi
         </Link>
       </nav>
 
@@ -133,15 +133,15 @@ export default function Home() {
       <header className="relative z-10 pt-36 pb-16 px-6 max-w-7xl mx-auto w-full text-center">
         <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full border border-emerald-500/15 bg-[#03110a]/60 text-[9px] font-bold text-emerald-400 tracking-widest mb-6 shadow-[0_0_15px_rgba(16,185,129,0.05)]">
           <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse shadow-[0_0_8px_#10b981]" />
-          UNIVERSAL KNOWLEDGE LAYER FOR ARC & CIRCLE WEBSITES LIVE
+          MicroAi now Live on Arc Testnet
         </div>
 
         <h1 className="text-4xl sm:text-6xl md:text-8xl font-black tracking-tight leading-[1.05] max-w-5xl mx-auto text-transparent bg-clip-text bg-gradient-to-b from-white via-slate-200 to-slate-400/40">
-          The Crypto Hub for All Arc & Circle Intel
+          The ultimate hub for Arc and Circle
         </h1>
         
         <p className="text-sm sm:text-base text-slate-400 max-w-2xl mx-auto mt-6 font-medium leading-relaxed">
-          One unified AI engine built to ingest, organize, and solve every single inquiry across Arc Chain mechanics and Circle infrastructure instantly.
+          Ask anything across Arc mechanics and Circle infrastructure. Settled instantly on-chain for $0.001 USDC per query
         </p>
       </header>
 
@@ -154,7 +154,7 @@ export default function Home() {
             
             {/* Simulation Interface Information */}
             <div className="md:col-span-5 space-y-4">
-              <div className="text-[10px] font-mono font-bold text-emerald-400 tracking-widest uppercase">🧠 AI Training Preset Matrix</div>
+              <div className="text-[10px] font-mono font-bold text-emerald-400 tracking-widest uppercase">AI Training Preset Matrix</div>
               <h3 className="text-xl font-bold text-white tracking-wide">Test the Hub In Realtime</h3>
               <p className="text-xs text-slate-400 leading-relaxed font-medium">
                 Our Knowledge Hub is completely optimized for all user brackets. Click on any stakeholder category below to see how the engine handles real ecosystem issues:
@@ -315,7 +315,7 @@ export default function Home() {
         </div>
       </section>
 
-      {/* MICRO-PAYMENTS PRICING MATRIX */}
+      {/* MICRO PAYMENTS PRICING MATRIX */}
       <section id="pricing" className="relative z-10 py-16 px-6 text-center max-w-7xl mx-auto">
         <div className="max-w-sm mx-auto">
           <div className="text-[9px] font-mono font-bold tracking-[0.3em] text-emerald-400 mb-2 uppercase">Frictionless Costs</div>
@@ -337,7 +337,7 @@ export default function Home() {
             </ul>
             
             <Link href="/chat" className="block w-full text-center bg-gradient-to-r from-emerald-400 to-emerald-500 text-black font-black py-3 rounded-xl shadow-md hover:opacity-95 transition mt-8 text-xs tracking-widest">
-              LAUNCH CHAT TERMINAL →
+              Try MicroAi
             </Link>
           </div>
         </div>
@@ -348,11 +348,11 @@ export default function Home() {
         <div className="max-w-7xl mx-auto flex flex-col sm:flex-row justify-between items-center gap-4 text-[10px] text-slate-500 font-medium">
           <div className="flex items-center gap-2.5">
             <div className="w-6 h-6 rounded-lg bg-emerald-500/5 border border-emerald-500/20 flex items-center justify-center font-bold text-xs text-emerald-400">M</div>
-            <div>MICROAI NETWORK · CENTRAL INTEL HUB FOR ARC CHAIN & CIRCLE SOLUTIONS</div>
+            <div>MicroAi · The ultimate hub for arc and circle solutions</div>
           </div>
           <div className="flex gap-6 font-bold tracking-wider font-mono">
-            <a href="https://arc.io" target="_blank" rel="noreferrer" className="hover:text-emerald-400 transition-colors">ARC.NET</a>
-            <a href="https://circle.com" target="_blank" rel="noreferrer" className="hover:text-emerald-400 transition-colors">CIRCLE.COM</a>
+            <a href="https://arc.io" target="_blank" rel="noreferrer" className="hover:text-emerald-400 transition-colors">ARC</a>
+            <a href="https://circle.com" target="_blank" rel="noreferrer" className="hover:text-emerald-400 transition-colors">CIRCLE</a>
             <a href="https://testnet.arcscan.app" target="_blank" rel="noreferrer" className="hover:text-emerald-400 transition-colors">ARCSCAN</a>
           </div>
         </div>
