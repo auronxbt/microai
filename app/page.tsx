@@ -19,30 +19,12 @@ export default function Home() {
     if (!canvas) return;
     const ctx = canvas.getContext('2d');
     if (!ctx) return;
-
-    // Fix: use CSS sizing, not canvas width/height to avoid reflow
-    const setSize = () => {
-      const w = window.innerWidth;
-      const h = window.innerHeight;
-      if (canvas.width !== w || canvas.height !== h) {
-        canvas.width = w;
-        canvas.height = h;
-      }
-    };
+    const setSize = () => { canvas.width = window.innerWidth; canvas.height = window.innerHeight; };
     setSize();
-
     const particles: { x: number; y: number; vx: number; vy: number; size: number; opacity: number }[] = [];
-    for (let i = 0; i < 55; i++) {
-      particles.push({
-        x: Math.random() * window.innerWidth,
-        y: Math.random() * window.innerHeight,
-        vx: (Math.random() - 0.5) * 0.2,
-        vy: (Math.random() - 0.5) * 0.2,
-        size: Math.random() * 1.5 + 0.5,
-        opacity: Math.random() * 0.2 + 0.05,
-      });
+    for (let i = 0; i < 50; i++) {
+      particles.push({ x: Math.random() * window.innerWidth, y: Math.random() * window.innerHeight, vx: (Math.random() - 0.5) * 0.2, vy: (Math.random() - 0.5) * 0.2, size: Math.random() * 1.5 + 0.5, opacity: Math.random() * 0.18 + 0.04 });
     }
-
     let animId: number;
     const animate = () => {
       ctx.clearRect(0, 0, canvas.width, canvas.height);
@@ -53,182 +35,142 @@ export default function Home() {
         ctx.beginPath(); ctx.arc(p.x, p.y, p.size, 0, Math.PI * 2);
         ctx.fillStyle = `rgba(16,185,129,${p.opacity})`; ctx.fill();
       });
-      for (let i = 0; i < particles.length; i++) {
-        for (let j = i + 1; j < particles.length; j++) {
-          const dx = particles[i].x - particles[j].x;
-          const dy = particles[i].y - particles[j].y;
-          const dist = Math.sqrt(dx * dx + dy * dy);
-          if (dist < 120) {
-            ctx.beginPath();
-            ctx.moveTo(particles[i].x, particles[i].y);
-            ctx.lineTo(particles[j].x, particles[j].y);
-            ctx.strokeStyle = `rgba(16,185,129,${0.04 * (1 - dist / 120)})`;
-            ctx.lineWidth = 0.5;
-            ctx.stroke();
-          }
-        }
-      }
       animId = requestAnimationFrame(animate);
     };
     animate();
     return () => cancelAnimationFrame(animId);
   }, []);
 
-  const handlePresetQuery = (query: string, response: string) => {
-    setChatInput(query);
-    setChatResponse(response);
-  };
+  const presets = [
+    { label: 'For Developers & Deployers', key: 'ERC-8004', q: 'How do I implement ERC-8004 AI Agent specifications on Arc Chain?', r: 'To deploy ERC-8004 on Arc, initialize your contract with the Arc Agent Core SDK, specify your runtime constraints, and ensure gas calculations utilize the native USDC gas settlement architecture.' },
+    { label: 'For Marketers & Teams', key: 'CCTP', q: 'How can we leverage Circle CCTP for cross-chain liquidity marketing?', r: 'Circle CCTP allows your marketing campaigns to target multi-chain native onboarding. Users burn USDC on source chains and mint natively on Arc without third-party wrap risk.' },
+    { label: 'For Buyers, Sellers & Traders', key: 'trades', q: 'What is the easiest protocol to settle secure USDC trades on Arc?', r: "Traders use the Native Arc Liquidity Hub. Sub-second settlement using Circle's native APIs ensures 100% security with near-zero slippage." },
+  ];
 
   return (
-    <div className="min-h-screen bg-[#010503] text-[#e2e8f0] overflow-x-hidden relative" style={{ fontFamily: "'Plus Jakarta Sans', sans-serif" }}>
+    <div style={{ minHeight: '100vh', background: '#010503', color: '#e2e8f0', overflowX: 'hidden', fontFamily: "'Plus Jakarta Sans', sans-serif" }}>
 
-      {/* Background canvas — position fixed, no layout impact */}
-      <canvas ref={canvasRef} style={{ position: 'fixed', inset: 0, zIndex: 0, pointerEvents: 'none', opacity: 0.4, width: '100%', height: '100%' }} />
+      <canvas ref={canvasRef} style={{ position: 'fixed', inset: 0, zIndex: 0, pointerEvents: 'none', opacity: 0.35, width: '100%', height: '100%' }} />
 
-      {/* Ambient glow */}
-      <div className="fixed inset-0 z-0 pointer-events-none">
-        <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[85%] h-[60%] rounded-full bg-emerald-500/[0.05] blur-[140px]" />
-        <div className="absolute w-[600px] h-[600px] rounded-full pointer-events-none"
-          style={{ background: 'radial-gradient(circle, rgba(16,185,129,0.06), transparent 70%)', left: mousePos.x - 300, top: mousePos.y - 300, transition: 'left 0.4s ease, top 0.4s ease' }} />
-        <div className="absolute inset-0 opacity-[0.012]" style={{ backgroundImage: "linear-gradient(rgba(16,185,129,0.2) 1px, transparent 1px), linear-gradient(90deg, rgba(16,185,129,0.2) 1px, transparent 1px)", backgroundSize: "55px 55px" }} />
+      <div style={{ position: 'fixed', inset: 0, zIndex: 0, pointerEvents: 'none' }}>
+        <div style={{ position: 'absolute', top: 0, left: '50%', transform: 'translateX(-50%)', width: '80%', height: '50%', borderRadius: '50%', background: 'rgba(16,185,129,0.04)', filter: 'blur(120px)' }} />
+        <div style={{ position: 'absolute', inset: 0, opacity: 0.012, backgroundImage: 'linear-gradient(rgba(16,185,129,0.2) 1px, transparent 1px), linear-gradient(90deg, rgba(16,185,129,0.2) 1px, transparent 1px)', backgroundSize: '55px 55px' }} />
+        <div style={{ position: 'absolute', width: 400, height: 400, borderRadius: '50%', pointerEvents: 'none', background: 'radial-gradient(circle, rgba(16,185,129,0.05), transparent 70%)', left: mousePos.x - 200, top: mousePos.y - 200, transition: 'left 0.4s, top 0.4s' }} />
       </div>
 
       {/* NAVBAR */}
-      <nav className="fixed top-3 left-1/2 -translate-x-1/2 z-50 w-[95%] max-w-7xl px-4 md:px-6 py-3 bg-[#03120a]/60 backdrop-blur-xl border border-emerald-500/10 rounded-2xl shadow-[0_8px_32px_rgba(0,0,0,0.5)] flex items-center justify-between">
-        <div className="flex items-center gap-2.5">
-          <div className="w-8 h-8 rounded-xl bg-gradient-to-br from-emerald-400 to-emerald-600 flex items-center justify-center font-black text-xs text-black shadow-[0_0_14px_rgba(16,185,129,0.3)] flex-shrink-0">M</div>
+      <nav style={{ position: 'sticky', top: 0, zIndex: 50, display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '12px 16px', background: 'rgba(3,18,10,0.95)', backdropFilter: 'blur(20px)', borderBottom: '1px solid rgba(16,185,129,0.1)' }}>
+        <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
+          <div style={{ width: 32, height: 32, borderRadius: 10, background: 'linear-gradient(135deg, #34d399, #10b981)', display: 'flex', alignItems: 'center', justifyContent: 'center', fontWeight: 900, fontSize: 13, color: '#000', flexShrink: 0, boxShadow: '0 0 12px rgba(16,185,129,0.3)' }}>M</div>
           <div>
-            <div className="text-sm font-bold tracking-wider text-white leading-none">MICRO<span className="text-emerald-400 font-extrabold">AI</span></div>
-            <div className="text-[7px] text-emerald-500/60 tracking-[0.2em] font-mono">THE KNOWLEDGE HUB</div>
+            <div style={{ fontSize: 13, fontWeight: 800, color: '#fff', lineHeight: 1.2 }}>MICRO<span style={{ color: '#34d399' }}>AI</span></div>
+            <div style={{ fontSize: 7, color: 'rgba(52,211,153,0.5)', letterSpacing: '0.2em', fontFamily: 'monospace' }}>THE KNOWLEDGE HUB</div>
           </div>
         </div>
-
-        <div className="hidden md:flex items-center bg-[#010805]/90 border border-emerald-950/80 rounded-full px-5 py-1.5 gap-6 text-[10px] font-bold tracking-widest text-gray-400">
-          <a href="#hub-sectors" className="hover:text-emerald-400 transition-colors">ECOSYSTEM</a>
-          <a href="#features" className="hover:text-emerald-400 transition-colors">CAPABILITIES</a>
-          <a href="#how-it-works" className="hover:text-emerald-400 transition-colors">HOW IT WORKS</a>
-          <a href="#pricing" className="hover:text-emerald-400 transition-colors">PRICING</a>
+        <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
+          <div className="hidden md:flex" style={{ gap: 20, fontSize: 10, color: '#64748b', fontWeight: 700, letterSpacing: '0.08em' }}>
+            <a href="#hub-sectors" style={{ textDecoration: 'none', color: 'inherit' }}>ECOSYSTEM</a>
+            <a href="#features" style={{ textDecoration: 'none', color: 'inherit' }}>CAPABILITIES</a>
+            <a href="#pricing" style={{ textDecoration: 'none', color: 'inherit' }}>PRICING</a>
+          </div>
+          <Link href="/chat" style={{ padding: '7px 14px', borderRadius: 10, background: 'rgba(16,185,129,0.1)', border: '1px solid rgba(52,211,153,0.25)', color: '#34d399', fontSize: 11, fontWeight: 700, letterSpacing: '0.08em', textDecoration: 'none', whiteSpace: 'nowrap' }}>
+            LAUNCH →
+          </Link>
         </div>
-
-        <Link href="/chat" className="px-4 py-1.5 text-[11px] font-bold tracking-wider rounded-xl bg-emerald-500/10 border border-emerald-400/20 text-emerald-400 hover:bg-emerald-400 hover:text-black transition-all duration-200 flex-shrink-0">
-          LAUNCH ENGINE →
-        </Link>
       </nav>
 
       {/* HERO */}
-      <header className="relative z-10 pt-32 md:pt-36 pb-12 px-4 md:px-6 max-w-7xl mx-auto w-full text-center">
-        <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full border border-emerald-500/15 bg-[#03110a]/60 text-[9px] font-bold text-emerald-400 tracking-widest mb-6">
-          <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse" />
-          UNIVERSAL KNOWLEDGE LAYER FOR ARC & CIRCLE · LIVE
+      <section style={{ position: 'relative', zIndex: 10, padding: '48px 20px 40px', textAlign: 'center' }}>
+        <div style={{ display: 'inline-flex', alignItems: 'center', gap: 8, padding: '5px 12px', borderRadius: 20, border: '1px solid rgba(16,185,129,0.15)', background: 'rgba(3,17,10,0.6)', marginBottom: 20 }}>
+          <span style={{ width: 6, height: 6, borderRadius: '50%', background: '#34d399', display: 'inline-block', animation: 'pulse 2s infinite' }} />
+          <span style={{ fontSize: 9, color: '#34d399', fontWeight: 700, letterSpacing: '0.15em', fontFamily: 'monospace' }}>ARC & CIRCLE KNOWLEDGE LAYER · LIVE</span>
         </div>
 
-        {/* Fix: use explicit sizes instead of responsive text to prevent reflow */}
-        <h1 className="font-black tracking-tight leading-tight max-w-4xl mx-auto text-transparent bg-clip-text bg-gradient-to-b from-white via-slate-200 to-slate-400/50 mb-4"
-          style={{ fontSize: 'clamp(2rem, 6vw, 5.5rem)', lineHeight: 1.05 }}>
-          The Arc & Circle Intelligence Hub
+        <h1 style={{ fontSize: 'clamp(1.8rem, 7vw, 4.5rem)', fontWeight: 900, lineHeight: 1.08, margin: '0 0 16px', background: 'linear-gradient(180deg, #fff 0%, rgba(148,163,184,0.5) 100%)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent', letterSpacing: '-0.02em' }}>
+          The Arc & Circle<br />Intelligence Hub
         </h1>
 
-        <p className="text-slate-400 max-w-xl mx-auto mt-4 font-medium leading-relaxed" style={{ fontSize: 'clamp(13px, 2vw, 16px)' }}>
-          One AI engine for every Arc and Circle question — built on-chain. Ask anything, get instant answers, pay <span className="text-emerald-400 font-bold">$0.001 USDC</span> per query.
+        <p style={{ fontSize: 'clamp(13px, 3.5vw, 15px)', color: '#94a3b8', maxWidth: 480, margin: '0 auto 28px', lineHeight: 1.65 }}>
+          One AI engine for every Arc and Circle question — built on-chain. Ask anything, get instant answers, pay <span style={{ color: '#34d399', fontWeight: 700 }}>$0.001 USDC</span> per query.
         </p>
 
-        <div className="flex flex-wrap items-center justify-center gap-3 mt-8">
-          <Link href="/chat" className="px-6 py-3 rounded-xl bg-emerald-500 text-black font-black text-sm tracking-wider hover:bg-emerald-400 transition-all shadow-[0_0_20px_rgba(16,185,129,0.25)]">
+        <div style={{ display: 'flex', flexWrap: 'wrap', gap: 10, justifyContent: 'center' }}>
+          <Link href="/chat" style={{ padding: '11px 24px', borderRadius: 12, background: '#10b981', color: '#000', fontSize: 13, fontWeight: 800, letterSpacing: '0.06em', textDecoration: 'none', boxShadow: '0 0 18px rgba(16,185,129,0.25)' }}>
             LAUNCH ENGINE →
           </Link>
-          <a href="#hub-sectors" className="px-6 py-3 rounded-xl border border-emerald-500/20 bg-emerald-500/5 text-emerald-400 font-bold text-sm tracking-wider hover:border-emerald-500/40 transition-all">
+          <a href="#hub-sectors" style={{ padding: '11px 24px', borderRadius: 12, border: '1px solid rgba(16,185,129,0.2)', background: 'rgba(16,185,129,0.05)', color: '#34d399', fontSize: 13, fontWeight: 700, letterSpacing: '0.06em', textDecoration: 'none' }}>
             EXPLORE HUB
           </a>
         </div>
-      </header>
+      </section>
 
       {/* CORE HUB WIDGET */}
-      <section className="relative z-10 max-w-5xl mx-auto px-4 md:px-6 mb-20">
-        <div className="bg-[#03130b]/20 backdrop-blur-2xl border border-emerald-500/15 rounded-3xl p-5 md:p-8 shadow-[0_20px_50px_rgba(0,0,0,0.5)] relative overflow-hidden">
-          <div className="absolute top-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-emerald-400/30 to-transparent" />
-
-          <div className="grid grid-cols-1 md:grid-cols-12 gap-6 items-start">
-            <div className="md:col-span-5 space-y-4">
-              <div className="text-[10px] font-mono font-bold text-emerald-400 tracking-widest uppercase">AI Training Preset Matrix</div>
-              <h3 className="text-lg md:text-xl font-bold text-white tracking-wide">Test the Hub In Realtime</h3>
-              <p className="text-xs text-slate-400 leading-relaxed font-medium">
-                Click any stakeholder category to see how MicroAI handles real Arc & Circle ecosystem questions.
-              </p>
-              <div className="space-y-2 pt-1">
-                {[
-                  { label: "For Developers & Deployers", key: "ERC-8004", query: "How do I implement ERC-8004 AI Agent specifications on Arc Chain?", resp: "To deploy ERC-8004 on Arc, initialize your contract with the Arc Agent Core SDK, specify your runtime constraints, and ensure gas calculations utilize the native USDC gas settlement architecture." },
-                  { label: "For Marketers & Teams", key: "CCTP", query: "How can we leverage Circle CCTP for cross-chain liquidity marketing?", resp: "Circle CCTP allows your marketing campaigns to target multi-chain native onboarding. Users burn USDC on source chains and mint natively on Arc without third-party wrap risk." },
-                  { label: "For Buyers, Sellers & Traders", key: "trades", query: "What is the easiest protocol to settle secure USDC trades on Arc?", resp: "Traders use the Native Arc Liquidity Hub. Transactions take advantage of sub-second settlement using Circle's native APIs, ensuring 100% security with near-zero slippage." },
-                ].map((item) => (
-                  <button key={item.key} onClick={() => handlePresetQuery(item.query, item.resp)}
-                    className={`w-full text-left p-3 rounded-xl border text-xs transition-all flex items-center justify-between ${chatInput.includes(item.key) ? 'bg-emerald-500/10 border-emerald-400/40 text-emerald-400 font-bold' : 'bg-black/20 border-emerald-500/5 text-slate-400 hover:border-emerald-500/20 hover:text-slate-300'}`}>
-                    <span>{item.label}</span>
-                    <span className="text-[9px] font-mono opacity-60 ml-2 flex-shrink-0">Try Intel</span>
-                  </button>
-                ))}
+      <section style={{ position: 'relative', zIndex: 10, padding: '0 16px 48px', maxWidth: 900, margin: '0 auto' }}>
+        <div style={{ background: 'rgba(3,19,11,0.2)', backdropFilter: 'blur(20px)', border: '1px solid rgba(16,185,129,0.12)', borderRadius: 20, padding: '20px 16px', position: 'relative', overflow: 'hidden' }}>
+          <div style={{ position: 'absolute', top: 0, left: 0, right: 0, height: 1, background: 'linear-gradient(90deg, transparent, rgba(52,211,153,0.3), transparent)' }} />
+          <div style={{ fontSize: 9, color: '#34d399', fontWeight: 700, letterSpacing: '0.2em', fontFamily: 'monospace', marginBottom: 12 }}>AI TRAINING PRESET MATRIX</div>
+          <div style={{ display: 'flex', flexDirection: 'column', gap: 8, marginBottom: 16 }}>
+            {presets.map(item => (
+              <button key={item.key} onClick={() => { setChatInput(item.q); setChatResponse(item.r); }}
+                style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '10px 14px', borderRadius: 10, border: chatInput.includes(item.key) ? '1px solid rgba(52,211,153,0.4)' : '1px solid rgba(16,185,129,0.07)', background: chatInput.includes(item.key) ? 'rgba(16,185,129,0.08)' : 'rgba(0,0,0,0.2)', cursor: 'pointer', width: '100%', textAlign: 'left' }}>
+                <span style={{ fontSize: 12, color: chatInput.includes(item.key) ? '#34d399' : '#94a3b8', fontWeight: 500 }}>{item.label}</span>
+                <span style={{ fontSize: 9, color: '#475569', fontFamily: 'monospace', flexShrink: 0, marginLeft: 8 }}>Try Intel</span>
+              </button>
+            ))}
+          </div>
+          <div style={{ background: 'rgba(0,0,0,0.4)', border: '1px solid rgba(16,185,129,0.1)', borderRadius: 14, overflow: 'hidden' }}>
+            <div style={{ background: 'rgba(3,16,10,0.8)', padding: '8px 14px', borderBottom: '1px solid rgba(16,185,129,0.08)', display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+              <div style={{ display: 'flex', alignItems: 'center', gap: 6 }}>
+                <span style={{ width: 6, height: 6, borderRadius: '50%', background: '#34d399', display: 'inline-block', animation: 'pulse 2s infinite' }} />
+                <span style={{ fontSize: 9, color: '#34d399', fontWeight: 700, letterSpacing: '0.1em', fontFamily: 'monospace' }}>MICRO_HUB_CORE_V2.0</span>
               </div>
+              <span style={{ fontSize: 8, color: '#475569', fontFamily: 'monospace' }}>SECURE SHELL</span>
             </div>
-
-            <div className="md:col-span-7 bg-black/40 border border-emerald-500/10 rounded-2xl overflow-hidden flex flex-col shadow-inner" style={{ minHeight: 260 }}>
-              <div className="bg-[#03100a]/80 px-4 py-2.5 border-b border-emerald-950/60 flex items-center justify-between flex-shrink-0">
-                <div className="flex items-center gap-2">
-                  <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse" />
-                  <span className="text-[9px] font-mono text-emerald-500 font-bold tracking-wider">MICRO_HUB_CORE_V2.0</span>
-                </div>
-                <span className="text-[8px] font-mono text-slate-500">SECURE SHELL</span>
+            <div style={{ padding: '14px', fontFamily: 'monospace' }}>
+              <div style={{ fontSize: 9, color: '#475569', marginBottom: 4 }}>&gt; USER_QUERY_INPUT:</div>
+              <div style={{ fontSize: 11, color: '#fff', background: 'rgba(16,185,129,0.06)', padding: '8px 10px', borderRadius: 8, border: '1px solid rgba(16,185,129,0.1)', marginBottom: 12, wordBreak: 'break-word', lineHeight: 1.5 }}>
+                {chatInput || 'Select a preset or type a query...'}
               </div>
-              <div className="p-4 flex-1 flex flex-col justify-between font-mono overflow-hidden">
-                <div className="space-y-1 mb-3">
-                  <div className="text-[10px] text-slate-500">&gt; USER_QUERY_INPUT:</div>
-                  <div className="text-xs text-white font-medium bg-emerald-950/20 p-2 rounded border border-emerald-900/30 line-clamp-2">
-                    {chatInput || "Select a training preset or type a custom query..."}
-                  </div>
-                </div>
-                <div className="space-y-1 flex-1">
-                  <div className="text-[10px] text-emerald-500/60">&gt; CORE_MICROAI_RESPONSE:</div>
-                  <div className="text-[11px] text-emerald-300 leading-relaxed italic line-clamp-4">{chatResponse}</div>
-                </div>
-              </div>
-              <div className="p-2 bg-[#020a05] border-t border-emerald-950/60 flex gap-2 flex-shrink-0">
-                <input type="text" value={chatInput} onChange={e => setChatInput(e.target.value)}
-                  placeholder="Ask MicroAI something..."
-                  className="bg-black/40 border border-emerald-900/50 rounded-lg px-3 py-1.5 text-xs text-white flex-1 focus:outline-none focus:border-emerald-400 font-mono min-w-0" />
-                <Link href="/chat" className="px-3 py-1.5 bg-emerald-500 text-black text-xs font-black rounded-lg hover:bg-emerald-400 transition font-mono flex-shrink-0">
-                  EXECUTE
-                </Link>
-              </div>
+              <div style={{ fontSize: 9, color: 'rgba(52,211,153,0.5)', marginBottom: 4 }}>&gt; CORE_MICROAI_RESPONSE:</div>
+              <div style={{ fontSize: 11, color: '#6ee7b7', lineHeight: 1.6, fontStyle: 'italic', wordBreak: 'break-word' }}>{chatResponse}</div>
+            </div>
+            <div style={{ padding: '10px', background: 'rgba(2,10,5,0.8)', borderTop: '1px solid rgba(16,185,129,0.06)', display: 'flex', gap: 8 }}>
+              <input type="text" value={chatInput} onChange={e => setChatInput(e.target.value)}
+                placeholder="Ask MicroAI something..."
+                style={{ flex: 1, minWidth: 0, background: 'rgba(0,0,0,0.4)', border: '1px solid rgba(16,185,129,0.2)', borderRadius: 8, padding: '7px 12px', fontSize: 12, color: '#fff', outline: 'none', fontFamily: 'monospace' }} />
+              <Link href="/chat" style={{ padding: '7px 14px', background: '#10b981', color: '#000', fontSize: 11, fontWeight: 800, borderRadius: 8, textDecoration: 'none', whiteSpace: 'nowrap', fontFamily: 'monospace', flexShrink: 0 }}>
+                EXECUTE
+              </Link>
             </div>
           </div>
         </div>
       </section>
 
       {/* HUB SECTORS */}
-      <section id="hub-sectors" className="relative z-10 py-16 px-4 md:px-6 max-w-7xl mx-auto">
-        <div className="text-center mb-12">
-          <div className="text-[9px] font-mono font-bold tracking-[0.3em] text-emerald-400 mb-2 uppercase">Ecosystem Map</div>
-          <h2 className="text-2xl md:text-4xl font-black text-white tracking-tight">One Hub. Every Stakeholder Role.</h2>
-          <p className="text-xs md:text-sm text-slate-400 max-w-xl mx-auto mt-3 leading-relaxed">Whether you write smart contracts or bootstrap communities, MicroAI has the exact knowledge you need.</p>
+      <section id="hub-sectors" style={{ position: 'relative', zIndex: 10, padding: '40px 16px', maxWidth: 1100, margin: '0 auto' }}>
+        <div style={{ textAlign: 'center', marginBottom: 32 }}>
+          <div style={{ fontSize: 9, color: '#34d399', fontWeight: 700, letterSpacing: '0.25em', fontFamily: 'monospace', marginBottom: 8 }}>ECOSYSTEM MAP</div>
+          <h2 style={{ fontSize: 'clamp(1.4rem, 5vw, 2.5rem)', fontWeight: 900, color: '#fff', margin: '0 0 10px' }}>One Hub. Every Stakeholder Role.</h2>
+          <p style={{ fontSize: 13, color: '#64748b', maxWidth: 480, margin: '0 auto', lineHeight: 1.6 }}>Whether you write smart contracts or bootstrap communities, MicroAI has the knowledge you need.</p>
         </div>
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5">
+        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(240px, 1fr))', gap: 12 }}>
           {[
-            { n: "01", title: "Developers & Architects", points: ["ERC-8004 & ERC-8183 templates", "Circle Programmable Wallets APIs", "Arc App Kit integration steps", "Sub-second gas optimization"] },
-            { n: "02", title: "Marketers & Project Teams", points: ["Circle CCTP launch frameworks", "Cross-chain onboarding tactics", "Arc Testnet deployment narrative", "Native USDC distribution flows"] },
-            { n: "03", title: "Buyers, Sellers & Traders", points: ["USDC atomic swap structures", "Arc Liquidity Pool mechanics", "Secure payment tracking steps", "Zero-slippage path routing"] },
-            { n: "04", title: "New Users & Community", points: ["Arc Chain basic setup guides", "Frictionless faucet instructions", "Ecosystem project directory", "Troubleshooting wallet errors"] },
-          ].map((sector) => (
-            <div key={sector.n} className="p-5 rounded-2xl bg-[#03110a]/20 border border-emerald-500/10 hover:border-emerald-500/25 transition-all duration-300 flex flex-col justify-between group">
-              <div>
-                <div className="w-8 h-8 rounded-lg bg-emerald-500/5 border border-emerald-500/15 flex items-center justify-center text-emerald-400 font-bold font-mono text-xs mb-4">{sector.n}</div>
-                <h4 className="font-bold text-sm text-white tracking-wide mb-3 group-hover:text-emerald-400 transition-colors">{sector.title}</h4>
-                <ul className="space-y-2">
-                  {sector.points.map((p, i) => (
-                    <li key={i} className="text-xs text-slate-400 flex items-start gap-2 font-medium">
-                      <span className="text-emerald-500 mt-0.5 flex-shrink-0">▪</span><span>{p}</span>
-                    </li>
-                  ))}
-                </ul>
-              </div>
-              <Link href="/chat" className="mt-5 text-[10px] font-mono font-black text-emerald-500 tracking-wider hover:text-emerald-400 transition-colors">
+            { n: '01', title: 'Developers & Architects', points: ['ERC-8004 & ERC-8183 templates', 'Circle Programmable Wallets APIs', 'Arc App Kit integration steps', 'Sub-second gas optimization'] },
+            { n: '02', title: 'Marketers & Project Teams', points: ['Circle CCTP launch frameworks', 'Cross-chain onboarding tactics', 'Arc Testnet deployment narrative', 'Native USDC distribution flows'] },
+            { n: '03', title: 'Buyers, Sellers & Traders', points: ['USDC atomic swap structures', 'Arc Liquidity Pool mechanics', 'Secure payment tracking steps', 'Zero-slippage path routing'] },
+            { n: '04', title: 'New Users & Community', points: ['Arc Chain basic setup guides', 'Frictionless faucet instructions', 'Ecosystem project directory', 'Troubleshooting wallet errors'] },
+          ].map(sector => (
+            <div key={sector.n} style={{ padding: '18px', borderRadius: 14, background: 'rgba(3,17,10,0.2)', border: '1px solid rgba(16,185,129,0.08)' }}>
+              <div style={{ width: 28, height: 28, borderRadius: 8, background: 'rgba(16,185,129,0.05)', border: '1px solid rgba(16,185,129,0.12)', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 10, fontWeight: 800, color: '#34d399', fontFamily: 'monospace', marginBottom: 10 }}>{sector.n}</div>
+              <div style={{ fontSize: 13, fontWeight: 700, color: '#fff', marginBottom: 10 }}>{sector.title}</div>
+              <ul style={{ margin: 0, padding: 0, listStyle: 'none', display: 'flex', flexDirection: 'column', gap: 6 }}>
+                {sector.points.map((p, i) => (
+                  <li key={i} style={{ display: 'flex', gap: 8, fontSize: 11, color: '#64748b' }}>
+                    <span style={{ color: '#34d399', flexShrink: 0 }}>▪</span><span>{p}</span>
+                  </li>
+                ))}
+              </ul>
+              <Link href="/chat" style={{ display: 'block', marginTop: 14, fontSize: 10, color: '#34d399', fontWeight: 700, fontFamily: 'monospace', letterSpacing: '0.1em', textDecoration: 'none' }}>
                 ACCESS MODULE →
               </Link>
             </div>
@@ -237,22 +179,22 @@ export default function Home() {
       </section>
 
       {/* FEATURES */}
-      <section id="features" className="relative z-10 py-16 bg-[#020b06]/40 border-y border-emerald-500/5 px-4 md:px-6">
-        <div className="max-w-7xl mx-auto">
-          <div className="text-center mb-12">
-            <div className="text-[9px] font-mono font-bold tracking-[0.3em] text-emerald-400 mb-2 uppercase">Deep Training Layer</div>
-            <h2 className="text-2xl md:text-4xl font-black text-white tracking-tight">Engine Capabilities & Solutions</h2>
+      <section id="features" style={{ position: 'relative', zIndex: 10, padding: '40px 16px', background: 'rgba(2,11,6,0.4)', borderTop: '1px solid rgba(16,185,129,0.05)', borderBottom: '1px solid rgba(16,185,129,0.05)' }}>
+        <div style={{ maxWidth: 1100, margin: '0 auto' }}>
+          <div style={{ textAlign: 'center', marginBottom: 28 }}>
+            <div style={{ fontSize: 9, color: '#34d399', fontWeight: 700, letterSpacing: '0.25em', fontFamily: 'monospace', marginBottom: 8 }}>DEEP TRAINING LAYER</div>
+            <h2 style={{ fontSize: 'clamp(1.4rem, 5vw, 2.5rem)', fontWeight: 900, color: '#fff', margin: 0 }}>Engine Capabilities & Solutions</h2>
           </div>
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-5">
+          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(260px, 1fr))', gap: 12 }}>
             {[
-              { title: "Complete Protocol Ingestion", desc: "Every page of official Arc Chain codebases, Circle developer documentation, and ecosystem manuals compiled into our AI memory." },
-              { title: "Instantaneous Error Resolution", desc: "Stuck on a failed transaction or code issue? Input trace logs for custom, context-aware Arc & Circle debugging feedback instantly." },
-              { title: "Cross-Chain Architecture Advice", desc: "Master how Circle's USDC minting mechanics work with Arc's rapid network infrastructure to build frictionless payment dApps." },
-            ].map((f, i) => (
-              <div key={i} className="p-6 rounded-2xl bg-[#010604] border border-emerald-500/5 hover:border-emerald-500/15 transition-all">
-                <div className="w-8 h-8 rounded-lg bg-emerald-500/5 border border-emerald-500/10 flex items-center justify-center font-mono font-black text-emerald-400 text-xs mb-4">0{i + 1}</div>
-                <h3 className="font-bold text-sm text-white tracking-wider mb-2">{f.title}</h3>
-                <p className="text-slate-400 text-xs leading-relaxed font-medium">{f.desc}</p>
+              { n: '01', title: 'Complete Protocol Ingestion', desc: 'Every page of official Arc Chain codebases and Circle developer documentation compiled into our AI memory.' },
+              { n: '02', title: 'Instantaneous Error Resolution', desc: 'Input trace logs for custom, context-aware Arc & Circle debugging feedback instantly.' },
+              { n: '03', title: 'Cross-Chain Architecture Advice', desc: "Master how Circle's USDC minting mechanics work with Arc's rapid network to build frictionless payment dApps." },
+            ].map(f => (
+              <div key={f.n} style={{ padding: '18px', borderRadius: 14, background: '#010604', border: '1px solid rgba(16,185,129,0.06)' }}>
+                <div style={{ width: 28, height: 28, borderRadius: 8, background: 'rgba(16,185,129,0.05)', border: '1px solid rgba(16,185,129,0.1)', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 10, fontWeight: 800, color: '#34d399', fontFamily: 'monospace', marginBottom: 12 }}>{f.n}</div>
+                <div style={{ fontSize: 13, fontWeight: 700, color: '#fff', marginBottom: 8 }}>{f.title}</div>
+                <p style={{ fontSize: 12, color: '#64748b', lineHeight: 1.65, margin: 0 }}>{f.desc}</p>
               </div>
             ))}
           </div>
@@ -260,50 +202,50 @@ export default function Home() {
       </section>
 
       {/* HOW IT WORKS */}
-      <section id="how-it-works" className="relative z-10 py-16 px-4 md:px-6 max-w-7xl mx-auto">
-        <div className="text-center mb-12">
-          <div className="text-[9px] font-mono font-bold tracking-[0.3em] text-emerald-400 mb-2 uppercase">Frictionless Workflow</div>
-          <h2 className="text-2xl md:text-4xl font-black text-white tracking-tight">Four Steps to Instant Clarity</h2>
+      <section id="how-it-works" style={{ position: 'relative', zIndex: 10, padding: '40px 16px', maxWidth: 1100, margin: '0 auto' }}>
+        <div style={{ textAlign: 'center', marginBottom: 28 }}>
+          <div style={{ fontSize: 9, color: '#34d399', fontWeight: 700, letterSpacing: '0.25em', fontFamily: 'monospace', marginBottom: 8 }}>FRICTIONLESS WORKFLOW</div>
+          <h2 style={{ fontSize: 'clamp(1.4rem, 5vw, 2.5rem)', fontWeight: 900, color: '#fff', margin: 0 }}>Four Steps to Instant Clarity</h2>
         </div>
-        <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 md:gap-6 max-w-5xl mx-auto">
+        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(180px, 1fr))', gap: 12 }}>
           {[
-            { step: "01", name: "Connect EVM Wallet", desc: "Link your non-custodial wallet on the Arc Testnet channel." },
-            { step: "02", name: "State Your Question", desc: "Ask anything about Arc SDK, Circle APIs, or contract verification." },
-            { step: "03", name: "Approve Micro-Settle", desc: "Authorize $0.001 USDC directly on-chain. Instant, secure." },
-            { step: "04", name: "Get Your Answer", desc: "Receive expert AI responses with immutable TX proof on Arc." },
-          ].map((s) => (
-            <div key={s.step} className="p-4 md:p-5 rounded-2xl bg-[#03110a]/10 border border-emerald-500/5">
-              <div className="text-xs font-mono font-black text-emerald-400 mb-3 bg-emerald-500/5 w-8 h-8 rounded-lg flex items-center justify-center border border-emerald-500/10">{s.step}</div>
-              <div className="font-bold text-xs text-white tracking-wide mb-1.5">{s.name}</div>
-              <p className="text-slate-400 text-[11px] leading-relaxed font-medium">{s.desc}</p>
+            { step: '01', name: 'Connect EVM Wallet', desc: 'Link your non-custodial wallet on Arc Testnet.' },
+            { step: '02', name: 'State Your Question', desc: 'Ask anything about Arc SDK, Circle APIs, or contracts.' },
+            { step: '03', name: 'Approve Micro-Settle', desc: 'Authorize $0.001 USDC directly on-chain.' },
+            { step: '04', name: 'Get Your Answer', desc: 'Expert AI response with immutable TX proof on Arc.' },
+          ].map(s => (
+            <div key={s.step} style={{ padding: '16px', borderRadius: 12, background: 'rgba(3,17,10,0.1)', border: '1px solid rgba(16,185,129,0.06)' }}>
+              <div style={{ width: 28, height: 28, borderRadius: 8, background: 'rgba(16,185,129,0.05)', border: '1px solid rgba(16,185,129,0.1)', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 10, fontWeight: 800, color: '#34d399', fontFamily: 'monospace', marginBottom: 10 }}>{s.step}</div>
+              <div style={{ fontSize: 12, fontWeight: 700, color: '#fff', marginBottom: 6 }}>{s.name}</div>
+              <p style={{ fontSize: 11, color: '#64748b', lineHeight: 1.6, margin: 0 }}>{s.desc}</p>
             </div>
           ))}
         </div>
-        <div className="text-center mt-10">
-          <Link href="/chat" className="inline-block px-8 py-3 rounded-xl bg-emerald-500 text-black font-black text-sm tracking-wider hover:bg-emerald-400 transition-all shadow-[0_0_20px_rgba(16,185,129,0.2)]">
+        <div style={{ textAlign: 'center', marginTop: 28 }}>
+          <Link href="/chat" style={{ display: 'inline-block', padding: '12px 28px', borderRadius: 12, background: '#10b981', color: '#000', fontSize: 13, fontWeight: 800, letterSpacing: '0.06em', textDecoration: 'none', boxShadow: '0 0 18px rgba(16,185,129,0.2)' }}>
             LAUNCH CHAT TERMINAL →
           </Link>
         </div>
       </section>
 
       {/* PRICING */}
-      <section id="pricing" className="relative z-10 py-16 px-4 md:px-6 text-center">
-        <div className="max-w-sm mx-auto">
-          <div className="text-[9px] font-mono font-bold tracking-[0.3em] text-emerald-400 mb-2 uppercase">Frictionless Costs</div>
-          <h2 className="text-2xl md:text-3xl font-black text-white tracking-tight mb-8">Zero Subscriptions.<br />Per-Query Only.</h2>
-          <div className="bg-gradient-to-b from-[#03130c] to-[#010604]/95 border-2 border-emerald-500/15 p-7 rounded-[24px] shadow-2xl relative">
-            <div className="absolute top-0 left-1/4 right-1/4 h-px bg-gradient-to-r from-transparent via-emerald-400/40 to-transparent" />
-            <div className="text-5xl font-black text-white font-mono tracking-tighter">$0.001</div>
-            <div className="text-[8px] text-emerald-400 font-bold tracking-[0.2em] font-mono mt-2 uppercase">USDC per AI Engine call</div>
-            <div className="h-px bg-emerald-500/10 my-5" />
-            <ul className="text-left space-y-3 text-xs text-slate-300 font-medium">
-              {["No monthly platform locking", "Direct wallet-to-contract gas speed", "Full access to all ecosystem modules", "100% on-chain audit log"].map(item => (
-                <li key={item} className="flex items-center gap-2.5">
-                  <span className="text-emerald-400 font-bold flex-shrink-0">✓</span> {item}
+      <section id="pricing" style={{ position: 'relative', zIndex: 10, padding: '40px 16px', textAlign: 'center' }}>
+        <div style={{ maxWidth: 340, margin: '0 auto' }}>
+          <div style={{ fontSize: 9, color: '#34d399', fontWeight: 700, letterSpacing: '0.25em', fontFamily: 'monospace', marginBottom: 8 }}>FRICTIONLESS COSTS</div>
+          <h2 style={{ fontSize: 'clamp(1.3rem, 5vw, 2rem)', fontWeight: 900, color: '#fff', margin: '0 0 20px' }}>Zero Subscriptions.<br />Per-Query Only.</h2>
+          <div style={{ background: 'linear-gradient(180deg, #03130c, rgba(1,6,4,0.95))', border: '2px solid rgba(16,185,129,0.15)', borderRadius: 22, padding: '28px 22px', position: 'relative' }}>
+            <div style={{ position: 'absolute', top: 0, left: '20%', right: '20%', height: 1, background: 'linear-gradient(90deg, transparent, rgba(52,211,153,0.4), transparent)' }} />
+            <div style={{ fontSize: 52, fontWeight: 900, color: '#fff', fontFamily: 'monospace', letterSpacing: '-0.02em' }}>$0.001</div>
+            <div style={{ fontSize: 8, color: '#34d399', fontWeight: 700, letterSpacing: '0.2em', fontFamily: 'monospace', marginTop: 6 }}>USDC PER AI ENGINE CALL</div>
+            <div style={{ height: 1, background: 'rgba(16,185,129,0.1)', margin: '18px 0' }} />
+            <ul style={{ textAlign: 'left', margin: 0, padding: 0, listStyle: 'none', display: 'flex', flexDirection: 'column', gap: 10 }}>
+              {['No monthly platform locking', 'Direct wallet-to-contract gas speed', 'Full access to all ecosystem modules', '100% on-chain audit log'].map(item => (
+                <li key={item} style={{ display: 'flex', alignItems: 'center', gap: 10, fontSize: 12, color: '#94a3b8' }}>
+                  <span style={{ color: '#34d399', fontWeight: 700, flexShrink: 0 }}>✓</span> {item}
                 </li>
               ))}
             </ul>
-            <Link href="/chat" className="block w-full text-center bg-gradient-to-r from-emerald-400 to-emerald-500 text-black font-black py-3 rounded-xl hover:opacity-90 transition mt-6 text-xs tracking-widest">
+            <Link href="/chat" style={{ display: 'block', marginTop: 20, padding: '12px 0', borderRadius: 12, background: 'linear-gradient(135deg, #34d399, #10b981)', color: '#000', fontSize: 12, fontWeight: 800, letterSpacing: '0.1em', textDecoration: 'none' }}>
               LAUNCH CHAT TERMINAL →
             </Link>
           </div>
@@ -311,17 +253,18 @@ export default function Home() {
       </section>
 
       {/* FOOTER */}
-      <footer className="relative z-10 border-t border-emerald-500/10 bg-[#010402] px-4 md:px-6 py-8">
-        <div className="max-w-7xl mx-auto flex flex-col sm:flex-row justify-between items-center gap-4 text-[10px] text-slate-500 font-medium">
-          <div className="flex items-center gap-2.5">
-            <div className="w-6 h-6 rounded-lg bg-emerald-500/5 border border-emerald-500/20 flex items-center justify-center font-bold text-xs text-emerald-400 flex-shrink-0">M</div>
-            <div className="text-center sm:text-left">MICROAI · THE ARC & CIRCLE INTELLIGENCE HUB</div>
+      <footer style={{ position: 'relative', zIndex: 10, borderTop: '1px solid rgba(16,185,129,0.08)', background: '#010402', padding: '24px 16px' }}>
+        <div style={{ maxWidth: 1100, margin: '0 auto', display: 'flex', flexWrap: 'wrap', justifyContent: 'space-between', alignItems: 'center', gap: 16 }}>
+          <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
+            <div style={{ width: 24, height: 24, borderRadius: 7, background: 'rgba(16,185,129,0.08)', border: '1px solid rgba(16,185,129,0.2)', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 11, fontWeight: 800, color: '#34d399', flexShrink: 0 }}>M</div>
+            <div style={{ fontSize: 10, color: '#475569' }}>MICROAI · THE ARC & CIRCLE INTELLIGENCE HUB</div>
           </div>
-          <div className="flex gap-5 font-bold tracking-wider font-mono">
-            <a href="https://arc.io" target="_blank" rel="noreferrer" className="hover:text-emerald-400 transition-colors">ARC</a>
-            <a href="https://circle.com" target="_blank" rel="noreferrer" className="hover:text-emerald-400 transition-colors">CIRCLE</a>
-            <a href="https://github.com/sahmedonchain/microai" target="_blank" rel="noreferrer" className="hover:text-emerald-400 transition-colors">GITHUB</a>
-            <a href="https://testnet.arcscan.app" target="_blank" rel="noreferrer" className="hover:text-emerald-400 transition-colors">EXPLORER</a>
+          <div style={{ display: 'flex', flexWrap: 'wrap', gap: 16 }}>
+            {[{ l: 'ARC', h: 'https://arc.io' }, { l: 'CIRCLE', h: 'https://circle.com' }, { l: 'GITHUB', h: 'https://github.com/sahmedonchain/microai' }, { l: 'EXPLORER', h: 'https://testnet.arcscan.app' }].map(link => (
+              <a key={link.l} href={link.h} target="_blank" rel="noreferrer" style={{ fontSize: 10, color: '#475569', fontWeight: 700, letterSpacing: '0.1em', fontFamily: 'monospace', textDecoration: 'none' }}>
+                {link.l}
+              </a>
+            ))}
           </div>
         </div>
       </footer>
@@ -329,8 +272,11 @@ export default function Home() {
       <style>{`
         @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800;900&display=swap');
         html { scroll-behavior: smooth; }
-        body { background-color: #010503; }
+        body { background: #010503; margin: 0; }
         * { box-sizing: border-box; }
+        @keyframes pulse { 0%, 100% { opacity: 1; } 50% { opacity: 0.4; } }
+        .hidden { display: none; }
+        @media (min-width: 768px) { .hidden { display: flex !important; } }
       `}</style>
     </div>
   );
