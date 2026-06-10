@@ -59,7 +59,7 @@ export default function Home() {
       </div>
 
       {/* NAVBAR */}
-      <nav style={{ position: 'sticky', top: 0, zIndex: 50, display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '12px 16px', background: 'rgba(3,18,10,0.95)', backdropFilter: 'blur(20px)', borderBottom: '1px solid rgba(16,185,129,0.1)' }}>
+      <nav style={{ position: 'relative', top: 0, zIndex: 50, display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '12px 16px', background: 'rgba(3,18,10,0.95)', backdropFilter: 'blur(20px)', borderBottom: '1px solid rgba(16,185,129,0.1)' }}>
         <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
           <div style={{ width: 32, height: 32, borderRadius: 10, background: 'linear-gradient(135deg, #34d399, #10b981)', display: 'flex', alignItems: 'center', justifyContent: 'center', fontWeight: 900, fontSize: 13, color: '#000', flexShrink: 0, boxShadow: '0 0 12px rgba(16,185,129,0.3)' }}>M</div>
           <div>
@@ -68,7 +68,7 @@ export default function Home() {
           </div>
         </div>
         <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
-          <div className="hidden md:flex" style={{ gap: 20, fontSize: 10, color: '#64748b', fontWeight: 700, letterSpacing: '0.08em' }}>
+          <div className="hidden md:flex" style={{ gap: 20, fontSize: 10, color: '#64748b', fontWeight: 700, letterSpacing: '0.08em', position: 'absolute', left: '50%', transform: 'translateX(-50%)' }}>
             <a href="#hub-sectors" style={{ textDecoration: 'none', color: 'inherit' }}>ECOSYSTEM</a>
             <a href="#features" style={{ textDecoration: 'none', color: 'inherit' }}>CAPABILITIES</a>
             <a href="#pricing" style={{ textDecoration: 'none', color: 'inherit' }}>PRICING</a>
@@ -83,7 +83,7 @@ export default function Home() {
       <section style={{ position: 'relative', zIndex: 10, padding: '48px 20px 40px', textAlign: 'center' }}>
         <div style={{ display: 'inline-flex', alignItems: 'center', gap: 8, padding: '5px 12px', borderRadius: 20, border: '1px solid rgba(16,185,129,0.15)', background: 'rgba(3,17,10,0.6)', marginBottom: 20 }}>
           <span style={{ width: 6, height: 6, borderRadius: '50%', background: '#34d399', display: 'inline-block', animation: 'pulse 2s infinite' }} />
-          <span style={{ fontSize: 9, color: '#34d399', fontWeight: 700, letterSpacing: '0.15em', fontFamily: 'monospace' }}>ARC & CIRCLE KNOWLEDGE LAYER · LIVE</span>
+          <span style={{ fontSize: 9, color: '#34d399', fontWeight: 700, letterSpacing: '0.15em', fontFamily: 'monospace' }}>NOW LIVE ON TESTNET</span>
         </div>
 
         <h1 style={{ fontSize: 'clamp(1.8rem, 7vw, 4.5rem)', fontWeight: 900, lineHeight: 1.08, margin: '0 0 16px', background: 'linear-gradient(180deg, #fff 0%, rgba(148,163,184,0.5) 100%)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent', letterSpacing: '-0.02em' }}>
@@ -91,7 +91,7 @@ export default function Home() {
         </h1>
 
         <p style={{ fontSize: 'clamp(13px, 3.5vw, 15px)', color: '#94a3b8', maxWidth: 480, margin: '0 auto 28px', lineHeight: 1.65 }}>
-          One AI engine for every Arc and Circle question — built on-chain. Ask anything, get instant answers, pay <span style={{ color: '#34d399', fontWeight: 700 }}>$0.001 USDC</span> per query.
+          One AI engine for all Arc and Circle queries, on-chain. Instant answers, for just <span style={{ color: '#34d399', fontWeight: 700 }}>$0.001 USDC</span> per question
         </p>
 
         <div style={{ display: 'flex', flexWrap: 'wrap', gap: 10, justifyContent: 'center' }}>
@@ -257,7 +257,7 @@ export default function Home() {
         <div style={{ maxWidth: 1100, margin: '0 auto', display: 'flex', flexWrap: 'wrap', justifyContent: 'space-between', alignItems: 'center', gap: 16 }}>
           <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
             <div style={{ width: 24, height: 24, borderRadius: 7, background: 'rgba(16,185,129,0.08)', border: '1px solid rgba(16,185,129,0.2)', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 11, fontWeight: 800, color: '#34d399', flexShrink: 0 }}>M</div>
-            <div style={{ fontSize: 10, color: '#475569' }}>MICROAI · THE ARC & CIRCLE INTELLIGENCE HUB</div>
+            <div style={{ fontSize: 10, color: '#475569' }}>MICROAI · THE ARC & CIRCLE HUB</div>
           </div>
           <div style={{ display: 'flex', flexWrap: 'wrap', gap: 16 }}>
             {[{ l: 'ARC', h: 'https://arc.io' }, { l: 'CIRCLE', h: 'https://circle.com' }, { l: 'GITHUB', h: 'https://github.com/sahmedonchain/microai' }, { l: 'EXPLORER', h: 'https://testnet.arcscan.app' }].map(link => (
