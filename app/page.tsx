@@ -42,9 +42,9 @@ export default function Home() {
   }, []);
 
   const presets = [
-    { label: 'For Developers & Deployers', key: 'ERC-8004', q: 'How do I implement ERC-8004 AI Agent specifications on Arc Chain?', r: 'To deploy ERC-8004 on Arc, initialize your contract with the Arc Agent Core SDK, specify your runtime constraints, and ensure gas calculations utilize the native USDC gas settlement architecture.' },
-    { label: 'For Marketers & Teams', key: 'CCTP', q: 'How can we leverage Circle CCTP for cross-chain liquidity marketing?', r: 'Circle CCTP allows your marketing campaigns to target multi-chain native onboarding. Users burn USDC on source chains and mint natively on Arc without third-party wrap risk.' },
-    { label: 'For Buyers, Sellers & Traders', key: 'trades', q: 'What is the easiest protocol to settle secure USDC trades on Arc?', r: "Traders use the Native Arc Liquidity Hub. Sub-second settlement using Circle's native APIs ensures 100% security with near-zero slippage." },
+    { label: 'For Developers & Builders', key: 'ERC-8004', q: 'How do I implement ERC-8004 AI Agent on Arc?', r: 'To deploy ERC-8004 on Arc, initialize with Arc Agent Core SDK, specify runtime constraints, and use native USDC gas settlement.' },
+{ label: 'For Fintech & Startups', key: 'CCTP', q: 'How do I integrate Circle CCTP for cross-chain payments?', r: 'Circle CCTP burns USDC on source chain and mints native USDC on Arc — no wrapped tokens, fully native settlement.' },
+{ label: 'For Crypto Native & Traders', key: 'trades', q: 'How does DeFi and liquidity work on Arc?', r: 'Arc supports DeFi protocols with sub-second finality and USDC-native gas — ideal for liquidity pools and instant settlement.' },
   ];
 
   return (
@@ -155,10 +155,10 @@ export default function Home() {
         </div>
         <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(240px, 1fr))', gap: 12 }}>
           {[
-            { n: '01', title: 'Developers & Architects', points: ['ERC-8004 & ERC-8183 templates', 'Circle Programmable Wallets APIs', 'Arc App Kit integration steps', 'Sub-second gas optimization'] },
-            { n: '02', title: 'Marketers & Project Teams', points: ['Circle CCTP launch frameworks', 'Cross-chain onboarding tactics', 'Arc Testnet deployment narrative', 'Native USDC distribution flows'] },
-            { n: '03', title: 'Buyers, Sellers & Traders', points: ['USDC atomic swap structures', 'Arc Liquidity Pool mechanics', 'Secure payment tracking steps', 'Zero-slippage path routing'] },
-            { n: '04', title: 'New Users & Community', points: ['Arc Chain basic setup guides', 'Frictionless faucet instructions', 'Ecosystem project directory', 'Troubleshooting wallet errors'] },
+            { n: '01', title: 'Developers & Builders', points: ['Smart Contract Development', 'Frontend dApp Building', 'AI Agent Development (ERC-8004)', 'Agentic Commerce (ERC-8183)'] },
+{ n: '02', title: 'Fintech & Startups', points: ['Payment App Building', 'Cross-border Remittance Apps', 'Treasury & Payroll Systems', 'FX & Stablecoin Settlement'] },
+{ n: '03', title: 'Crypto Native', points: ['DeFi Protocol Building', 'Liquidity & Trading', 'Cross-chain Bridge Integration', 'Chainlink & Oracle Setup'] },
+{ n: '04', title: 'Community & New Users', points: ['Arc House & Discord Help', 'Hackathon & Grant Guidance', 'Beginner Setup Guides', 'Merchants & Freelancers'] },
           ].map(sector => (
             <div key={sector.n} style={{ padding: '18px', borderRadius: 14, background: 'rgba(3,17,10,0.2)', border: '1px solid rgba(16,185,129,0.08)' }}>
               <div style={{ width: 28, height: 28, borderRadius: 8, background: 'rgba(16,185,129,0.05)', border: '1px solid rgba(16,185,129,0.12)', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 10, fontWeight: 800, color: '#34d399', fontFamily: 'monospace', marginBottom: 10 }}>{sector.n}</div>
