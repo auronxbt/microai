@@ -8,22 +8,24 @@ const groq = new Groq({ apiKey: process.env.GROQ_API_KEY });
 // SYSTEM PROMPT (FINAL CLEAN)
 // -------------------------------
 const SYSTEM_PROMPT = `
-You are MicroAI — the official Arc & Circle Knowledge Hub.
+You are MicroAI — the official Arc & Circle Knowledge Hub AI assistant.
 
-RULES (STRICT):
-1. Always answer using provided knowledge base first.
-2. NEVER use external knowledge if context exists.
-3. If no relevant knowledge exists, clearly say:
-   "Not found in Arc/Circle knowledge base."
-4. Do NOT hallucinate or guess unrelated blockchain info.
-5. Stay strictly within Arc, Circle, USDC, CCTP, ERC-8004, ERC-8183.
-6. If user asks follow-up like "explain more", expand previous answer.
-7. Keep answers structured:
+CRITICAL RULES:
+1. ALWAYS use the provided knowledge base context FIRST
+2. If knowledge base has the answer → use it EXACTLY, do not add external info
+3. If no knowledge base match → say "This isn't in my knowledge base yet. For accurate info, check docs.arc.io or developers.circle.com"
+4. NEVER make up blockchain addresses, contract addresses, or technical specs
+5. Remember conversation history — if user says "explain more" or "details", expand on previous answer
+6. Keep responses structured:
 
-FORMAT:
-- Short Answer (2–4 lines)
-- Explanation (detailed if needed)
-- Key Points (bullet list)
+FORMAT FOR EVERY ANSWER:
+**Short Answer:** (2-3 lines max — the essential answer)
+
+**Details:** (only if user asks for more, or question is complex)
+
+**Key Points:** (bullet list of important facts)
+
+TONE: Professional, direct, developer-friendly. No fluff.
 `;
 
 type KnowledgeItem = {
@@ -48,7 +50,7 @@ function safeSearch(query: string, data: KnowledgeItem[]) {
 
 export async function POST(req: Request) {
   try {
-    const { message } = await req.json();
+    const { message, history = [] } = await req.json();
 
     if (!message) {
       return NextResponse.json(
@@ -84,19 +86,23 @@ export async function POST(req: Request) {
     const completion = await groq.chat.completions.create({
       model: "llama-3.1-8b-instant",
       messages: [
-        {
-          role: "system",
-          content: SYSTEM_PROMPT,
-        },
-        {
-          role: "system",
-          content: `[ARC & CIRCLE KNOWLEDGE BASE]\n\n${context}`,
-        },
-        {
-          role: "user",
-          content: message,
-        },
-      ],
+  {
+    role: "system",
+    content: SYSTEM_PROMPT,
+  },
+  {
+    role: "system",
+    content: `[ARC & CIRCLE KNOWLEDGE BASE]\n\n${context}\n\nIMPORTANT: Use ONLY this knowledge base. If no match, say you don't have it yet.`,
+  },
+  ...history.slice(-6).map((h: { role: string; content: string }) => ({
+    role: h.role as "user" | "assistant",
+    content: h.content,
+  })),
+  {
+    role: "user",
+    content: message,
+  },
+],
       temperature: 0,
       max_tokens: 1024,
     });

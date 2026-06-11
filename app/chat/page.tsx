@@ -122,7 +122,7 @@ export default function Chat() {
       const txData = "0xa9059cbb" + RECEIVER.slice(2).padStart(64, "0") + amount;
       txHash = await window.ethereum!.request({ method: "eth_sendTransaction", params: [{ from: wallet, to: USDC_CONTRACT, data: txData, gas: "0x186A0" }] }) as string;
       setTxStep("Transaction confirmed. Generating response...");
-      const res = await fetch("/api/chat", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ message: msg }) });
+      const res = await fetch("/api/chat", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({message: msg,history: messages.map(m => ({ role: m.role, content: m.text })) }) });
       const aiData = await res.json();
       setMessages(prev => [...prev, { role: "assistant", text: aiData.reply || "Could not generate a response.", txHash }]);
       await getBalance(wallet);
