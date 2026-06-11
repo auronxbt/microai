@@ -1,68 +1,116 @@
 import { NextResponse } from "next/server";
 import Groq from "groq-sdk";
+import { searchKnowledge } from "@/lib/search";
 
 const groq = new Groq({ apiKey: process.env.GROQ_API_KEY });
 
-const SYSTEM_PROMPT = `You are MicroAI — the official AI knowledge hub for Arc Blockchain and Circle ecosystems.
+// -------------------------------
+// SYSTEM PROMPT (FINAL CLEAN)
+// -------------------------------
+const SYSTEM_PROMPT = `
+You are MicroAI — the official Arc & Circle Knowledge Hub.
 
-YOUR IDENTITY:
-- Built on Arc Testnet, powered by USDC microtransactions
-- Every question costs $0.001 USDC, paid instantly on Arc blockchain
-- You specialize ONLY in Arc and Circle — not a general-purpose AI
+RULES (STRICT):
+1. Always answer using provided knowledge base first.
+2. NEVER use external knowledge if context exists.
+3. If no relevant knowledge exists, clearly say:
+   "Not found in Arc/Circle knowledge base."
+4. Do NOT hallucinate or guess unrelated blockchain info.
+5. Stay strictly within Arc, Circle, USDC, CCTP, ERC-8004, ERC-8183.
+6. If user asks follow-up like "explain more", expand previous answer.
+7. Keep answers structured:
 
-ARC BLOCKCHAIN (arc.io):
-- High-performance Layer 1 optimized for stablecoin commerce
-- Native USDC gas — chain ID 0x4cef52, RPC: rpc.testnet.arc.network, Explorer: testnet.arcscan.app
-- ERC-8004: AI Agent Registration standard
-- ERC-8183: Agentic Commerce / Job Settlement standard  
-- Arc App Kit: Unified Balance, Bridge, Swap
-- Arc House: developer community, office hours, builder grants
-- Testnet faucet: faucet.circle.com
+FORMAT:
+- Short Answer (2–4 lines)
+- Explanation (detailed if needed)
+- Key Points (bullet list)
+`;
 
-CIRCLE (circle.com):
-- Issuer of USDC — world's leading regulated digital dollar
-- Circle Developer Console: console.circle.com
-- Developer-Controlled & User-Controlled Wallets
-- CCTP: Cross-Chain Transfer Protocol for USDC
-- Circle Contracts SDK, Payments API, Payouts API
-- Supported chains: Ethereum, Base, Arbitrum, Solana, Arc, Polygon, and more
+type KnowledgeItem = {
+  id: string;
+  title: string;
+  content: string;
+};
 
-BUILDING ON ARC + CIRCLE:
-- Stack: Next.js/Vite + wagmi + viem + @circle-fin/app-kit
-- npm install @circle-fin/developer-controlled-wallets
-- Hardhat or Circle Contracts SDK for smart contract deployment
-- Arc testnet RPC: rpc.testnet.arc.network, Chain ID: 314121 (0x4cef52)
+// -------------------------------
+// SIMPLE FALLBACK SEARCH (SAFE)
+// -------------------------------
+function safeSearch(query: string, data: KnowledgeItem[]) {
+  const q = query.toLowerCase();
 
-RULES:
-1. Only answer Arc, Circle, Web3, USDC, smart contracts, DeFi topics
-2. If unrelated: "I specialize in Arc and Circle. Ask me anything about those!"
-3. Direct, precise, developer-friendly answers
-4. Use markdown — bullets, code blocks, headers
-5. No greetings or filler — straight to the answer`;
+  return data.filter((item) => {
+    const t = item.title.toLowerCase();
+    const c = item.content.toLowerCase();
+
+    return t.includes(q) || c.includes(q);
+  });
+}
 
 export async function POST(req: Request) {
   try {
     const { message } = await req.json();
 
     if (!message) {
-      return NextResponse.json({ error: "Message is required" }, { status: 400 });
+      return NextResponse.json(
+        { error: "Message is required" },
+        { status: 400 }
+      );
     }
 
+    // -------------------------------
+    // STEP 1: SEARCH KNOWLEDGE
+    // -------------------------------
+    const matched = searchKnowledge(message);
+
+    const fallbackMatched = safeSearch(message, matched);
+
+    const relevantKnowledge = fallbackMatched
+      .map(
+        (item) => `### ${item.title}\n${item.content}`
+      )
+      .join("\n\n");
+
+    // -------------------------------
+    // STEP 2: BUILD CONTEXT
+    // -------------------------------
+    const context =
+      relevantKnowledge.length > 0
+        ? relevantKnowledge
+        : "NO MATCH FOUND IN KNOWLEDGE BASE";
+
+    // -------------------------------
+    // STEP 3: CALL AI
+    // -------------------------------
     const completion = await groq.chat.completions.create({
       model: "llama-3.1-8b-instant",
       messages: [
-        { role: "system", content: SYSTEM_PROMPT },
-        { role: "user", content: message },
+        {
+          role: "system",
+          content: SYSTEM_PROMPT,
+        },
+        {
+          role: "system",
+          content: `[ARC & CIRCLE KNOWLEDGE BASE]\n\n${context}`,
+        },
+        {
+          role: "user",
+          content: message,
+        },
       ],
-      temperature: 0.15,
+      temperature: 0,
       max_tokens: 1024,
     });
 
-    const reply = completion.choices[0]?.message?.content || "Could not generate a response.";
-    return NextResponse.json({ reply });
+    const reply =
+      completion.choices[0]?.message?.content ||
+      "Could not generate response.";
 
+    return NextResponse.json({ reply });
   } catch (error) {
-    console.error("Route error:", error);
-    return NextResponse.json({ reply: "An error occurred. Please try again." }, { status: 500 });
+    console.error(error);
+    return NextResponse.json(
+      { reply: "Server error occurred." },
+      { status: 500 }
+    );
   }
 }

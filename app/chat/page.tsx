@@ -153,48 +153,45 @@ export default function Chat() {
       </div>
 
       {/* Navbar */}
-      <nav className="relative z-20 flex-shrink-0 flex items-center justify-between px-4 md:px-6 py-3 bg-[#020d06]/90 backdrop-blur-xl border-b border-emerald-500/10">
-        <Link href="/" className="flex items-center gap-2.5 group">
-          <div className="w-8 h-8 rounded-xl bg-gradient-to-br from-emerald-400 to-emerald-600 flex items-center justify-center font-black text-xs text-black shadow-[0_0_15px_rgba(16,185,129,0.3)]">M</div>
-          <div>
-            <div className="text-sm font-bold tracking-wider text-white">MICRO<span className="text-emerald-400 font-extrabold">AI</span></div>
-            <div className="text-[7px] text-emerald-500/60 tracking-[0.25em] font-mono -mt-0.5">KNOWLEDGE HUB TERMINAL</div>
-          </div>
-        </Link>
+      <nav className="relative z-20 flex-shrink-0 flex items-center justify-between px-3 py-2.5 bg-[#020d06]/90 backdrop-blur-xl border-b border-emerald-500/10">
+  <Link href="/" className="flex items-center gap-2 flex-shrink-0 min-w-0">
+    <div className="w-7 h-7 rounded-lg bg-gradient-to-br from-emerald-400 to-emerald-600 flex items-center justify-center font-black text-xs text-black flex-shrink-0">M</div>
+    <div className="min-w-0">
+      <div className="text-xs font-bold tracking-wider text-white leading-none">MICRO<span className="text-emerald-400">AI</span></div>
+      <div style={{ fontSize: 6, color: 'rgba(52,211,153,0.4)', letterSpacing: '0.12em', fontFamily: 'monospace' }}>KNOWLEDGE HUB</div>
+    </div>
+  </Link>
 
-        <div className="flex items-center gap-2 md:gap-3">
-          {/* Network */}
-          <div className="flex rounded-xl overflow-hidden border border-emerald-500/15 bg-[#010805]/80">
-            <button className="px-3 py-1.5 text-[10px] font-bold font-mono tracking-wider bg-emerald-500/10 text-emerald-400 border-r border-emerald-500/10">
-              TESTNET
-            </button>
-            <button onClick={() => alert('Mainnet coming soon!')} className="px-3 py-1.5 text-[10px] font-bold font-mono tracking-wider text-slate-500 hover:text-slate-400 transition-colors">
-              MAINNET
-            </button>
-          </div>
+  <div className="flex items-center gap-2 flex-shrink-0">
+    {/* Testnet badge only */}
+    <select
+  onChange={e => { if (e.target.value === 'mainnet') { alert('Mainnet coming soon!'); e.target.value = 'testnet'; } }}
+  style={{ padding: '4px 8px', borderRadius: 8, border: '1px solid rgba(52,211,153,0.2)', background: '#010805', color: '#34d399', fontSize: 9, fontWeight: 700, fontFamily: 'monospace', outline: 'none', cursor: 'pointer' }}>
+  <option value="testnet" style={{ background: '#010805' }}>TESTNET</option>
+  <option value="mainnet" style={{ background: '#010805' }}>MAINNET</option>
+</select>
 
-          {/* Balance */}
-          {wallet && balance !== null && (
-            <div className="hidden sm:flex items-center gap-1.5 px-3 py-1.5 rounded-xl border border-emerald-500/15 bg-emerald-500/5 text-[11px] font-bold font-mono text-emerald-400">
-              <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse" />
-              {balance} USDC
-            </div>
-          )}
+    {/* Balance - sm+ only */}
+    {wallet && balance !== null && (
+      <div className="hidden sm:block text-[9px] font-mono text-emerald-400 font-bold">
+        {balance} USDC
+      </div>
+    )}
 
-          {/* Wallet */}
-          {wallet ? (
-            <div className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl border border-emerald-500/15 bg-[#020d06]/60">
-              <span className="w-1.5 h-1.5 rounded-full bg-emerald-400" />
-              <span className="text-[11px] font-mono text-emerald-300">{wallet.slice(0, 6)}...{wallet.slice(-4)}</span>
-              <button onClick={disconnect} className="text-slate-600 hover:text-red-400 transition-colors ml-1 text-xs font-bold">×</button>
-            </div>
-          ) : (
-            <button onClick={connectWallet} className="px-4 py-1.5 text-[11px] font-black tracking-wider rounded-xl bg-emerald-500 text-black hover:bg-emerald-400 transition-all shadow-[0_0_15px_rgba(16,185,129,0.2)]">
-              CONNECT WALLET
-            </button>
-          )}
-        </div>
-      </nav>
+    {/* Wallet / Connect */}
+    {wallet ? (
+      <div className="flex items-center gap-1 px-2 py-1 rounded-lg border border-emerald-500/15 bg-[#020d06]/60">
+        <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 flex-shrink-0" />
+        <span className="text-[9px] font-mono text-emerald-300">{wallet.slice(0, 5)}...{wallet.slice(-3)}</span>
+        <button onClick={disconnect} className="text-slate-600 hover:text-red-400 text-xs font-bold ml-1">×</button>
+      </div>
+    ) : (
+      <button onClick={connectWallet} className="px-3 py-1.5 text-[10px] font-black rounded-lg bg-emerald-500 text-black hover:bg-emerald-400 transition-all whitespace-nowrap">
+        CONNECT
+      </button>
+    )}
+  </div>
+</nav>
 
       {/* Messages */}
       <div className="relative z-10 flex-1 overflow-y-auto px-4 md:px-6">
