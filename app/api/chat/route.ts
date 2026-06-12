@@ -36,13 +36,13 @@ RESPONSE FORMAT — ALWAYS follow this structure:
 2. Step two
 3. Step three
 
-"example" or "code":
+IF user says "example" or "code":
 **Code Example**
 \`\`\`typescript
 // working code here
 \`\`\`
 
-"source" or "docs":
+IF user says "source" or "docs":
 **Official Sources**
 - docs.arc.io
 - developers.circle.com
