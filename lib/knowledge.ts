@@ -1,459 +1,325 @@
 export const knowledgeBase = [
 
   // ============================================================
-  // ARC BLOCKCHAIN — CORE
+  // A. ARC BASICS
   // ============================================================
   {
-    id: "arc-1",
-    keywords: ["arc", "arc blockchain", "what is arc", "arc l1", "layer 1", "arc chain"],
-    title: "What is Arc, and what makes it different from other L1 blockchains?",
+    id: "arc-basics-1",
+    keywords: ["evm compatible", "solidity arc", "ethereum compatible", "existing code arc", "evm arc"],
+    title: "Is Arc EVM-compatible? Can I use my existing Solidity code?",
     content: `
-Short Answer:
-Arc is a Layer-1 blockchain designed specifically for fast, low-cost stablecoin payments using USDC as the native gas token. It is purpose-built for real-world financial transactions, not general-purpose dApps.
+SHORT_ANSWER:
+Yes. Arc is fully EVM-compatible. Your existing Solidity contracts, Hardhat/Foundry configs, and Ethereum libraries work on Arc with minimal changes. The main difference is gas is paid in USDC, not ETH.
 
-Explanation:
-Arc is a next-generation Layer-1 blockchain focused on stablecoin settlement. Unlike Ethereum or Solana which support all kinds of apps, Arc is optimized purely for payments and financial infrastructure.
+EXPLANATION:
+Arc is built as an EVM-compatible Layer-1 blockchain. This means:
+- All standard Solidity versions (including 0.8.x) work
+- Hardhat, Foundry, Remix, Truffle all work
+- ethers.js, viem, wagmi all work
+- ERC-20, ERC-721, ERC-1155 standards all work
+- OpenZeppelin contracts work without modification
+The key difference: USDC replaces ETH as the gas token. You must have USDC to pay transaction fees — no ETH needed.
 
-Key Points:
-- Payments-first architecture — designed for money movement, not gaming or NFTs
-- USDC is the native gas token — all fees paid in USDC, no ETH or native coin needed
-- High-performance settlement — fast finality, low latency
-- Compliance-aware — built for banks, fintechs, and enterprise payment systems
-- Chain ID: 0x4cef52 (5042002) | RPC: rpc.testnet.arc.network | Explorer: testnet.arcscan.app
-- Supports ERC-8004 (AI Agent Registration) and ERC-8183 (Agentic Commerce)
+GUIDE:
+Step 1: Change your RPC to https://rpc.testnet.arc.network
+Step 2: Change chain ID to 5042002
+Step 3: Make sure your deployer wallet has testnet USDC (for gas)
+Step 4: Deploy exactly as you would on Ethereum
+
+KEY DIFFERENCES FROM ETHEREUM:
+- Gas paid in USDC (not ETH)
+- Sub-second deterministic finality (no waiting for confirmations)
+- No reorg risk
+- USDC has 6 decimals for ERC-20, 18 decimals for native gas
+
+SOURCE:
+docs.arc.io/arc/references/evm-compatibility.md
 `
   },
 
   {
-    id: "arc-2",
-    keywords: ["arc testnet", "testnet setup", "arc rpc", "add arc", "metamask arc", "connect arc"],
-    title: "How do I set up and connect to Arc Testnet?",
+    id: "arc-basics-2",
+    keywords: ["hardhat arc", "foundry arc", "remix arc", "tools arc", "developer tools arc"],
+    title: "What developer tools work on Arc?",
     content: `
-Short Answer:
-Add Arc Testnet to MetaMask using the RPC details below. Get free testnet USDC from the faucet and start building.
+SHORT_ANSWER:
+All standard Ethereum developer tools work on Arc — Hardhat, Foundry, Remix, Truffle, ethers.js, viem, wagmi, and OpenZeppelin.
 
-Setup Guide:
-1. Open MetaMask → Networks → Add Network manually
-2. Network Name: Arc Testnet
-3. RPC URL: https://rpc.testnet.arc.network
-4. Chain ID: 5042002 (hex: 0x4cef52)
-5. Currency Symbol: USDC
-6. Block Explorer: https://testnet.arcscan.app
+FULL LIST OF SUPPORTED TOOLS:
+- Hardhat (recommended for most projects)
+- Foundry (fastest for testing)
+- Remix IDE (browser-based, good for quick deploys)
+- Truffle (legacy support)
+- ethers.js v5 and v6
+- viem (modern, recommended)
+- wagmi (React hooks for wallet connection)
+- OpenZeppelin Contracts
+- Chainlink (oracle support)
+- Thirdweb
+- Alchemy (RPC provider)
 
-Get Testnet USDC:
-- Visit faucet.circle.com
-- Select Arc Testnet
-- Enter your wallet address
-- Receive free testnet USDC
-
-Key Points:
-- All gas fees are paid in USDC — no ETH needed
-- Use testnet.arcscan.app to verify transactions
-- Arc Testnet is fully EVM-compatible
-`
-  },
-
-  {
-    id: "arc-3",
-    keywords: ["arc usdc gas", "gas fee usdc", "pay gas usdc", "native usdc", "arc fee"],
-    title: "How does USDC work as gas on Arc?",
-    content: `
-Short Answer:
-On Arc, all transaction fees (gas) are paid in USDC — not in a native coin like ETH. This makes payments predictable and eliminates the need to hold a separate gas token.
-
-Explanation:
-Traditional blockchains require you to hold ETH, BNB, or SOL to pay gas fees. Arc eliminates this friction by using USDC directly as the gas currency.
-
-Key Points:
-- 1 USDC = $1 always — gas costs are stable and predictable
-- No need to buy a separate native token
-- Great for businesses and institutions that already hold USDC
-- Gas fees are typically very low (fractions of a cent on testnet)
-- USDC contract on Arc Testnet: 0x3600000000000000000000000000000000000000
-`
-  },
-
-  {
-    id: "arc-4",
-    keywords: ["arc explorer", "arcscan", "view transaction", "tx hash arc", "check transaction"],
-    title: "How do I check transactions on Arc blockchain?",
-    content: `
-Short Answer:
-Use Arc's block explorer at testnet.arcscan.app to view all transactions, wallet balances, and smart contract activity.
-
-Guide:
-1. Go to https://testnet.arcscan.app
-2. Paste your wallet address or transaction hash in the search bar
-3. View transaction status, amount, gas used, and block confirmation
-
-Key Points:
-- Every transaction on Arc is publicly verifiable
-- You can view: TX hash, sender, receiver, amount, gas fee, block number
-- Smart contract interactions are also visible
-- Testnet explorer URL: https://testnet.arcscan.app
-`
-  },
-
-  // ============================================================
-  // ERC-8004 — AI AGENT REGISTRATION
-  // ============================================================
-  {
-    id: "erc8004-1",
-    keywords: ["erc-8004", "erc 8004", "ai agent registration", "register agent", "agent identity", "agent id"],
-    title: "What is ERC-8004 and how do I register an AI Agent on Arc?",
-    content: `
-Short Answer:
-ERC-8004 is Arc's standard for registering AI agents on-chain. It gives each AI agent a unique on-chain identity (NFT-based) with metadata stored on IPFS.
-
-What is ERC-8004:
-ERC-8004 is the AI Agent Identity Registry standard on Arc blockchain. When you register an agent, you receive a unique Agent ID (NFT tokenId) that represents your AI agent on-chain.
-
-Registration Steps:
-1. Deploy or use the existing IdentityRegistry contract: 0x8004A818BFB912233c491871b3d84c89A494BD9e
-2. Prepare your agent metadata JSON (name, description, capabilities, version, URL)
-3. Upload metadata to IPFS (use Pinata or similar)
-4. Call register(string metadataURI) function with your IPFS URI
-5. Receive your Agent ID (NFT tokenId)
-
-Key Points:
-- IdentityRegistry Contract: 0x8004A818BFB912233c491871b3d84c89A494BD9e
-- Each agent gets a unique NFT-based ID
-- Metadata should include: name, description, capabilities, version, URL
-- Compatible with Circle's developer-controlled wallets for programmatic registration
-- Used by MicroAI Agent ID: 69168
-`
-  },
-
-  {
-    id: "erc8004-2",
-    keywords: ["erc-8004 metadata", "agent metadata", "ipfs agent", "agent json", "agent capabilities"],
-    title: "What should the ERC-8004 agent metadata JSON look like?",
-    content: `
-Short Answer:
-Your agent metadata is a JSON file uploaded to IPFS. It describes your AI agent's identity, capabilities, and endpoint.
-
-Example Metadata JSON:
-{
-  "name": "MicroAI Agent",
-  "description": "Pay-per-use AI assistant on Arc Testnet. $0.001 USDC per question.",
-  "agent_type": "ai_assistant",
-  "capabilities": ["natural_language_qa", "web3_analysis", "code_generation"],
-  "version": "1.0.0",
-  "url": "https://your-dapp.vercel.app",
-  "payment": {
-    "cost_per_query": "0.001",
-    "token": "USDC",
-    "network": "ARC-TESTNET"
+GUIDE (Hardhat setup):
+Step 1: npm install --save-dev hardhat @nomicfoundation/hardhat-toolbox
+Step 2: In hardhat.config.ts, add:
+networks: {
+  arcTestnet: {
+    url: "https://rpc.testnet.arc.network",
+    chainId: 5042002,
+    accounts: [process.env.PRIVATE_KEY],
   }
 }
+Step 3: npx hardhat run scripts/deploy.ts --network arcTestnet
 
-Steps to Upload:
-1. Create the JSON file
-2. Go to pinata.cloud and sign up (free)
-3. Upload the JSON file
-4. Copy the CID (e.g., bafkrei...)
-5. Use ipfs://YOUR_CID as the metadataURI when registering
-
-Key Points:
-- Always use ipfs:// prefix for the URI
-- Include all capabilities your agent supports
-- Keep the JSON valid and well-structured
-`
-  },
-
-  // ============================================================
-  // ERC-8183 — AGENTIC COMMERCE / JOB SETTLEMENT
-  // ============================================================
-  {
-    id: "erc8183-1",
-    keywords: ["erc-8183", "erc 8183", "job settlement", "agentic commerce", "job contract", "escrow arc"],
-    title: "What is ERC-8183 and how does Job Settlement work on Arc?",
-    content: `
-Short Answer:
-ERC-8183 is Arc's Agentic Commerce standard. It allows AI agents and humans to create on-chain jobs with escrow payment — the client pays, the provider delivers, and USDC settles automatically.
-
-How It Works:
-1. Client creates a job with: provider address, evaluator, deadline, description
-2. Provider sets the budget (how much USDC they expect)
-3. Client approves and funds the escrow with USDC
-4. Provider submits the deliverable (as a bytes32 hash)
-5. Evaluator/client marks job complete → USDC released to provider
-
-Contract: 0x0747EEf0706327138c69792bF28Cd525089e4583
-
-Job Status Flow:
-Open → Funded → Submitted → Completed (or Rejected/Expired)
-
-Key Points:
-- AgenticCommerce Contract: 0x0747EEf0706327138c69792bF28Cd525089e4583
-- Funds held in escrow until job completion
-- Supports dispute resolution via evaluator role
-- MicroAI Job ID example: 110278, Budget: 1 USDC
-- Perfect for: AI query settlement, freelance work, automated payments
-`
-  },
-
-  // ============================================================
-  // ARC APP KIT
-  // ============================================================
-  {
-    id: "arc-appkit-1",
-    keywords: ["arc app kit", "app kit", "unified balance", "bridge arc", "swap arc", "cross chain arc"],
-    title: "What is Arc App Kit and how do I use Unified Balance?",
-    content: `
-Short Answer:
-Arc App Kit is a developer SDK that lets users bring USDC from any chain (Ethereum, Base, Solana) into Arc with a single click — no complex bridging needed.
-
-What is App Kit:
-Arc App Kit provides:
-- Unified Balance: Aggregate USDC from multiple chains into one Arc balance
-- Bridge: Move USDC from Ethereum/Base/Solana to Arc
-- Swap: Exchange tokens within the Arc ecosystem
-- Wallet Connect: Easy wallet integration for dApps
-
-Installation:
-npm install @circle-fin/app-kit
-
-Key Use Cases:
-- Allow users to pay in your dApp with USDC from any chain
-- No need for users to manually bridge before using your app
-- Supports: Ethereum, Base, Arbitrum, Solana → Arc
-
-Key Points:
-- Package: @circle-fin/app-kit
-- Powered by Circle's CCTP (Cross-Chain Transfer Protocol)
-- Works with MetaMask, Coinbase Wallet, and other EVM wallets
-- Simplifies onboarding for users who have USDC on other chains
-`
-  },
-
-  // ============================================================
-  // ARC HOUSE & COMMUNITY
-  // ============================================================
-  {
-    id: "arc-house-1",
-    keywords: ["arc house", "arc community", "arc points", "arc builder", "arc grants", "arc office hours"],
-    title: "What is Arc House and how can builders get recognized?",
-    content: `
-Short Answer:
-Arc House is Arc's official community platform for builders. You earn points, get recognized, and can receive grants by building on Arc and engaging with the community.
-
-How to Get Started:
-1. Sign up at arc.house with your email
-2. Complete your builder profile (GitHub, Twitter, LinkedIn)
-3. Submit your project for ecosystem listing
-4. Participate in Discord Office Hours
-5. Earn points through: building, posting, engaging, sharing demos
-
-Office Hours:
-- Builders can present their projects live on Arc Discord
-- Submit your project via the Office Hours Google Form
-- Get direct feedback from Arc team and community
-
-Key Points:
-- Arc House URL: arc.house
-- Discord: discord.gg/arc
-- Office hours are held regularly for builders to demo projects
-- Projects can get officially listed and recognized
-- Arc team actively supports builders with feedback and resources
-`
-  },
-
-  // ============================================================
-  // CIRCLE — CORE
-  // ============================================================
-  {
-    id: "circle-1",
-    keywords: ["circle", "what is circle", "circle usdc", "circle company", "circle payments"],
-    title: "What is Circle and what does it do?",
-    content: `
-Short Answer:
-Circle is the company that issues USDC — the world's leading regulated digital dollar. Circle provides APIs, wallets, and infrastructure for businesses to use USDC in payments.
-
-What Circle Does:
-1. Issues USDC — a fully regulated, USD-backed stablecoin
-2. Provides developer APIs for payments, wallets, and transfers
-3. Operates CCTP — Cross-Chain Transfer Protocol for moving USDC across blockchains
-4. Offers Circle Wallets — for both users and developers to hold/send USDC
-5. Powers Arc's native USDC infrastructure
-
-Circle Products:
-- USDC: The stablecoin
-- Circle Developer Console: console.circle.com
-- Circle Wallets API: Create and manage wallets programmatically
-- CCTP: Bridge USDC across chains natively
-- Circle Payments API: Accept/send payments globally
-- Circle Accounts API: Business accounts for USDC management
-
-Key Points:
-- Circle is a regulated US financial company
-- USDC is fully backed 1:1 by US dollars
-- Circle's infrastructure powers Arc's payment layer
-- Developer access: console.circle.com
+SOURCE:
+docs.arc.io/arc/tutorials/deploy-on-arc.md
 `
   },
 
   {
-    id: "circle-2",
-    keywords: ["usdc", "what is usdc", "usdc stablecoin", "dollar coin", "usdc backed"],
-    title: "What is USDC and how is it different from other stablecoins?",
+    id: "arc-basics-3",
+    keywords: ["arc vs ethereum", "arc vs l2", "arc vs base", "arc vs arbitrum", "why arc", "arc different"],
+    title: "How is Arc different from Ethereum Layer-2s like Base or Arbitrum?",
     content: `
-Short Answer:
-USDC (USD Coin) is a regulated digital dollar issued by Circle, fully backed 1:1 by US dollar reserves. It is the most trusted stablecoin for institutional and developer use.
+SHORT_ANSWER:
+Arc is a standalone Layer-1 blockchain, not a Layer-2. It's purpose-built for stablecoin payments with USDC as native gas, sub-second finality, and direct Circle integration — unlike L2s which inherit Ethereum's security and token model.
 
-Key Differences from Other Stablecoins:
-1. Regulated: USDC is issued by Circle, a regulated US financial institution
-2. Fully Backed: Every USDC is backed by $1 in cash or short-term US treasuries
-3. Transparent: Monthly attestation reports by independent auditors
-4. Multi-chain: Available on 15+ blockchains including Arc, Ethereum, Base, Solana
-5. No algorithmic risk: Unlike UST/LUNA, USDC is fully collateralized
+KEY DIFFERENCES:
+| Feature | Arc | Base/Arbitrum (L2) |
+|---|---|---|
+| Type | L1 blockchain | L2 on Ethereum |
+| Gas token | USDC (stable) | ETH (volatile) |
+| Finality | Sub-second, deterministic | Seconds to minutes |
+| Fee stability | Stable, predictable | Volatile with ETH price |
+| Purpose | Stablecoin payments | General-purpose |
+| Circle integration | Native, deep | Third-party |
+| Reorg risk | None (BFT consensus) | Low but possible |
 
-USDC on Arc:
-- Contract: 0x3600000000000000000000000000000000000000
-- Used as gas fee currency on Arc
-- Native settlement token for all Arc transactions
+WHY BUILD ON ARC INSTEAD:
+- No ETH price exposure for gas costs
+- Predictable fees (bounded at ~$0.01/tx)
+- Faster finality for payment apps
+- Native USDC integration
+- Designed for financial apps, not gaming/NFTs
 
-Key Points:
-- 1 USDC = exactly $1 USD always
-- Supported by major exchanges: Coinbase, Binance, Kraken
-- Best stablecoin for developer/business use due to regulation
-- Circle publishes monthly reserve reports for full transparency
+SOURCE:
+docs.arc.io/arc/concepts/system-overview.md
+`
+  },
+
+  {
+    id: "arc-basics-4",
+    keywords: ["malachite", "consensus arc", "arc consensus", "bft arc", "tendermint arc"],
+    title: "What is Arc's consensus mechanism? What is Malachite?",
+    content: `
+SHORT_ANSWER:
+Arc uses Malachite — a Rust implementation of Tendermint-style Byzantine Fault Tolerant (BFT) consensus. It achieves deterministic finality as soon as 2/3 of validators commit a block, typically in under 1 second.
+
+EXPLANATION:
+Malachite is Arc's high-performance consensus engine:
+- Based on Tendermint BFT algorithm
+- Written in Rust for performance
+- Proof-of-Authority at launch (permissioned validator set)
+- Finality is deterministic — no probabilistic confirmation needed
+- Open source on GitHub under Circle's organization
+
+HOW FINALITY WORKS:
+1. Block is proposed by a validator
+2. Validators vote in two rounds (prevote + precommit)
+3. When 2/3+ validators precommit → block is FINAL
+4. No rollbacks, no reorgs possible after finality
+
+PRACTICAL IMPACT:
+- Your dApp can treat a transaction as final immediately
+- No need to wait for 6 confirmations like Ethereum
+- Eliminates reorg risk for payment applications
+
+SOURCE:
+docs.arc.io/arc/concepts/deterministic-finality.md
+`
+  },
+
+  {
+    id: "arc-basics-5",
+    keywords: ["arc tps", "arc speed", "block time arc", "transactions per second", "arc performance"],
+    title: "What is Arc's TPS and block time?",
+    content: `
+SHORT_ANSWER:
+Arc supports 20 million gas/second throughput with sub-second block times. Finality is deterministic and instant — no waiting for confirmations.
+
+SPECS:
+- Gas throughput: 20M gas/second
+- Finality: Sub-second (deterministic)
+- Block time: Sub-second
+- Base fee target: ~$0.01 per transaction
+- Max base fee: 1e-3 USDC (~$0.001 per gas unit)
+
+NOTE:
+Arc testnet has processed over 244M transactions as of May 2026. Mainnet specs may differ slightly. Performance is optimized for financial transactions, not gaming or high-frequency NFT minting.
+
+SOURCE:
+docs.arc.io/arc/references/gas-and-fees.md
+`
+  },
+
+  {
+    id: "arc-basics-6",
+    keywords: ["account abstraction arc", "aa arc", "smart account arc", "paymaster arc"],
+    title: "Does Arc support account abstraction?",
+    content: `
+SHORT_ANSWER:
+Yes. Arc supports account abstraction (AA) through third-party AA providers and paymasters listed in the Arc documentation.
+
+EXPLANATION:
+Account abstraction on Arc allows:
+- Smart contract wallets instead of EOAs
+- Gasless transactions via paymasters
+- Batch transactions
+- Social recovery wallets
+- Custom signing logic
+
+Arc uses SCA (Smart Contract Account) wallets in Circle's developer-controlled wallet system. These are AA-compatible wallets.
+
+GUIDE:
+Step 1: Check AA providers at docs.arc.io/arc/tools/account-abstraction.md
+Step 2: Choose an AA provider compatible with Arc
+Step 3: Deploy your AA wallet contract
+Step 4: Use paymaster to sponsor gas if needed
+
+SOURCE:
+docs.arc.io/arc/tools/account-abstraction.md
 `
   },
 
   // ============================================================
-  // CIRCLE WALLETS
+  // B. SETUP & CONFIGURATION
   // ============================================================
   {
-    id: "circle-wallets-1",
-    keywords: ["circle wallets", "developer controlled wallet", "user controlled wallet", "circle wallet api", "programmatic wallet"],
-    title: "What are Circle Developer-Controlled Wallets and how do I use them?",
+    id: "setup-1",
+    keywords: ["add arc testnet metamask", "metamask arc setup", "connect arc metamask", "arc network metamask"],
+    title: "How do I add Arc Testnet to MetaMask?",
     content: `
-Short Answer:
-Circle Developer-Controlled Wallets let you create and manage wallets programmatically on behalf of your users. You control the wallet using an Entity Secret — no MetaMask needed.
+SHORT_ANSWER:
+Open MetaMask → Settings → Networks → Add network manually → enter the details below → Save.
 
-When to Use:
-- When you want to manage wallets for users without requiring MetaMask
-- For automated payment systems and AI agents
-- For enterprise applications needing programmatic USDC transfers
+NETWORK DETAILS:
+- Network name: Arc Testnet
+- New RPC URL: https://rpc.testnet.arc.network
+- Chain ID: 5042002
+- Currency symbol: USDC
+- Block Explorer URL: https://testnet.arcscan.app
 
-Setup Steps:
-1. Install SDK: npm install @circle-fin/developer-controlled-wallets
-2. Create account at console.circle.com
-3. Generate API Key
-4. Create Entity Secret (32-byte hex)
-5. Register Entity Secret in Circle Console
-6. Create wallet sets and wallets via API
+STEP-BY-STEP:
+Step 1: Open MetaMask browser extension
+Step 2: Click the network selector at the top center
+Step 3: Click "Add Network"
+Step 4: Click "Add a network manually"
+Step 5: Fill in the fields above
+Step 6: Click "Save"
+Step 7: Click "Switch to Arc Testnet"
 
-Code Example:
-import { initiateDeveloperControlledWalletsClient } from "@circle-fin/developer-controlled-wallets";
-
-const client = initiateDeveloperControlledWalletsClient({
-  apiKey: process.env.CIRCLE_API_KEY,
-  entitySecret: process.env.CIRCLE_ENTITY_SECRET,
+PROGRAMMATIC (for dApps):
+await window.ethereum.request({
+  method: "wallet_addEthereumChain",
+  params: [{
+    chainId: "0x4cef52",
+    chainName: "Arc Testnet",
+    nativeCurrency: { name: "USDC", symbol: "USDC", decimals: 6 },
+    rpcUrls: ["https://rpc.testnet.arc.network"],
+    blockExplorerUrls: ["https://testnet.arcscan.app"],
+  }],
 });
 
-const walletSet = await client.createWalletSet({ name: "My App" });
-const wallets = await client.createWallets({
-  blockchains: ["ARC-TESTNET"],
-  count: 1,
-  walletSetId: walletSet.data.walletSet.id,
-  accountType: "SCA",
-});
+NOTE: MetaMask may show balance as "ETH" since it doesn't support custom gas tokens fully, but the underlying token is USDC. Use the ERC-20 interface to read actual USDC balance.
 
-Key Points:
-- Entity Secret must be kept secure — never share it
-- SCA (Smart Contract Account) wallets are recommended for Arc
-- Supports: create wallets, send transactions, check balances
-- Recovery file (.dat) should be saved when creating Entity Secret
+SOURCE:
+docs.arc.io/arc/references/connect-to-arc.md
 `
   },
 
   {
-    id: "circle-wallets-2",
-    keywords: ["entity secret", "circle entity secret", "circle api key", "circle credentials", "circle setup"],
-    title: "What is a Circle Entity Secret and how do I set it up?",
+    id: "setup-2",
+    keywords: ["arc rpc url", "rpc endpoint arc", "arc rpc", "arc endpoint"],
+    title: "What is Arc Testnet's RPC URL and network details?",
     content: `
-Short Answer:
-The Entity Secret is a 32-byte security key required to make critical API calls with Circle Developer-Controlled Wallets. You generate it once and register it in Circle Console.
+SHORT_ANSWER:
+RPC URL: https://rpc.testnet.arc.network | Chain ID: 5042002 (hex: 0x4cef52) | Explorer: https://testnet.arcscan.app
 
-Setup Steps:
-1. Install SDK: npm install @circle-fin/developer-controlled-wallets
-2. Generate Entity Secret:
-   import { generateEntitySecret } from "@circle-fin/developer-controlled-wallets";
-   const secret = generateEntitySecret();
-3. Register in Circle Console:
-   - Go to console.circle.com → DEV CONTROLLED → Configurator → Entity Secret
-   - Use registerEntitySecretCiphertext() function
-   - Save the recovery_file.dat
-4. Add to your .env file:
-   CIRCLE_API_KEY=your_api_key
-   CIRCLE_ENTITY_SECRET=your_32_byte_secret
+COMPLETE NETWORK DETAILS:
+- Network name: Arc Testnet
+- RPC URL: https://rpc.testnet.arc.network
+- Chain ID: 5042002 (hex: 0x4cef52)
+- Currency symbol: USDC
+- Block Explorer: https://testnet.arcscan.app
+- Faucet: https://faucet.circle.com
 
-Key Points:
-- Never share your Entity Secret — treat it like a private key
-- Save the recovery_file.dat securely — needed if you lose the secret
-- Entity Secret is encrypted before sending to Circle's servers
-- One Entity Secret per Circle account (can be rotated)
+CONTRACT ADDRESSES (Testnet):
+- USDC: 0x3600000000000000000000000000000000000000
+- EURC: 0x89B50855Aa3bE2F677cD6303Cec089B5F319D72a
+- CCTP TokenMessengerV2: 0x8FE6B999Dc680CcFDD5Bf7EB0974218be2542DAA
+- CCTP MessageTransmitterV2: 0xE737e5cEBEEBa77EFE34D4aa090756590b1CE275
+- Gateway: 0x0077777d7EBA4688BDeF3E311b846F25870A19B9
+- ERC-8004 IdentityRegistry: 0x8004A818BFB912233c491871b3d84c89A494BD9e
+- ERC-8183 AgenticCommerce: 0x0747EEf0706327138c69792bF28Cd525089e4583
+
+SOURCE:
+docs.arc.io/arc/references/connect-to-arc.md
+docs.arc.io/arc/references/contract-addresses.md
 `
   },
 
-  // ============================================================
-  // CCTP — CROSS-CHAIN TRANSFER PROTOCOL
-  // ============================================================
   {
-    id: "cctp-1",
-    keywords: ["cctp", "cross chain transfer", "bridge usdc", "usdc bridge", "circle bridge", "multi chain usdc"],
-    title: "What is Circle CCTP and how does cross-chain USDC transfer work?",
+    id: "setup-3",
+    keywords: ["testnet usdc faucet", "get usdc testnet", "free usdc arc", "arc faucet", "faucet circle"],
+    title: "How do I get testnet USDC on Arc?",
     content: `
-Short Answer:
-CCTP (Cross-Chain Transfer Protocol) is Circle's native protocol for moving USDC between blockchains without wrapping. It burns USDC on the source chain and mints native USDC on the destination chain.
+SHORT_ANSWER:
+Go to faucet.circle.com → Select Arc Testnet → Enter your wallet address → Click Send. USDC arrives in seconds.
 
-How CCTP Works:
-1. User burns USDC on source chain (e.g., Ethereum)
-2. Circle's attestation service verifies the burn
-3. Native USDC is minted on the destination chain (e.g., Arc)
-4. No wrapped tokens — always real, native USDC
+STEP-BY-STEP:
+Step 1: Go to https://faucet.circle.com
+Step 2: Select network: ARC Testnet
+Step 3: Select token: USDC
+Step 4: Enter your wallet address
+Step 5: Click "Send"
+Step 6: Wait 10-30 seconds
+Step 7: Check balance at https://testnet.arcscan.app
 
-Supported Chains (CCTP):
-- Ethereum ↔ Arc
-- Base ↔ Arc
-- Arbitrum ↔ Arc
-- Solana ↔ Arc
-- Polygon ↔ Arc
-- And more
+ALSO AVAILABLE:
+- EURC testnet tokens from same faucet
+- USYC testnet (requires allowlisting via Circle Support)
 
-Benefits over Traditional Bridges:
-- No wrapped tokens (no bridging risk)
-- Native USDC on every chain
-- Faster and cheaper than wrapped bridges
-- Backed by Circle's security
+KEY POINTS:
+- Testnet USDC has no real monetary value
+- You can request multiple times
+- USDC required for gas fees on Arc
+- USDC Contract: 0x3600000000000000000000000000000000000000
 
-Key Points:
-- CCTP is the safest way to move USDC across chains
-- Used by Arc App Kit under the hood
-- No intermediary tokens — always 1:1 USDC
-- Developer docs: developers.circle.com/stablecoins/cctp
+SOURCE:
+faucet.circle.com
+docs.arc.io/arc/references/contract-addresses.md
 `
   },
 
-  // ============================================================
-  // DEVELOPERS — DEPLOYING ON ARC
-  // ============================================================
   {
-    id: "dev-1",
-    keywords: ["deploy contract arc", "hardhat arc", "smart contract arc", "deploy on arc", "arc deployment"],
-    title: "How do I deploy a smart contract on Arc Testnet using Hardhat?",
+    id: "setup-4",
+    keywords: ["hardhat config arc", "hardhat arc setup", "deploy hardhat arc", "hardhat testnet arc"],
+    title: "How do I set up Hardhat for Arc?",
     content: `
-Short Answer:
-Arc is EVM-compatible, so you can deploy Solidity contracts using Hardhat or Foundry with Arc's testnet RPC.
+SHORT_ANSWER:
+Install Hardhat, add Arc Testnet network config with RPC and Chain ID, then deploy with --network arcTestnet flag.
 
-Hardhat Setup:
-1. Install Hardhat: npm install --save-dev hardhat
-2. Create hardhat.config.ts:
+COMPLETE SETUP:
+Step 1: Install dependencies
+npm install --save-dev hardhat @nomicfoundation/hardhat-toolbox dotenv
 
+Step 2: Create .env file
+PRIVATE_KEY=your_wallet_private_key
+
+Step 3: Create hardhat.config.ts
 import { HardhatUserConfig } from "hardhat/config";
 import "@nomicfoundation/hardhat-toolbox";
+import dotenv from "dotenv";
+dotenv.config();
 
 const config: HardhatUserConfig = {
   solidity: "0.8.24",
@@ -462,462 +328,1179 @@ const config: HardhatUserConfig = {
       url: "https://rpc.testnet.arc.network",
       chainId: 5042002,
       accounts: [process.env.PRIVATE_KEY!],
-    }
-  }
+    },
+  },
 };
 export default config;
 
-3. Write your contract in contracts/
-4. Deploy:
-   npx hardhat run scripts/deploy.ts --network arcTestnet
+Step 4: Write your contract in contracts/MyContract.sol
 
-5. Verify on Explorer:
-   https://testnet.arcscan.app
+Step 5: Write deploy script in scripts/deploy.ts
+import { ethers } from "hardhat";
+async function main() {
+  const Contract = await ethers.getContractFactory("MyContract");
+  const contract = await Contract.deploy();
+  await contract.waitForDeployment();
+  console.log("Deployed to:", await contract.getAddress());
+}
+main().catch(console.error);
 
-Key Points:
-- Arc is fully EVM-compatible — standard Solidity works
-- Chain ID: 5042002 | RPC: https://rpc.testnet.arc.network
-- Gas is paid in USDC — make sure your deployer wallet has testnet USDC
-- Get testnet USDC at faucet.circle.com
-- Use Circle Contracts SDK for USDC-native contract patterns
+Step 6: Deploy
+npx hardhat run scripts/deploy.ts --network arcTestnet
+
+Step 7: View on explorer
+https://testnet.arcscan.app/address/YOUR_CONTRACT_ADDRESS
+
+KEY POINTS:
+- Deployer wallet must have testnet USDC for gas
+- Gas is automatically paid in USDC
+- No ETH needed
+
+SOURCE:
+docs.arc.io/arc/tutorials/deploy-on-arc.md
 `
   },
 
   {
-    id: "dev-2",
-    keywords: ["circle contracts sdk", "deploy usdc contract", "circle sdk contract", "programmable wallet contract"],
-    title: "How do I deploy contracts using Circle Contracts SDK?",
+    id: "setup-5",
+    keywords: ["foundry arc", "forge arc", "foundry setup arc", "cast arc"],
+    title: "How do I set up Foundry for Arc?",
     content: `
-Short Answer:
-Circle Contracts SDK lets you deploy and interact with smart contracts on Arc using your Circle Developer-Controlled Wallets — no private key management needed.
+SHORT_ANSWER:
+Install Foundry, create foundry.toml with Arc RPC, then use forge deploy with Arc's RPC URL.
 
-Steps:
-1. Set up Circle Developer-Controlled Wallets (see Entity Secret guide)
-2. Use createContractExecutionTransaction to call contract functions:
+SETUP:
+Step 1: Install Foundry
+curl -L https://foundry.paradigm.xyz | bash
+foundryup
 
-const tx = await client.createContractExecutionTransaction({
-  walletAddress: yourWalletAddress,
+Step 2: Create project
+forge init my-arc-project
+cd my-arc-project
+
+Step 3: Create foundry.toml
+[profile.default]
+src = "src"
+out = "out"
+libs = ["lib"]
+
+[rpc_endpoints]
+arc_testnet = "https://rpc.testnet.arc.network"
+
+Step 4: Write contract in src/MyContract.sol
+
+Step 5: Deploy
+forge create src/MyContract.sol:MyContract \
+  --rpc-url https://rpc.testnet.arc.network \
+  --private-key $PRIVATE_KEY \
+  --chain-id 5042002
+
+Step 6: Run tests
+forge test --rpc-url https://rpc.testnet.arc.network
+
+KEY POINTS:
+- forge test works locally without RPC
+- Use --rpc-url for on-chain tests
+- cast send works for contract interactions
+
+SOURCE:
+docs.arc.io/arc/tutorials/deploy-on-arc.md
+`
+  },
+
+  {
+    id: "setup-6",
+    keywords: ["verify contract arc", "arcscan verify", "contract verification arc"],
+    title: "How do I verify contracts on Arc Explorer?",
+    content: `
+SHORT_ANSWER:
+Go to testnet.arcscan.app, find your contract, click "Verify & Publish", upload your Solidity source code and compiler settings.
+
+STEP-BY-STEP:
+Step 1: Go to https://testnet.arcscan.app
+Step 2: Search your contract address
+Step 3: Click "Contract" tab
+Step 4: Click "Verify & Publish"
+Step 5: Select compiler version (must match what you used)
+Step 6: Paste your Solidity source code
+Step 7: Submit verification
+
+WITH HARDHAT (automated):
+npm install --save-dev @nomicfoundation/hardhat-verify
+
+In hardhat.config.ts add:
+etherscan: {
+  apiKey: { arcTestnet: "placeholder" },
+  customChains: [{
+    network: "arcTestnet",
+    chainId: 5042002,
+    urls: {
+      apiURL: "https://testnet.arcscan.app/api",
+      browserURL: "https://testnet.arcscan.app",
+    },
+  }],
+},
+
+Then run:
+npx hardhat verify --network arcTestnet YOUR_CONTRACT_ADDRESS
+
+SOURCE:
+https://testnet.arcscan.app
+`
+  },
+
+  // ============================================================
+  // C. USDC & GAS
+  // ============================================================
+  {
+    id: "gas-1",
+    keywords: ["pay gas usdc", "gas usdc arc", "how gas works arc", "usdc gas fee", "arc gas model"],
+    title: "How does gas work on Arc? How do I pay gas in USDC?",
+    content: `
+SHORT_ANSWER:
+On Arc, gas fees are paid in USDC automatically. You just need USDC in your wallet — no ETH needed. The fee model uses EIP-1559 + EWMA smoothing for stable, predictable costs.
+
+EXPLANATION:
+Arc's fee model:
+- Gas unit: USDC (18 decimals for internal accounting)
+- Pricing: EIP-1559 + EWMA smoothing
+- Base fee target: ~$0.01 per transaction
+- Minimum base fee: 20 Gwei
+- Maximum base fee: 1e-3 USDC
+- Fees are stable — short spikes don't cause sudden jumps
+
+HOW TO SET GAS (ethers.js):
+import { ethers } from "ethers";
+const provider = new ethers.JsonRpcProvider("https://rpc.testnet.arc.network");
+const wallet = new ethers.Wallet(process.env.PRIVATE_KEY, provider);
+
+const tx = await wallet.sendTransaction({
+  to: recipient,
+  value: ethers.parseUnits("1", 6), // 1 USDC
+  maxFeePerGas: ethers.parseUnits("20", "gwei"), // minimum
+  maxPriorityFeePerGas: ethers.parseUnits("1", "gwei"), // tip
+});
+
+COMMON ERROR: "transaction underpriced"
+Fix: Set maxFeePerGas to at least ethers.parseUnits("20", "gwei")
+
+SOURCE:
+docs.arc.io/arc/references/gas-and-fees.md
+`
+  },
+
+  {
+    id: "gas-2",
+    keywords: ["usdc contract address arc", "usdc address testnet", "arc usdc contract", "usdc token arc"],
+    title: "What is the USDC contract address on Arc Testnet?",
+    content: `
+SHORT_ANSWER:
+USDC Contract on Arc Testnet: 0x3600000000000000000000000000000000000000 (6 decimals for ERC-20 interface)
+
+ALL CONTRACT ADDRESSES (Arc Testnet):
+- USDC: 0x3600000000000000000000000000000000000000
+- EURC: 0x89B50855Aa3bE2F677cD6303Cec089B5F319D72a
+- USYC: 0xe9185F0c5F296Ed1797AaE4238D26CCaBEadb86C
+- CCTP TokenMessengerV2: 0x8FE6B999Dc680CcFDD5Bf7EB0974218be2542DAA
+- CCTP MessageTransmitterV2: 0xE737e5cEBEEBa77EFE34D4aa090756590b1CE275
+- Gateway Wallet: 0x0077777d7EBA4688BDeF3E311b846F25870A19B9
+- StableFX Escrow: 0x867650F5eAe8df91445971f14d89fd84F0C9a9f8
+- ERC-8004 IdentityRegistry: 0x8004A818BFB912233c491871b3d84c89A494BD9e
+- ERC-8183 AgenticCommerce: 0x0747EEf0706327138c69792bF28Cd525089e4583
+- Multicall3: 0xcA11bde05977b3631167028862bE2a173976CA11
+- Permit2: 0x000000000022D473030F116dDEE9F6B43aC78BA3
+- CREATE2 Factory: 0x4e59b44847b379578588920cA78FbF26c0B4956C
+
+IMPORTANT: USDC uses 6 decimals for ERC-20 interface, 18 decimals for native gas accounting. Use ERC-20 interface (6 decimals) for application-level transfers.
+
+SOURCE:
+docs.arc.io/arc/references/contract-addresses.md
+`
+  },
+
+  {
+    id: "gas-3",
+    keywords: ["transfer usdc arc", "send usdc programmatic", "usdc transfer code", "erc20 transfer arc"],
+    title: "How do I transfer USDC programmatically on Arc?",
+    content: `
+SHORT_ANSWER:
+Use the ERC-20 transfer function with USDC contract 0x3600000000000000000000000000000000000000. USDC has 6 decimals — 1 USDC = 1,000,000 units.
+
+CODE EXAMPLES:
+
+Using ethers.js:
+import { ethers } from "ethers";
+const USDC = "0x3600000000000000000000000000000000000000";
+const ERC20_ABI = ["function transfer(address to, uint256 amount) returns (bool)"];
+
+const provider = new ethers.JsonRpcProvider("https://rpc.testnet.arc.network");
+const wallet = new ethers.Wallet(process.env.PRIVATE_KEY, provider);
+const usdc = new ethers.Contract(USDC, ERC20_ABI, wallet);
+
+// Send 1 USDC
+const tx = await usdc.transfer(recipientAddress, ethers.parseUnits("1", 6));
+await tx.wait();
+
+Using raw transaction (MetaMask/frontend):
+const amount = (1000000).toString(16).padStart(64, "0"); // 1 USDC in hex
+const data = "0xa9059cbb" + recipientAddress.slice(2).padStart(64, "0") + amount;
+
+await window.ethereum.request({
+  method: "eth_sendTransaction",
+  params: [{ from: senderAddress, to: USDC_CONTRACT, data }],
+});
+
+DECIMAL GUIDE:
+- 0.001 USDC = 1000 units
+- 0.1 USDC = 100000 units
+- 1 USDC = 1000000 units
+- 10 USDC = 10000000 units
+
+SOURCE:
+docs.arc.io/arc/references/contract-addresses.md
+`
+  },
+
+  // ============================================================
+  // D. SMART CONTRACTS
+  // ============================================================
+  {
+    id: "contracts-1",
+    keywords: ["deploy erc20 arc", "erc20 contract arc", "create token arc", "deploy token arc"],
+    title: "How do I deploy an ERC-20 contract on Arc?",
+    content: `
+SHORT_ANSWER:
+Arc is EVM-compatible — deploy standard ERC-20 contracts using Hardhat or Foundry with Arc's RPC URL and Chain ID 5042002.
+
+COMPLETE GUIDE:
+
+Step 1: Write your ERC-20 contract (contracts/MyToken.sol)
+// SPDX-License-Identifier: MIT
+pragma solidity ^0.8.24;
+import "@openzeppelin/contracts/token/ERC20/ERC20.sol";
+
+contract MyToken is ERC20 {
+    constructor(uint256 initialSupply) ERC20("MyToken", "MTK") {
+        _mint(msg.sender, initialSupply * 10 ** decimals());
+    }
+}
+
+Step 2: Install OpenZeppelin
+npm install @openzeppelin/contracts
+
+Step 3: Deploy script (scripts/deploy.ts)
+import { ethers } from "hardhat";
+async function main() {
+  const MyToken = await ethers.getContractFactory("MyToken");
+  const token = await MyToken.deploy(1000000); // 1M tokens
+  await token.waitForDeployment();
+  console.log("Token deployed to:", await token.getAddress());
+}
+main().catch(console.error);
+
+Step 4: Deploy to Arc
+npx hardhat run scripts/deploy.ts --network arcTestnet
+
+Step 5: Verify on explorer
+https://testnet.arcscan.app/address/YOUR_TOKEN_ADDRESS
+
+SOURCE:
+docs.arc.io/arc/tutorials/deploy-on-arc.md
+`
+  },
+
+  {
+    id: "contracts-2",
+    keywords: ["usdc payment contract", "accept usdc", "payment contract arc", "receive usdc contract"],
+    title: "How do I write a payment contract that accepts USDC on Arc?",
+    content: `
+SHORT_ANSWER:
+Create a contract that calls transferFrom on the USDC ERC-20 interface. Users must first approve your contract to spend their USDC.
+
+COMPLETE EXAMPLE:
+// SPDX-License-Identifier: MIT
+pragma solidity ^0.8.24;
+
+interface IERC20 {
+    function transferFrom(address from, address to, uint256 amount) external returns (bool);
+    function transfer(address to, uint256 amount) external returns (bool);
+}
+
+contract MicroPayment {
+    address public constant USDC = 0x3600000000000000000000000000000000000000;
+    address public owner;
+    uint256 public pricePerQuery = 1000; // 0.001 USDC (6 decimals)
+
+    event Payment(address indexed payer, uint256 amount);
+
+    constructor() { owner = msg.sender; }
+
+    function pay() external {
+        require(
+            IERC20(USDC).transferFrom(msg.sender, owner, pricePerQuery),
+            "USDC transfer failed"
+        );
+        emit Payment(msg.sender, pricePerQuery);
+    }
+
+    function withdraw() external {
+        require(msg.sender == owner, "Not owner");
+        uint256 balance = IERC20(USDC).balanceOf(address(this));
+        IERC20(USDC).transfer(owner, balance);
+    }
+}
+
+FRONTEND FLOW:
+Step 1: User approves your contract to spend USDC
+Step 2: User calls pay() on your contract
+Step 3: USDC transfers from user to owner
+
+NOTE: For simpler payment collection without a custom contract, use direct USDC transfer to your wallet address.
+
+SOURCE:
+docs.arc.io/arc/tutorials/deploy-on-arc.md
+`
+  },
+
+  {
+    id: "contracts-3",
+    keywords: ["proxy contract arc", "upgradeable contract arc", "contract upgrade arc", "transparent proxy"],
+    title: "Can I deploy proxy/upgradeable contracts on Arc?",
+    content: `
+SHORT_ANSWER:
+Yes. Standard OpenZeppelin proxy patterns (Transparent, UUPS) work on Arc. The CREATE2 factory is also available for deterministic deployment.
+
+UUPS PROXY EXAMPLE:
+// SPDX-License-Identifier: MIT
+pragma solidity ^0.8.24;
+import "@openzeppelin/contracts-upgradeable/proxy/utils/UUPSUpgradeable.sol";
+import "@openzeppelin/contracts-upgradeable/access/OwnableUpgradeable.sol";
+
+contract MyUpgradeableContract is UUPSUpgradeable, OwnableUpgradeable {
+    function initialize() public initializer {
+        __Ownable_init(msg.sender);
+        __UUPSUpgradeable_init();
+    }
+
+    function _authorizeUpgrade(address) internal override onlyOwner {}
+}
+
+DEPLOY WITH HARDHAT:
+import { upgrades } from "hardhat";
+const contract = await upgrades.deployProxy(MyContract, [], { kind: "uups" });
+
+CREATE2 FACTORY ADDRESS:
+0x4e59b44847b379578588920cA78FbF26c0B4956C
+
+SOURCE:
+docs.arc.io/arc/tutorials/deploy-on-arc.md
+`
+  },
+
+  // ============================================================
+  // E. CIRCLE WALLETS SDK
+  // ============================================================
+  {
+    id: "circle-sdk-1",
+    keywords: ["circle sdk setup", "developer controlled wallets setup", "circle wallet install", "circle sdk install"],
+    title: "How do I set up Circle Developer-Controlled Wallets SDK?",
+    content: `
+SHORT_ANSWER:
+Install the SDK, create API key and Entity Secret in Circle Console, then initialize the client with your credentials.
+
+COMPLETE SETUP:
+Step 1: Install SDK
+npm install @circle-fin/developer-controlled-wallets
+
+Step 2: Create Circle account
+Go to https://console.circle.com and sign up
+
+Step 3: Generate API Key
+Console → API Keys → Create API Key → Standard Key
+Copy the key (shown only once)
+
+Step 4: Generate Entity Secret
+import { generateEntitySecret } from "@circle-fin/developer-controlled-wallets";
+const secret = generateEntitySecret();
+console.log(secret); // Save this securely!
+
+Step 5: Register Entity Secret in Console
+import { registerEntitySecretCiphertext } from "@circle-fin/developer-controlled-wallets";
+const response = await registerEntitySecretCiphertext({
+  apiKey: process.env.CIRCLE_API_KEY,
+  entitySecret: process.env.CIRCLE_ENTITY_SECRET,
+});
+// Save recovery_file.dat if provided
+
+Step 6: Add to .env
+CIRCLE_API_KEY=your_api_key
+CIRCLE_ENTITY_SECRET=your_32_byte_secret
+
+Step 7: Initialize client
+import { initiateDeveloperControlledWalletsClient } from "@circle-fin/developer-controlled-wallets";
+
+const client = initiateDeveloperControlledWalletsClient({
+  apiKey: process.env.CIRCLE_API_KEY,
+  entitySecret: process.env.CIRCLE_ENTITY_SECRET,
+});
+
+SOURCE:
+developers.circle.com/wallets/developer-controlled/quickstart
+`
+  },
+
+  {
+    id: "circle-sdk-2",
+    keywords: ["create wallet circle", "circle wallet arc", "wallet set circle", "create arc wallet"],
+    title: "How do I create and manage wallets on Arc with Circle SDK?",
+    content: `
+SHORT_ANSWER:
+Create a WalletSet first, then create wallets inside it. Each WalletSet can hold up to 10 million wallets. Use blockchain: "ARC-TESTNET" for Arc.
+
+CODE:
+// Create wallet set
+const walletSet = await client.createWalletSet({
+  name: "My App Wallets",
+});
+
+// Create wallets on Arc Testnet
+const walletsResponse = await client.createWallets({
+  blockchains: ["ARC-TESTNET"],
+  count: 1, // number of wallets to create
+  walletSetId: walletSet.data.walletSet.id,
+  accountType: "SCA", // Smart Contract Account (recommended)
+});
+
+const wallet = walletsResponse.data.wallets[0];
+console.log("Wallet Address:", wallet.address);
+console.log("Wallet ID:", wallet.id);
+
+// List existing wallets
+const wallets = await client.listWallets({});
+console.log(wallets.data.wallets);
+
+// Get specific wallet
+const wallet = await client.getWallet({ id: walletId });
+
+KEY POINTS:
+- SCA (Smart Contract Account) recommended for Arc
+- Each wallet has a unique ID and address
+- WalletSet ID needed for creating wallets
+- Up to 10M wallets per WalletSet
+
+SOURCE:
+developers.circle.com/wallets/developer-controlled/quickstart
+`
+  },
+
+  {
+    id: "circle-sdk-3",
+    keywords: ["send usdc circle sdk", "transfer circle sdk", "circle sdk transaction", "send transaction circle"],
+    title: "How do I send USDC using Circle SDK on Arc?",
+    content: `
+SHORT_ANSWER:
+Use createTransaction() method with the USDC token address and recipient. Circle handles signing automatically.
+
+CODE:
+// Send 1 USDC from a Circle-managed wallet
+const tx = await client.createTransaction({
+  walletAddress: "0xYourWalletAddress",
   blockchain: "ARC-TESTNET",
-  contractAddress: "0xYourContractAddress",
-  abiFunctionSignature: "transfer(address,uint256)",
-  abiParameters: [receiverAddress, "1000000"],
+  tokenAddress: "0x3600000000000000000000000000000000000000", // USDC
+  destinationAddress: "0xRecipientAddress",
+  amount: ["1"], // 1 USDC (string array)
+  fee: {
+    type: "level",
+    config: { feeLevel: "MEDIUM" }, // LOW, MEDIUM, HIGH
+  },
+});
+
+// Get transaction ID
+const txId = tx.data.id;
+
+// Poll transaction status
+const checkStatus = async () => {
+  const result = await client.getTransaction({ id: txId });
+  const state = result.data.transaction.state;
+  console.log("Status:", state);
+  // States: INITIATED, PENDING_RISK_SCREENING, SENT, CONFIRMED, COMPLETE, FAILED
+  if (state !== "COMPLETE" && state !== "FAILED") {
+    setTimeout(checkStatus, 2000); // poll every 2 seconds
+  }
+};
+await checkStatus();
+
+AMOUNT FORMAT:
+- "1" = 1 USDC
+- "0.001" = 0.001 USDC
+- Always pass as string
+
+SOURCE:
+developers.circle.com/wallets/developer-controlled/send-tokens
+`
+  },
+
+  {
+    id: "circle-sdk-4",
+    keywords: ["entity secret lost", "recover entity secret", "entity secret recovery", "lost circle credentials"],
+    title: "How do I recover a lost Entity Secret?",
+    content: `
+SHORT_ANSWER:
+If you saved the recovery_file.dat during setup, use it to reset via Circle Console → Reset. If lost, you must generate a new Entity Secret — existing wallets remain accessible with the new secret.
+
+RECOVERY OPTIONS:
+
+Option 1: You have recovery_file.dat
+- Go to console.circle.com → DEV CONTROLLED → Configurator → Entity Secret
+- Click "Reset"
+- Upload the recovery_file.dat file
+- Enter new entity secret ciphertext
+- Click Reset
+
+Option 2: No recovery_file.dat (use Rotate)
+- You need the current Entity Secret to rotate
+- If you have it stored somewhere, use Rotate to get a new one
+- Warning: All pending transactions using old secret will fail
+
+Option 3: Completely lost
+- Contact Circle Support at support.circle.com
+- Provide API key and account verification
+- They may be able to help reset
+
+PREVENTION:
+Always save the recovery_file.dat when creating Entity Secret:
+import fs from "fs";
+const response = await registerEntitySecretCiphertext({...});
+fs.writeFileSync("recovery_file.dat", response.data?.recoveryFile ?? "");
+
+SOURCE:
+console.circle.com → Configurator → Entity Secret
+`
+  },
+
+  {
+    id: "circle-sdk-5",
+    keywords: ["sca wallet eoa wallet", "smart contract account", "wallet type circle", "account type circle"],
+    title: "What is the difference between SCA and EOA wallets in Circle?",
+    content: `
+SHORT_ANSWER:
+SCA (Smart Contract Account) is recommended for Arc — it supports account abstraction features. EOA (Externally Owned Account) is simpler but lacks advanced features like batch transactions.
+
+COMPARISON:
+| Feature | SCA | EOA |
+|---|---|---|
+| Account Abstraction | Yes | No |
+| Batch transactions | Yes | No |
+| Gas sponsorship | Yes | No |
+| Recovery options | Better | Basic |
+| Recommended for Arc | Yes | Basic use only |
+
+WHEN TO USE EACH:
+SCA: Production apps, AI agents, payment systems, dApps needing AA
+EOA: Simple scripts, testing, basic transfers
+
+CODE (create SCA):
+const wallets = await client.createWallets({
+  blockchains: ["ARC-TESTNET"],
+  count: 1,
+  walletSetId: walletSetId,
+  accountType: "SCA", // use this for Arc
+});
+
+SOURCE:
+developers.circle.com/wallets/developer-controlled/wallets
+`
+  },
+
+  // ============================================================
+  // F. ERC-8004
+  // ============================================================
+  {
+    id: "erc8004-setup-1",
+    keywords: ["erc-8004 setup", "register ai agent arc", "agent registration guide", "erc8004 tutorial"],
+    title: "How do I register an AI Agent on Arc using ERC-8004?",
+    content: `
+SHORT_ANSWER:
+Prepare metadata JSON → Upload to IPFS → Call register() on IdentityRegistry contract → Get your Agent ID (NFT tokenId).
+
+COMPLETE GUIDE:
+
+Step 1: Create metadata JSON
+{
+  "name": "My AI Agent",
+  "description": "What your agent does",
+  "agent_type": "ai_assistant",
+  "capabilities": ["natural_language_qa", "code_generation"],
+  "version": "1.0.0",
+  "url": "https://your-dapp.com",
+  "payment": {
+    "cost_per_query": "0.001",
+    "token": "USDC",
+    "network": "ARC-TESTNET"
+  }
+}
+
+Step 2: Upload to IPFS (Pinata)
+- Go to pinata.cloud
+- Upload the JSON file
+- Copy CID (e.g., bafkrei...)
+- Your URI: ipfs://YOUR_CID
+
+Step 3: Register using Circle SDK
+const tx = await client.createContractExecutionTransaction({
+  walletAddress: ownerWalletAddress,
+  blockchain: "ARC-TESTNET",
+  contractAddress: "0x8004A818BFB912233c491871b3d84c89A494BD9e",
+  abiFunctionSignature: "register(string)",
+  abiParameters: ["ipfs://YOUR_CID"],
   fee: { type: "level", config: { feeLevel: "MEDIUM" } },
 });
 
-Key Points:
-- No private keys needed — Circle manages signing
-- Supports any EVM smart contract
-- Transaction status can be polled via getTransaction()
-- Combine with ERC-8004 and ERC-8183 for full agentic apps
+Step 4: Get your Agent ID
+// Listen for Transfer event to get tokenId (your Agent ID)
+// Or check your wallet on testnet.arcscan.app
+
+CONTRACT ADDRESSES:
+- IdentityRegistry: 0x8004A818BFB912233c491871b3d84c89A494BD9e
+- ReputationRegistry: 0x8004B663056A597Dffe9eCcC1965A193B7388713
+- ValidationRegistry: 0x8004Cb1BF31DAf7788923b405b754f57acEB4272
+
+SOURCE:
+docs.arc.io/arc/tutorials/register-your-first-ai-agent.md
 `
   },
 
+  // ============================================================
+  // G. ERC-8183
+  // ============================================================
   {
-    id: "dev-3",
-    keywords: ["wagmi arc", "viem arc", "frontend arc", "web3 frontend", "arc dapp", "nextjs arc", "react arc"],
-    title: "How do I build a frontend dApp that connects to Arc Testnet?",
+    id: "erc8183-setup-1",
+    keywords: ["erc-8183 guide", "create job arc", "job settlement guide", "agentic commerce tutorial"],
+    title: "How do I create and complete an ERC-8183 job on Arc?",
     content: `
-Short Answer:
-Use wagmi + viem with Arc Testnet configuration to build a React/Next.js frontend that connects to Arc.
+SHORT_ANSWER:
+Client creates job → Provider sets budget → Client approves + funds USDC escrow → Provider submits deliverable → Client completes → USDC released.
 
-Stack:
-- Next.js or Vite + React
-- wagmi for wallet connection
-- viem for blockchain interaction
-- Tailwind CSS for styling
+COMPLETE GUIDE:
 
-Arc Testnet Config (viem):
+CONTRACT: 0x0747EEf0706327138c69792bF28Cd525089e4583
+
+Step 1: Create job (client wallet)
+const tx = await client.createContractExecutionTransaction({
+  walletAddress: clientWalletAddress,
+  blockchain: "ARC-TESTNET",
+  contractAddress: "0x0747EEf0706327138c69792bF28Cd525089e4583",
+  abiFunctionSignature: "createJob(address,address,uint256,string,address)",
+  abiParameters: [
+    providerAddress,           // who does the work
+    evaluatorAddress,          // who approves (can be client)
+    expiryTimestamp.toString(), // unix timestamp
+    "Job description here",
+    "0x0000000000000000000000000000000000000000" // hook (0 = none)
+  ],
+  fee: { type: "level", config: { feeLevel: "MEDIUM" } },
+});
+
+Step 2: Provider sets budget
+abiFunctionSignature: "setBudget(uint256,uint256,bytes)"
+abiParameters: [jobId, "1000000", "0x"] // 1 USDC
+
+Step 3: Approve USDC (client)
+abiFunctionSignature: "approve(address,uint256)"
+// Call on USDC contract, approve AgenticCommerce contract
+
+Step 4: Fund escrow (client)
+abiFunctionSignature: "fund(uint256,bytes)"
+abiParameters: [jobId, "0x"]
+
+Step 5: Submit deliverable (provider)
+import { keccak256, toHex } from "viem";
+const deliverable = keccak256(toHex("work-completed-proof"));
+abiFunctionSignature: "submit(uint256,bytes32,bytes)"
+abiParameters: [jobId, deliverable, "0x"]
+
+Step 6: Complete job (client/evaluator)
+import { keccak256, toHex } from "viem";
+const reason = keccak256(toHex("approved"));
+abiFunctionSignature: "complete(uint256,bytes32,bytes)"
+abiParameters: [jobId, reason, "0x"]
+// USDC automatically released to provider
+
+JOB STATES: Open → Funded → Submitted → Completed/Rejected/Expired
+
+SOURCE:
+docs.arc.io/arc/tutorials/create-your-first-erc-8183-job.md
+`
+  },
+
+  // ============================================================
+  // H. ARC APP KIT
+  // ============================================================
+  {
+    id: "appkit-1",
+    keywords: ["app kit install", "arc app kit setup", "bridge kit install", "circle app kit"],
+    title: "How do I install and use Arc App Kit?",
+    content: `
+SHORT_ANSWER:
+Install @circle-fin/app-kit, choose your adapter (viem, ethers, Solana, or Circle Wallets), then use Bridge, Swap, Send, or Unified Balance features.
+
+INSTALLATION:
+npm install @circle-fin/app-kit
+
+VIEM ADAPTER SETUP:
+import { AppKit } from "@circle-fin/app-kit";
+import { createViemAdapter } from "@circle-fin/app-kit/adapters/viem";
+import { createWalletClient, http } from "viem";
+import { arcTestnet } from "viem/chains";
+
+const walletClient = createWalletClient({
+  chain: arcTestnet,
+  transport: http(),
+});
+
+const adapter = createViemAdapter({ walletClient });
+const appKit = new AppKit({ adapter });
+
+BRIDGE USDC TO ARC:
+const result = await appKit.bridge({
+  fromChain: "ETH", // source chain
+  toChain: "ARC",   // destination
+  amount: "10",     // USDC amount
+  token: "USDC",
+});
+
+UNIFIED BALANCE:
+const balance = await appKit.getUnifiedBalance({
+  address: userAddress,
+});
+// Returns combined USDC balance across all chains
+
+SUPPORTED CHAINS:
+Ethereum, Base, Arbitrum, Polygon, Solana, Arc + more
+
+SOURCE:
+docs.arc.io/app-kit.md
+docs.arc.io/app-kit/tutorials/installation.md
+`
+  },
+
+  // ============================================================
+  // I. CCTP
+  // ============================================================
+  {
+    id: "cctp-setup-1",
+    keywords: ["cctp setup", "cctp bridge", "cross chain usdc arc", "cctp tutorial", "usdc bridge arc"],
+    title: "How do I use CCTP to bridge USDC to Arc?",
+    content: `
+SHORT_ANSWER:
+CCTP burns USDC on source chain and mints native USDC on Arc. Domain ID for Arc is 26. Use Arc App Kit for easiest integration — it handles CCTP automatically.
+
+EASIEST WAY (App Kit):
+const result = await appKit.bridge({
+  fromChain: "ETH",
+  toChain: "ARC",
+  amount: "100",
+  token: "USDC",
+});
+
+MANUAL CCTP FLOW:
+Step 1: Approve USDC for burning
+Step 2: Call depositForBurn on TokenMessengerV2 (source chain)
+Step 3: Wait for Circle attestation
+Step 4: Call receiveMessage on MessageTransmitterV2 (Arc)
+
+ARC CCTP CONTRACTS:
+- Domain: 26
+- TokenMessengerV2: 0x8FE6B999Dc680CcFDD5Bf7EB0974218be2542DAA
+- MessageTransmitterV2: 0xE737e5cEBEEBa77EFE34D4aa090756590b1CE275
+- TokenMinterV2: 0xb43db544E2c27092c107639Ad201b3dEfAbcF192
+
+SUPPORTED CHAINS: Ethereum, Base, Arbitrum, Optimism, Polygon, Solana, Avalanche, and more
+
+TRANSFER TIME: Usually 1-5 minutes for attestation
+
+SOURCE:
+docs.arc.io/app-kit/bridge.md
+developers.circle.com/cctp
+`
+  },
+
+  // ============================================================
+  // J. FRONTEND DEVELOPMENT
+  // ============================================================
+  {
+    id: "frontend-1",
+    keywords: ["viem arc config", "arc testnet viem", "define arc chain viem", "viem chain arc"],
+    title: "How do I define Arc Testnet in viem?",
+    content: `
+SHORT_ANSWER:
+Use defineChain() with Arc's network details, or import arcTestnet from viem/chains if available.
+
+CODE:
 import { defineChain } from "viem";
 
 export const arcTestnet = defineChain({
   id: 5042002,
   name: "Arc Testnet",
   network: "arc-testnet",
-  nativeCurrency: { name: "USDC", symbol: "USDC", decimals: 6 },
+  nativeCurrency: {
+    name: "USDC",
+    symbol: "USDC",
+    decimals: 6,
+  },
   rpcUrls: {
-    default: { http: ["https://rpc.testnet.arc.network"] }
+    default: { http: ["https://rpc.testnet.arc.network"] },
+    public: { http: ["https://rpc.testnet.arc.network"] },
   },
   blockExplorers: {
-    default: { name: "ArcScan", url: "https://testnet.arcscan.app" }
+    default: {
+      name: "ArcScan",
+      url: "https://testnet.arcscan.app",
+    },
   },
+  testnet: true,
 });
 
-Send USDC Payment (ethers/viem):
-// USDC transfer function selector: 0xa9059cbb
-const amount = (1000).toString(16).padStart(64, "0"); // 0.001 USDC
-const data = "0xa9059cbb" + receiverAddress.slice(2).padStart(64, "0") + amount;
-
-Key Points:
-- Arc is EVM-compatible — all standard web3 libraries work
-- USDC Contract: 0x3600000000000000000000000000000000000000
-- Always switch user to Arc Testnet chain before transactions
-- Use wallet_addEthereumChain if chain not found in MetaMask
-`
-  },
-
-  // ============================================================
-  // MARKETERS & PROJECT TEAMS
-  // ============================================================
-  {
-    id: "marketing-1",
-    keywords: ["arc marketing", "promote arc project", "arc community growth", "arc twitter", "arc social media"],
-    title: "How can I market my project built on Arc?",
-    content: `
-Short Answer:
-Build in public, engage with Arc's community channels, and leverage Arc House for official recognition. The Arc ecosystem actively promotes builders who share their work.
-
-Key Channels:
-1. Arc Discord — #user-made-things channel for project demos
-2. Arc House — Official community platform, earn points for activity
-3. Twitter/X — Tag @arc_xbt and use #ArcBlockchain hashtag
-4. YouTube — Demo videos showing your dApp in action
-5. LinkedIn — Professional posts about your build
-
-Strategies That Work:
-- Submit to Arc Office Hours (Discord presentation)
-- Post demo videos showing real transactions on Arc
-- Write technical blogs about building on Arc
-- Engage with Arc team members on Twitter
-- Submit PR to awesome-arc GitHub repository for ecosystem listing
-
-Content Ideas:
-- "How I built [your dApp] on Arc in X days"
-- "Why I chose Arc for stablecoin payments"
-- Demo videos of your app making real USDC transactions
-- Tutorials helping other developers build on Arc
-
-Key Points:
-- Arc team actively features builders on social media
-- Office Hours give direct access to Arc team for feedback
-- Ecosystem listing increases credibility and visibility
-- Arc House points can lead to grant opportunities
-`
-  },
-
-  {
-    id: "marketing-2",
-    keywords: ["arc hackathon", "arc grants", "circle grants", "arc funding", "web3 funding", "stablecoin hackathon"],
-    title: "Are there grants or hackathons for building on Arc and Circle?",
-    content: `
-Short Answer:
-Yes! Arc and Circle run hackathons and grant programs for builders. The Stablecoin Commerce Stack Challenge is a key example.
-
-Known Programs:
-1. Stablecoin Commerce Stack Challenge (Circle + Arc)
-   - Multiple tracks including Agentic Economy
-   - Cash prizes for best dApps
-   - Submit via Circle's developer platform
-
-2. Arc Builder Grants
-   - Apply through Arc House
-   - For projects with real traction and ecosystem value
-
-3. Circle Developer Grants
-   - Apply at developers.circle.com
-   - For startups building with USDC and Circle APIs
-
-How to Maximize Chances:
-- Build a working dApp (not just a concept)
-- Make real transactions on testnet
-- Document your build publicly (YouTube, Twitter)
-- Engage with Arc and Circle communities before applying
-- Use ERC-8004, ERC-8183, and Circle SDK for extra points
-
-Key Points:
-- Real working demos > concepts in hackathon judging
-- Community engagement increases visibility to judges
-- Arc Office Hours is a great way to get noticed
-- Circle tracks: Payments, Identity, Agentic Economy, Infrastructure
-`
-  },
-
-  // ============================================================
-  // BUYERS, SELLERS & TRADERS
-  // ============================================================
-  {
-    id: "trading-1",
-    keywords: ["arc trading", "usdc trading", "arc swap", "arc liquidity", "arc dex", "swap usdc"],
-    title: "How do I swap or trade USDC on Arc?",
-    content: `
-Short Answer:
-Arc supports USDC swaps and liquidity operations through Arc App Kit and integrated DEX protocols. You can also move USDC from other chains using CCTP.
-
-Options for Trading/Swapping:
-1. Arc App Kit — Unified Balance lets you aggregate and use USDC across chains
-2. CCTP Bridge — Move USDC from Ethereum/Base/Solana to Arc for use
-3. Arc-native DEX protocols — DEX projects building on Arc testnet
-
-How to Move USDC to Arc:
-1. Get testnet USDC at faucet.circle.com
-2. Or bridge from another testnet using CCTP
-3. Connect wallet to Arc Testnet (Chain ID: 5042002)
-4. USDC appears in your wallet automatically
-
-Key Points:
-- USDC is the only currency on Arc — no native coin needed
-- Arc's architecture is optimized for stablecoin liquidity
-- Arc App Kit simplifies cross-chain USDC aggregation
-- Testnet USDC has no real value — use it freely for testing
-`
-  },
-
-  {
-    id: "trading-2",
-    keywords: ["usdc payment", "send usdc", "receive usdc", "usdc transaction", "pay usdc arc"],
-    title: "How do I send and receive USDC payments on Arc?",
-    content: `
-Short Answer:
-Sending USDC on Arc is simple — use MetaMask or any EVM wallet. The USDC contract address on Arc Testnet is 0x3600000000000000000000000000000000000000.
-
-How to Send USDC on Arc:
-1. Add Arc Testnet to MetaMask (Chain ID: 5042002)
-2. Add USDC token: 0x3600000000000000000000000000000000000000
-3. Click Send, enter receiver address and amount
-4. Confirm transaction — gas is deducted in USDC
-
-Programmatic USDC Transfer (for developers):
-const amount = "1000"; // 0.001 USDC (6 decimals)
-const data = "0xa9059cbb" +
-  receiverAddress.slice(2).padStart(64, "0") +
-  parseInt(amount).toString(16).padStart(64, "0");
-
-await ethereum.request({
-  method: "eth_sendTransaction",
-  params: [{ from: senderAddress, to: USDC_CONTRACT, data }]
+// Use in wagmi config
+import { createConfig, http } from "wagmi";
+const config = createConfig({
+  chains: [arcTestnet],
+  transports: { [arcTestnet.id]: http() },
 });
 
-Key Points:
-- USDC has 6 decimal places (1 USDC = 1,000,000 units)
-- Gas fees are also paid in USDC
-- Transactions confirm in seconds on Arc
-- All transactions visible on testnet.arcscan.app
-`
-  },
-
-  // ============================================================
-  // NEW USERS & COMMUNITY
-  // ============================================================
-  {
-    id: "newuser-1",
-    keywords: ["getting started arc", "beginner arc", "new to arc", "start arc", "first steps arc", "how to start"],
-    title: "I'm new to Arc and Circle — where do I start?",
-    content: `
-Short Answer:
-Start by setting up MetaMask with Arc Testnet, getting free testnet USDC from the faucet, and exploring the ecosystem. Everything on testnet is free!
-
-Step-by-Step for Beginners:
-1. Install MetaMask browser extension (metamask.io)
-2. Add Arc Testnet:
-   - RPC: https://rpc.testnet.arc.network
-   - Chain ID: 5042002
-   - Symbol: USDC
-   - Explorer: https://testnet.arcscan.app
-3. Get free testnet USDC at faucet.circle.com
-4. Try sending USDC to another address
-5. View your transaction on testnet.arcscan.app
-6. Join Arc Discord: discord.gg/arc
-7. Sign up on Arc House: arc.house
-
-Resources:
-- Arc Docs: docs.arc.io
-- Circle Docs: developers.circle.com
-- Arc Discord: discord.gg/arc
-- Faucet: faucet.circle.com
-- Explorer: testnet.arcscan.app
-
-Key Points:
-- Testnet is completely free — no real money involved
-- Arc is EVM-compatible — if you know Ethereum, you know Arc
-- The community is very welcoming to newcomers
-- Circle has extensive tutorials and documentation
+SOURCE:
+docs.arc.io/arc/references/connect-to-arc.md
 `
   },
 
   {
-    id: "newuser-2",
-    keywords: ["metamask setup", "wallet setup", "crypto wallet beginner", "install metamask", "web3 wallet"],
-    title: "How do I set up a Web3 wallet for Arc?",
+    id: "frontend-2",
+    keywords: ["usdc balance react", "read balance arc", "usdc balance frontend", "check balance react"],
+    title: "How do I read USDC balance on Arc in a React frontend?",
     content: `
-Short Answer:
-Install MetaMask and add Arc Testnet network. MetaMask is the most compatible wallet for Arc and all EVM chains.
+SHORT_ANSWER:
+Call eth_call with the ERC-20 balanceOf function signature on the USDC contract. Divide result by 1e6 for display.
 
-Setup Guide:
-1. Install MetaMask:
-   - Go to metamask.io
-   - Install the browser extension (Chrome, Firefox, Brave)
-   - Create a new wallet and SAVE your seed phrase safely
+CODE (React + ethers.js):
+const getBalance = async (address: string) => {
+  const data = "0x70a08231" + address.slice(2).padStart(64, "0");
+  const result = await window.ethereum.request({
+    method: "eth_call",
+    params: [{ to: "0x3600000000000000000000000000000000000000", data }, "latest"],
+  });
+  const balance = parseInt(result, 16) / 1e6;
+  return balance.toFixed(3); // e.g., "19.850"
+};
 
-2. Add Arc Testnet to MetaMask:
-   - Click the network selector (top center)
-   - Click "Add Network" → "Add Network Manually"
-   - Fill in:
-     Network Name: Arc Testnet
-     RPC URL: https://rpc.testnet.arc.network
-     Chain ID: 5042002
-     Symbol: USDC
-     Block Explorer: https://testnet.arcscan.app
-   - Click Save
+CODE (viem):
+import { createPublicClient, http } from "viem";
+import { arcTestnet } from "./arcChain";
 
-3. Add USDC token:
-   - Click "Import Tokens"
-   - Token Address: 0x3600000000000000000000000000000000000000
-   - Symbol: USDC, Decimals: 6
+const client = createPublicClient({ chain: arcTestnet, transport: http() });
 
-4. Get testnet USDC:
-   - Visit faucet.circle.com
-   - Select Arc Testnet and enter your address
+const balance = await client.readContract({
+  address: "0x3600000000000000000000000000000000000000",
+  abi: [{ name: "balanceOf", type: "function", inputs: [{ type: "address" }], outputs: [{ type: "uint256" }] }],
+  functionName: "balanceOf",
+  args: [userAddress],
+});
+const formatted = Number(balance) / 1e6; // convert from 6 decimals
 
-Key Points:
-- NEVER share your seed phrase with anyone
-- Testnet wallets can be the same as mainnet wallets
-- MetaMask works on mobile and desktop
-- Multiple wallets can be added to MetaMask
+SOURCE:
+docs.arc.io/arc/references/contract-addresses.md
 `
   },
 
   {
-    id: "newuser-3",
-    keywords: ["arc faucet", "free usdc", "testnet usdc", "get usdc testnet", "faucet circle"],
-    title: "How do I get free testnet USDC on Arc?",
+    id: "frontend-3",
+    keywords: ["switch network metamask", "switch arc chain", "wallet switch chain", "add arc dapp"],
+    title: "How do I switch users to Arc Testnet in a dApp?",
     content: `
-Short Answer:
-Get free testnet USDC from Circle's faucet at faucet.circle.com. Select Arc Testnet and enter your wallet address — USDC arrives in seconds.
+SHORT_ANSWER:
+Use wallet_switchEthereumChain. If Arc isn't added yet, catch error code 4902 and call wallet_addEthereumChain to add it automatically.
 
-Step-by-Step:
-1. Go to faucet.circle.com
-2. Select Network: ARC Testnet
-3. Enter your wallet address (from MetaMask)
-4. Click "Send" or "Request"
-5. Wait 10-30 seconds for USDC to arrive
-6. Check your balance on testnet.arcscan.app
+COMPLETE CODE:
+const switchToArc = async () => {
+  const ARC_CHAIN_ID = "0x4cef52"; // 5042002 in hex
 
-Key Points:
-- Testnet USDC has no real value — it's for testing only
-- You can request multiple times if needed
-- Faucet gives you enough to test transactions and dApps
-- No account or signup required for the faucet
-- USDC Contract: 0x3600000000000000000000000000000000000000
+  try {
+    await window.ethereum.request({
+      method: "wallet_switchEthereumChain",
+      params: [{ chainId: ARC_CHAIN_ID }],
+    });
+  } catch (err) {
+    if (err.code === 4902) {
+      // Chain not added yet — add it
+      await window.ethereum.request({
+        method: "wallet_addEthereumChain",
+        params: [{
+          chainId: ARC_CHAIN_ID,
+          chainName: "Arc Testnet",
+          nativeCurrency: { name: "USDC", symbol: "USDC", decimals: 6 },
+          rpcUrls: ["https://rpc.testnet.arc.network"],
+          blockExplorerUrls: ["https://testnet.arcscan.app"],
+        }],
+      });
+    } else if (err.code === 4001) {
+      console.log("User rejected the request");
+    }
+  }
+};
+
+SOURCE:
+docs.arc.io/arc/references/connect-to-arc.md
 `
   },
 
   // ============================================================
-  // TROUBLESHOOTING
+  // K. BACKEND & API
   // ============================================================
   {
-    id: "troubleshoot-1",
-    keywords: ["transaction failed", "transaction error", "metamask error", "arc transaction failed", "usdc failed"],
-    title: "Why is my transaction failing on Arc Testnet?",
+    id: "backend-1",
+    keywords: ["arc rpc nodejs", "arc backend", "ethers arc node", "arc node js"],
+    title: "How do I use Arc RPC in Node.js backend?",
     content: `
-Short Answer:
-Most transaction failures on Arc are due to insufficient USDC balance (for gas), wrong network, or incorrect contract address.
+SHORT_ANSWER:
+Use ethers.js JsonRpcProvider or viem createPublicClient with Arc's RPC URL.
 
-Common Issues and Fixes:
+ethers.js:
+import { ethers } from "ethers";
 
-1. Insufficient USDC for gas:
-   Fix: Get more testnet USDC from faucet.circle.com
+const provider = new ethers.JsonRpcProvider("https://rpc.testnet.arc.network");
 
-2. Wrong network selected:
-   Fix: Switch MetaMask to Arc Testnet (Chain ID: 5042002)
+// Get block number
+const blockNumber = await provider.getBlockNumber();
 
-3. Wrong USDC contract address:
-   Fix: Use 0x3600000000000000000000000000000000000000
+// Get USDC balance
+const USDC = "0x3600000000000000000000000000000000000000";
+const ABI = ["function balanceOf(address) view returns (uint256)"];
+const usdc = new ethers.Contract(USDC, ABI, provider);
+const balance = await usdc.balanceOf(address);
+console.log(ethers.formatUnits(balance, 6)); // convert 6 decimals
 
-4. Transaction rejected (user cancelled):
-   Fix: Click Confirm in MetaMask when the popup appears
+// Send transaction
+const wallet = new ethers.Wallet(process.env.PRIVATE_KEY, provider);
+const tx = await wallet.sendTransaction({
+  to: recipient,
+  data: transferData,
+  maxFeePerGas: ethers.parseUnits("20", "gwei"),
+});
+await tx.wait();
 
-5. RPC error / connection issue:
-   Fix: Check RPC URL is https://rpc.testnet.arc.network
+viem:
+import { createPublicClient, http } from "viem";
+import { arcTestnet } from "./arcChain";
 
-6. Gas limit too low:
-   Fix: Set gas limit to at least 0x186A0 (100,000) for USDC transfers
+const client = createPublicClient({
+  chain: arcTestnet,
+  transport: http("https://rpc.testnet.arc.network"),
+});
 
-Debugging Steps:
-1. Check balance on testnet.arcscan.app
-2. Verify you're on Arc Testnet (Chain ID: 5042002)
-3. Check the USDC contract address
-4. Try increasing gas limit
-5. Check Arc Discord for any network issues
+const blockNumber = await client.getBlockNumber();
 
-Key Points:
-- All gas on Arc is paid in USDC — you need USDC to send USDC
-- Arc Testnet is occasionally updated — check Discord for status
-- MetaMask sometimes needs network reset: Settings → Advanced → Reset Account
+SOURCE:
+docs.arc.io/arc/references/connect-to-arc.md
 `
   },
 
   {
-    id: "troubleshoot-2",
-    keywords: ["groq api", "api error", "ai error", "chat error", "microai error", "response error"],
-    title: "Why is MicroAI not responding or showing an error?",
+    id: "backend-2",
+    keywords: ["listen events arc", "contract events arc", "usdc transfer events", "monitor arc events"],
+    title: "How do I listen for USDC transfer events on Arc?",
     content: `
-Short Answer:
-MicroAI errors are usually caused by the GROQ API key being invalid, rate limited, or not set in Vercel environment variables.
+SHORT_ANSWER:
+Use getLogs() with the Transfer event topic. USDC Transfer topic: 0xddf252ad1be2c89b69c2b068fc378daa952ba7f163c4a11628f55a4df523b3ef
 
-Common Fixes:
+ethers.js:
+import { ethers } from "ethers";
 
-1. GROQ API key not set:
-   Fix: Add GROQ_API_KEY to Vercel → Settings → Environment Variables
+const provider = new ethers.JsonRpcProvider("https://rpc.testnet.arc.network");
+const USDC = "0x3600000000000000000000000000000000000000";
+const ABI = ["event Transfer(address indexed from, address indexed to, uint256 value)"];
+const usdc = new ethers.Contract(USDC, ABI, provider);
 
-2. Rate limit exceeded:
-   Fix: Wait a moment and try again, or use multiple API keys
+// Listen for transfers TO your wallet
+usdc.on("Transfer", (from, to, amount, event) => {
+  if (to.toLowerCase() === yourAddress.toLowerCase()) {
+    console.log("Received:", ethers.formatUnits(amount, 6), "USDC from", from);
+    console.log("TX:", event.transactionHash);
+  }
+});
 
-3. Transaction failed before response:
-   Fix: Make sure you have USDC and confirmed the MetaMask transaction
+// Get historical transfers
+const filter = usdc.filters.Transfer(null, yourAddress);
+const events = await usdc.queryFilter(filter, -1000); // last 1000 blocks
 
-4. Network error:
-   Fix: Check internet connection and Arc RPC status
+viem:
+const logs = await client.getLogs({
+  address: USDC_CONTRACT,
+  event: parseAbiItem("event Transfer(address indexed from, address indexed to, uint256 indexed value)"),
+  args: { to: yourAddress },
+  fromBlock: BigInt(startBlock),
+  toBlock: "latest",
+});
 
-For Developers:
-- Get free Groq API key at console.groq.com
-- Recommended model: llama-3.1-8b-instant (fast and free)
-- Set environment variable: GROQ_API_KEY=your_key
-- Redeploy after adding environment variables
-
-Key Points:
-- Groq is free with generous rate limits
-- Always add API keys to Vercel env vars, not just .env.local
-- Redeploy after changing environment variables on Vercel
+SOURCE:
+docs.arc.io/arc/tutorials/monitor-contract-events.md
 `
   },
 
   // ============================================================
-  // MICROAI SPECIFIC
+  // L. TROUBLESHOOTING
   // ============================================================
   {
-    id: "microai-1",
-    keywords: ["microai", "what is microai", "microai dapp", "arc ai chatbot", "pay per question"],
-    title: "What is MicroAI and how does it work?",
+    id: "troubleshoot-dev-1",
+    keywords: ["transaction failing arc", "transaction error arc", "arc tx error", "debug arc transaction"],
+    title: "Why is my transaction failing on Arc? How do I debug it?",
     content: `
-Short Answer:
-MicroAI is a pay-per-use AI knowledge hub built on Arc Testnet. Users pay $0.001 USDC per question and get instant answers about Arc Blockchain and Circle ecosystem.
+SHORT_ANSWER:
+Most Arc transaction failures are caused by: insufficient USDC for gas, maxFeePerGas below 20 Gwei minimum, wrong network, or incorrect contract interaction.
 
-How MicroAI Works:
-1. User connects their MetaMask wallet to Arc Testnet
-2. User types a question about Arc or Circle
-3. MetaMask popup appears asking to approve 0.001 USDC payment
-4. User confirms → USDC sent instantly on Arc blockchain
-5. AI generates expert answer using Arc & Circle knowledge base
-6. Transaction hash (TX proof) is shown with every answer
+COMMON ERRORS AND FIXES:
 
-Technical Stack:
-- Frontend: Next.js 15 + Tailwind CSS
-- AI: Groq API with Llama 3.1 8B
-- Blockchain: Arc Testnet (Chain ID: 5042002)
-- Payment: USDC (0x3600000000000000000000000000000000000000)
-- Receiver: 0x9a318CD2BC533B5B2e96F7f5b499738732492b15
-- Deployed: microai-tan.vercel.app
-- GitHub: github.com/sahmedonchain/microai
+1. "transaction underpriced"
+Cause: maxFeePerGas below 20 Gwei minimum
+Fix: Set maxFeePerGas: ethers.parseUnits("20", "gwei")
 
-Arc Integration:
-- ERC-8004 Agent ID: 69168
-- ERC-8183 Job ID: 110278
-- BuildOrbit YouTube: youtube.com/@buildorbitofficial
+2. "insufficient funds for gas * price + value"
+Cause: Not enough USDC to cover gas + transfer amount
+Fix: Get more testnet USDC at faucet.circle.com
 
-Key Points:
-- No subscription — pay only for what you ask
-- Every answer has an on-chain transaction proof
-- Built by BuildOrbit (Sahmed Zayan) for Arc ecosystem
-- Open source on GitHub
+3. "intrinsic gas too low"
+Cause: Gas limit too low
+Fix: Set gas limit to minimum 21000 for transfers, use eth_estimateGas for contracts
+
+4. Transaction pending forever
+Cause: maxFeePerGas too low
+Fix: Increase fee or reset MetaMask nonce via Settings → Advanced → Reset Account
+
+5. Contract call reverting
+Cause: Business logic error, wrong parameters, or insufficient allowance
+Fix: Check ABI parameters match contract expectations, ensure USDC allowance approved
+
+DEBUGGING STEPS:
+Step 1: Check USDC balance at testnet.arcscan.app
+Step 2: Verify you're on Arc Testnet (Chain ID: 5042002)
+Step 3: Check maxFeePerGas is at least 20 Gwei
+Step 4: Use eth_estimateGas to check gas limit
+Step 5: Check Arc Discord for network issues
+
+ERROR CODE REFERENCE:
+- 156013: Entity Secret invalid or not registered
+- 155258: Insufficient USDC balance for transaction
+- 4001: User rejected MetaMask request
+- 4902: Chain not added to MetaMask
+
+SOURCE:
+docs.arc.io/arc/references/gas-and-fees.md
+`
+  },
+
+  {
+    id: "troubleshoot-dev-2",
+    keywords: ["error 156013", "circle error 156013", "entity secret error", "walletset error"],
+    title: "What does Circle error code 156013 mean and how do I fix it?",
+    content: `
+SHORT_ANSWER:
+Error 156013 means "Entity Secret is invalid or does not match the registered ciphertext." Your entity secret in .env doesn't match what's registered in Circle Console.
+
+CAUSES:
+1. Wrong entity secret in .env file
+2. Entity secret was rotated but .env not updated
+3. Entity secret not yet registered in Circle Console
+4. Copy-paste error when saving the secret
+
+STEP-BY-STEP FIX:
+Step 1: Check your .env file
+cat .env | grep CIRCLE_ENTITY_SECRET
+
+Step 2: Verify it's exactly 64 hex characters (32 bytes)
+
+Step 3: Test if your current credentials work
+const wallets = await client.listWallets({});
+// If this works, entity secret is correct
+
+Step 4: If wrong, you have two options:
+Option A: Find original secret in old .env files
+grep -r "ENTITY_SECRET" ~/projects/
+
+Option B: Rotate entity secret using Circle Console
+- console.circle.com → DEV CONTROLLED → Configurator → Entity Secret → Rotate
+- Requires current secret's ciphertext
+
+Step 5: Update .env with correct secret
+Step 6: Restart your dev server
+
+SOURCE:
+developers.circle.com/wallets/developer-controlled/entity-secret
+`
+  },
+
+  {
+    id: "troubleshoot-dev-3",
+    keywords: ["error 155258", "insufficient balance error", "circle insufficient funds", "155258"],
+    title: "What does Circle error code 155258 mean?",
+    content: `
+SHORT_ANSWER:
+Error 155258 means "The wallet does not have enough USDC balance for this transaction." You need to fund the Circle-managed wallet with testnet USDC.
+
+FIX:
+Step 1: Get your wallet address
+const wallets = await client.listWallets({});
+const address = wallets.data.wallets[0].address;
+console.log("Fund this address:", address);
+
+Step 2: Fund with testnet USDC
+- Go to faucet.circle.com
+- Select Arc Testnet
+- Enter the wallet address
+- Click Send
+
+Step 3: Wait 10-30 seconds for USDC to arrive
+
+Step 4: Verify balance
+const balance = await client.getWalletTokenBalance({ id: walletId });
+
+Step 5: Retry your transaction
+
+NOTE: Make sure to fund the specific Circle wallet address, not your MetaMask address.
+
+SOURCE:
+developers.circle.com/wallets/developer-controlled/send-tokens
+`
+  },
+
+  {
+    id: "troubleshoot-dev-4",
+    keywords: ["metamask wrong balance", "metamask usdc not showing", "usdc not visible metamask", "add usdc metamask"],
+    title: "Why is MetaMask showing wrong balance or USDC not visible?",
+    content: `
+SHORT_ANSWER:
+MetaMask doesn't natively display custom gas tokens correctly. Manually add USDC as a token using its contract address.
+
+FIX:
+Step 1: Add USDC token manually
+- Open MetaMask
+- Make sure you're on Arc Testnet
+- Click "Import tokens"
+- Enter: 0x3600000000000000000000000000000000000000
+- Symbol: USDC, Decimals: 6
+- Click Add
+
+Step 2: If balance shows as ETH
+MetaMask shows native gas as ETH even on Arc. The actual balance is USDC. Read the ERC-20 balanceOf instead:
+const data = "0x70a08231" + address.slice(2).padStart(64, "0");
+const result = await window.ethereum.request({
+  method: "eth_call",
+  params: [{ to: "0x3600000000000000000000000000000000000000", data }, "latest"],
+});
+const balance = parseInt(result, 16) / 1e6;
+
+Step 3: Reset account if stale
+MetaMask → Settings → Advanced → Reset Account (clears nonce/pending txs, not funds)
+
+SOURCE:
+docs.arc.io/arc/references/connect-to-arc.md
 `
   },
 
