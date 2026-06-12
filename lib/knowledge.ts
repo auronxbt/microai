@@ -1504,4 +1504,1034 @@ docs.arc.io/arc/references/connect-to-arc.md
 `
   },
 
+  // ============================================================
+  // A. ARC TOKEN & AIRDROP
+  // ============================================================
+  {
+    id: "token-1",
+    keywords: ["arc token", "arc airdrop", "arc native token", "arc coin", "will arc have token"],
+    title: "Will Arc have a native token? Is there an Arc airdrop?",
+    content: `
+SHORT_ANSWER:
+No official token or airdrop has been confirmed yet. Circle CEO Jeremy Allaire publicly stated in April 2026 that Arc will have a native token for governance, staking incentives, and economic alignment — but no date or distribution details announced.
+
+WHAT WE KNOW:
+- Circle CEO Jeremy Allaire at a Seoul event (April 14, 2026): Arc token will "help provide mechanisms for governance, incentives, economic alignment, and to ultimately move it into a proof-of-stake system"
+- Circle mentioned native token possibility in Q3 2025, Q4 2025, and Q1 2026 earnings calls
+- Circle published broad tokenomics in its whitepaper
+
+ARC TOKENOMICS (from whitepaper):
+- Total Supply: 10 billion ARC tokens
+- Ecosystem (60%): Token sales, developer grants, network growth, participation mechanisms
+- Circle (25%): Circle operations, staking, governance, ecosystem programs
+- Long-Term Reserve (15%): Treasury for market stability and critical infrastructure
+
+WHAT IS NOT CONFIRMED:
+- No official airdrop date
+- No distribution eligibility criteria published
+- No unlock or vesting schedule
+- No TGE (Token Generation Event) date
+
+HONEST ADVICE:
+Testnet participation is speculative but low-risk. Focus on meaningful contributions (building, content creation) rather than simple faucet farming.
+
+SOURCE:
+Circle CEO statement at Seoul event, April 14, 2026
+airdrops.io/arc (updated May 2026)
+`
+  },
+
+  {
+    id: "token-2",
+    keywords: ["arc tokenomics", "arc supply", "arc distribution", "arc token supply", "10 billion arc"],
+    title: "What are Arc's tokenomics?",
+    content: `
+SHORT_ANSWER:
+Arc has a 10 billion total supply split into: Ecosystem 60%, Circle 25%, Long-Term Reserve 15%. Unlock and vesting schedules have not been published yet.
+
+BREAKDOWN:
+- Total Supply: 10,000,000,000 ARC
+- Ecosystem (60% = 6 billion): Covers token sales, developer grants, network growth programs, and participation mechanisms. Majority goes to builders and contributors.
+- Circle (25% = 2.5 billion): For Circle's operations on the network, staking, governance participation, and ecosystem programs
+- Long-Term Reserve (15% = 1.5 billion): Treasury for market stress, critical infrastructure, and network stability
+
+WHAT'S NOT PUBLISHED YET:
+- Vesting schedules
+- Unlock timelines
+- Eligibility criteria for ecosystem allocation
+- TGE date
+
+NOTE:
+These tokenomics were shared in Circle's whitepaper. Circle went public on NYSE in June 2025. Arc is a core part of Circle's 2026 product roadmap.
+
+SOURCE:
+Circle whitepaper (2026)
+`
+  },
+
+  {
+    id: "token-3",
+    keywords: ["qualify airdrop arc", "arc airdrop eligibility", "farming arc", "increase arc airdrop chance", "how to get arc airdrop"],
+    title: "How do I increase my chances of a potential Arc airdrop?",
+    content: `
+SHORT_ANSWER:
+Participate meaningfully on Arc Testnet — deploy contracts, use dApps, join Arc House community program, get Discord roles, create content, and build real projects.
+
+RECOMMENDED ACTIVITIES (from community guides):
+
+1. TESTNET TRANSACTIONS
+- Add Arc Testnet to MetaMask (Chain ID: 5042002)
+- Get testnet USDC from faucet.circle.com
+- Send transactions regularly
+- Do cross-chain swaps
+- Interact with multiple dApps
+
+2. ARC HOUSE (OFFICIAL PROGRAM)
+- Join arc.house community program
+- Complete tasks to earn badges and points
+- Apply for Builder/Creator roles
+- Submit your project
+
+3. DISCORD
+- Join Arc Discord
+- Get Architect role (verified member)
+- Apply for Creator role (requires building or content)
+- Participate in AMAs and Office Hours
+
+4. BUILD SOMETHING
+- Deploy a smart contract on Arc
+- Build a dApp or tool
+- Create educational content about Arc
+- Submit to #user-made-things on Discord
+
+5. SOCIAL MEDIA
+- Follow @arc_xbt on Twitter/X
+- Post about your Arc builds
+- Share demo videos on YouTube
+- Tag Arc team in your content
+
+6. ADVANCED ACTIVITIES
+- Register an ERC-8004 AI Agent
+- Create ERC-8183 jobs
+- Use Circle Developer-Controlled Wallets
+- Mint NFTs on Arc (Omnihub, Ordinal Genesis)
+- Register domain on InfinityName
+
+HONEST ADVICE:
+No airdrop is confirmed. Focus on activities that have real value regardless of airdrop — building skills, networking, creating content.
+
+SOURCE:
+airdrops.io/arc, cryptorank.io/drophunting/arc-chain-activity
+`
+  },
+
+  {
+    id: "token-4",
+    keywords: ["arc mainnet", "when mainnet arc", "arc mainnet date", "arc mainnet launch", "arc mainnet 2026"],
+    title: "When will Arc mainnet launch?",
+    content: `
+SHORT_ANSWER:
+No official mainnet date confirmed. Arc public testnet launched October 28, 2025. Mainnet Beta is expected in 2026 based on Circle's roadmap.
+
+TIMELINE SO FAR:
+- Private testnet: Early 2025
+- Public testnet: October 28, 2025
+- Mainnet Beta: Expected 2026 (no specific date)
+- Full mainnet: TBD
+
+WHAT ARC HAS AT TESTNET LAUNCH:
+- 100+ institutional partners (BlackRock, Visa, Goldman Sachs, HSBC, Mastercard, AWS, Anthropic)
+- ERC-8004 AI Agent Registry
+- ERC-8183 Agentic Commerce
+- CCTP cross-chain transfers
+- Arc App Kit (Bridge, Swap, Send, Unified Balance)
+- Over 244M+ transactions on testnet as of May 2026
+
+WHAT COMES WITH MAINNET:
+- Privacy Module (confidential transactions)
+- Stablecoin Services (multi-stablecoin gas, paymaster)
+- Proof-of-Stake transition (eventually)
+- Possible ARC token launch
+
+NOTE:
+Circle is now publicly traded (NYSE: CRCL since June 2025). Mainnet timing will depend on testing, regulatory, and development milestones.
+
+SOURCE:
+airdrops.io/arc (May 2026 update)
+docs.arc.io/arc/concepts/system-overview.md
+`
+  },
+
+  {
+    id: "token-5",
+    keywords: ["arc builders fund", "circle ventures arc", "arc grant", "arc funding", "arc investment"],
+    title: "What is the Arc Builders Fund and how do I apply?",
+    content: `
+SHORT_ANSWER:
+Circle Ventures launched the Arc Builders Fund in December 2025 to provide funding and support for early-stage teams building on Arc network.
+
+WHAT IS IT:
+- Launched: December 2025
+- Purpose: Fund early-stage teams building real applications on Arc
+- Run by: Circle Ventures (Circle's investment arm)
+- Focus: Fintech, payments, AI agents, DeFi, enterprise apps
+
+HOW TO APPLY:
+Step 1: Build something meaningful on Arc (working prototype required)
+Step 2: Join Arc House (arc.house) and establish your profile
+Step 3: Engage with Arc community (Discord, Twitter, Office Hours)
+Step 4: Contact Circle Ventures through official Arc channels
+Step 5: Submit your project for review
+
+WHAT THEY LOOK FOR:
+- Real working applications on Arc
+- Clear business model or ecosystem value
+- Strong team with relevant background
+- Arc-native features (USDC payments, ERC-8004/8183, CCTP)
+
+TIP:
+Presenting at Arc Office Hours on Discord is a great way to get noticed by the Arc team before formally applying.
+
+SOURCE:
+Bitget News, December 2025 (Circle Ventures Arc Builders Fund announcement)
+`
+  },
+
+  // ============================================================
+  // B. ARC HOUSE
+  // ============================================================
+  {
+    id: "archouse-1",
+    keywords: ["arc house", "what is arc house", "arc house community", "arc house program", "arc house join"],
+    title: "What is Arc House and how do I join?",
+    content: `
+SHORT_ANSWER:
+Arc House is the official community platform for Arc builders and contributors. You earn points and badges by completing tasks, building projects, and engaging with the ecosystem.
+
+WHAT IS ARC HOUSE:
+- Official Arc community portal at arc.house
+- Builder recognition platform
+- Task-based point system with badges
+- Gateway to grants, recognition, and ecosystem listing
+- Connected to Arc Discord community
+
+HOW TO JOIN:
+Step 1: Go to arc.house
+Step 2: Click "Join Community"
+Step 3: Register with email or LinkedIn account
+Step 4: Create your profile (add GitHub, Twitter, LinkedIn)
+Step 5: Submit application for approval
+Step 6: Once approved, start completing tasks
+
+PROFILE TIPS:
+- Add all your social links (GitHub, Twitter, LinkedIn)
+- Write a clear bio about what you build
+- Link your Arc testnet wallet address
+- Add your YouTube channel if you create content
+
+NOTE:
+Approval may take 24-48 hours. Some roles require manual review by Arc team.
+
+SOURCE:
+arc.house
+airdrops.io/arc
+`
+  },
+
+  {
+    id: "archouse-2",
+    keywords: ["arc house points", "earn arc points", "arc badges", "arc house tasks", "arc house rewards"],
+    title: "How do I earn points and badges on Arc House?",
+    content: `
+SHORT_ANSWER:
+Earn points by completing tasks: building dApps, creating content, participating in Discord, submitting to ecosystem, and engaging with Arc community.
+
+WAYS TO EARN POINTS:
+
+HIGH VALUE ACTIVITIES:
+- Build and deploy a dApp on Arc Testnet
+- Create educational YouTube video about Arc
+- Get featured in Arc Discord #user-made-things
+- Present at Arc Office Hours
+- Submit project for Arc ecosystem listing
+- Register an ERC-8004 AI Agent
+- Write technical blog post or tutorial
+
+MEDIUM VALUE:
+- Active Discord participation
+- Create Twitter/X content about Arc
+- Help other community members with questions
+- Complete bounty tasks on Superboard
+- Mint NFTs on Arc dApps
+
+LOWER VALUE:
+- Daily GM interactions
+- Like/retweet Arc official posts
+- Refer new members
+
+BADGES:
+- Builder Badge: Deploy contracts/dApps
+- Creator Badge: Quality content creation
+- Architect Badge: Verified Discord member
+- Community Badge: Active participation
+
+HOW TO REDEEM:
+Arc House hasn't officially announced redemption mechanics yet. Points and badges are being tracked for potential future rewards.
+
+SOURCE:
+arc.house (contribution rules section)
+`
+  },
+
+  {
+    id: "archouse-3",
+    keywords: ["creator role arc", "arc discord creator", "get creator role", "arc builder role"],
+    title: "How do I get the Creator or Builder role on Arc Discord?",
+    content: `
+SHORT_ANSWER:
+Creator role requires building meaningful projects OR creating quality educational content about Arc. Apply through Arc Discord by showing your work.
+
+CREATOR ROLE REQUIREMENTS:
+Option A — Build something:
+- Deploy a working dApp on Arc Testnet
+- Must use Arc-native features (USDC payment, ERC-8004, ERC-8183)
+- Share in #user-made-things Discord channel
+- Include GitHub repo and demo link/video
+
+Option B — Create content:
+- Create quality YouTube tutorials about Arc
+- Write technical articles/blogs about building on Arc
+- Consistent posting with real educational value
+- Not just promotional — must be technically informative
+
+HOW TO APPLY:
+Step 1: Join Arc Discord
+Step 2: Build your project or create your content
+Step 3: Share in appropriate Discord channel
+Step 4: Request Creator role in designated channel
+Step 5: Arc team reviews and assigns role
+
+ARCHITECT ROLE:
+- Basic verified member role
+- Easier to get — just verify your account
+- Entry point before Creator
+
+TIP:
+A YouTube demo video showing your dApp working on Arc is one of the most effective ways to get noticed and qualify for Creator role.
+
+SOURCE:
+airdrops.io/arc
+Arc Discord community
+`
+  },
+
+  {
+    id: "archouse-4",
+    keywords: ["arc office hours", "arc discord presentation", "arc office hours submit", "present arc project"],
+    title: "What is Arc Office Hours and how do I apply?",
+    content: `
+SHORT_ANSWER:
+Arc Office Hours is a regular session on Arc Discord where builders present their projects, get feedback from the Arc team, and connect with the community. Apply via Google Form.
+
+WHAT IS IT:
+- Live presentation sessions on Arc Discord
+- Builders demo their projects for 5-10 minutes
+- Arc team gives direct feedback
+- Community asks questions
+- Great for visibility and ecosystem recognition
+
+HOW TO APPLY:
+Step 1: Build a working project on Arc (testnet or prototype)
+Step 2: Fill out the Arc Office Hours Google Form
+Step 3: Include: project name, GitHub, demo link, what feedback you want
+Step 4: Wait for confirmation from Arc community team
+Step 5: Present live on scheduled date
+
+WHAT TO PREPARE:
+- 5-10 minute demo of your project
+- Live transaction on Arc Testnet
+- Clear explanation of how you use Arc/Circle
+- What feedback you're looking for
+
+TIPS FOR ACCEPTANCE:
+- Have a working demo (not just slides)
+- Show real Arc transactions
+- Be clear about your Arc integration
+- Engage in Discord before applying
+
+NOTE:
+Submitting this form does not guarantee a slot. Arc team reviews for fit, readiness, and available time.
+
+SOURCE:
+Arc Discord #announcements channel
+`
+  },
+
+  // ============================================================
+  // C. UNDERSTANDING ARC (COMMUNITY LEVEL)
+  // ============================================================
+  {
+    id: "community-explain-1",
+    keywords: ["what is arc simple", "arc blockchain explain", "arc for beginners", "arc explained simply"],
+    title: "What is Arc blockchain in simple terms?",
+    content: `
+SHORT_ANSWER:
+Arc is a new blockchain made by Circle (the company that created USDC). Think of it as a fast payment network where you pay transaction fees in USDC dollars instead of ETH or other volatile coins.
+
+SIMPLE EXPLANATION:
+Imagine a bank network, but decentralized and on a blockchain:
+- You use USDC (digital dollars) for everything
+- Paying fees costs pennies in USDC
+- Transactions confirm in under 1 second
+- Built for payments, not games or NFTs
+- Backed by Circle (publicly traded US company)
+
+WHY IT MATTERS:
+Traditional blockchains use volatile coins for gas (ETH, BNB, SOL). When ETH price goes up, transaction fees become expensive and unpredictable. Arc solves this by using USDC — fees are always predictable and cheap.
+
+WHO IS BUILDING ON ARC:
+- BlackRock (world's largest asset manager)
+- Visa (global payments giant)
+- Goldman Sachs (top investment bank)
+- Mastercard
+- Amazon Web Services
+
+KEY FACTS:
+- Made by Circle (creator of USDC)
+- Circle is publicly traded on NYSE
+- Public testnet launched October 28, 2025
+- Over 100 institutional partners
+
+SOURCE:
+docs.arc.io
+`
+  },
+
+  {
+    id: "community-explain-2",
+    keywords: ["arc circle same", "is arc circle", "arc vs circle", "circle arc relationship"],
+    title: "Is Arc the same as Circle? What is their relationship?",
+    content: `
+SHORT_ANSWER:
+Arc is Circle's blockchain. Circle created and built Arc, just like Apple made iOS. Circle continues to exist as a separate company — Arc is one of their products.
+
+RELATIONSHIP:
+- Circle: The company (like Apple)
+- USDC: Circle's stablecoin product (like iPhone)
+- Arc: Circle's blockchain (like iOS)
+- CCTP: Circle's cross-chain protocol (like iCloud)
+
+CIRCLE BACKGROUND:
+- Founded 2013 by Jeremy Allaire and Sean Neville
+- Issued USDC stablecoin (world's #2 stablecoin by market cap)
+- Raised $2.22+ billion in funding
+- Went public on NYSE (ticker: CRCL) in June 2025
+- Revenue: Billions from USDC reserves interest
+
+WHY CIRCLE BUILT ARC:
+Circle needed a blockchain that natively supported stablecoins as gas. Existing chains treat USDC as just another token. Arc makes USDC the core of everything.
+
+KEY POINT:
+Circle will continue supporting USDC on 15+ other blockchains (Ethereum, Solana, Base, etc.). Arc is an addition to Circle's ecosystem, not a replacement.
+
+SOURCE:
+circle.com
+arc.io
+`
+  },
+
+  {
+    id: "community-explain-3",
+    keywords: ["is arc safe", "arc scam", "arc legit", "is arc trustworthy", "arc reliable"],
+    title: "Is Arc safe and legitimate? Is it a scam?",
+    content: `
+SHORT_ANSWER:
+Arc is legitimate and safe. It is built by Circle, a regulated US financial company that is publicly traded on NYSE. It is not a scam.
+
+WHY ARC IS TRUSTWORTHY:
+1. Built by Circle — a regulated, publicly traded US company (NYSE: CRCL)
+2. Circle is the issuer of USDC — the world's most regulated stablecoin
+3. Circle has published monthly reserve reports since 2018
+4. Arc has 100+ institutional partners including BlackRock and Visa
+5. Circle raised $2.22+ billion from top investors
+6. Open source code — anyone can verify it
+
+RISKS TO BE AWARE OF:
+- Arc Testnet is still in testing phase — bugs possible
+- Testnet USDC has no real value
+- No confirmed token or airdrop — be skeptical of claims
+- Mainnet not launched yet
+- Smart contracts on testnet may have vulnerabilities
+
+WHAT IS SAFE:
+- Using Arc Testnet with test USDC (no real money)
+- Joining Arc House and Discord
+- Building projects on testnet
+- Creating educational content
+
+WHAT TO AVOID:
+- Anyone claiming to sell "Arc tokens" — no token exists yet
+- Fake airdrop websites asking for your seed phrase
+- Unofficial "Arc" Discords or Telegrams
+
+SOURCE:
+circle.com, arc.io
+NYSE: CRCL (Circle's stock)
+`
+  },
+
+  {
+    id: "community-explain-4",
+    keywords: ["arc partners", "blackrock arc", "visa arc", "goldman arc", "institutional arc", "who uses arc"],
+    title: "Who are Arc's institutional partners?",
+    content: `
+SHORT_ANSWER:
+Arc launched with 100+ institutional partners including BlackRock, Visa, Goldman Sachs, HSBC, Mastercard, Amazon Web Services, and Anthropic.
+
+CONFIRMED PARTNERS AT TESTNET LAUNCH (October 2025):
+FINANCE:
+- BlackRock (world's largest asset manager, $10T AUM)
+- Goldman Sachs (top investment bank)
+- HSBC (global bank)
+- Standard Chartered
+- Janus Henderson
+- Cumberland (crypto market maker)
+- Coinbase
+
+PAYMENTS:
+- Visa
+- Mastercard
+- CopperX
+
+TECHNOLOGY:
+- Amazon Web Services (AWS)
+- Anthropic (AI company, maker of Claude)
+
+ARC BUILDERS FUND BACKED TEAMS:
+- Multiple early-stage fintech startups
+- DeFi protocols
+- Payment infrastructure companies
+
+WHAT THESE PARTNERS DO ON ARC:
+- Test USDC payments infrastructure
+- Build stablecoin payment rails
+- Explore tokenized real-world assets
+- Test FX settlement using StableFX
+
+NOTE:
+"Partner" means they are testing on Arc testnet. Full production deployments will happen after mainnet launch.
+
+SOURCE:
+airdrops.io/arc (May 2026)
+`
+  },
+
+  // ============================================================
+  // D. WALLETS & GETTING STARTED (COMMUNITY LEVEL)
+  // ============================================================
+  {
+    id: "community-wallet-1",
+    keywords: ["rabby wallet arc", "rabby arc setup", "rabby testnet arc"],
+    title: "How do I add Arc Testnet to Rabby Wallet?",
+    content: `
+SHORT_ANSWER:
+Open Rabby → Click network selector (top-left) → Add Custom Network → Enter Arc details → Confirm.
+
+STEP-BY-STEP:
+Step 1: Open Rabby Wallet browser extension
+Step 2: Click the network selector in top-left corner
+Step 3: Click "Add Custom Network"
+Step 4: Fill in:
+   - Chain Name: Arc Testnet
+   - Chain ID: 5042002
+   - RPC URL: https://rpc.testnet.arc.network
+   - Currency Symbol: USDC
+   - Block Explorer: https://testnet.arcscan.app
+Step 5: Click "Confirm"
+Step 6: Select Arc Testnet from your network list
+
+NOTE:
+Rabby is a great alternative to MetaMask — it has better security warnings and multi-chain support. Recommended for Arc users.
+
+SOURCE:
+docs.arc.io/arc/references/connect-to-arc.md
+`
+  },
+
+  {
+    id: "community-wallet-2",
+    keywords: ["coinbase wallet arc", "coinbase arc setup", "coinbase arc testnet"],
+    title: "How do I add Arc Testnet to Coinbase Wallet?",
+    content: `
+SHORT_ANSWER:
+Open Coinbase Wallet → Settings → Networks → Add custom network → Enter Arc details.
+
+STEP-BY-STEP:
+Step 1: Open Coinbase Wallet app or extension
+Step 2: Go to Settings
+Step 3: Tap "Networks"
+Step 4: Tap "Add custom network"
+Step 5: Enter:
+   - Network name: Arc Testnet
+   - RPC URL: https://rpc.testnet.arc.network
+   - Chain ID: 5042002
+   - Currency symbol: USDC
+   - Block explorer: https://testnet.arcscan.app
+Step 6: Tap "Save"
+Step 7: Switch to Arc Testnet
+
+NOTE:
+Coinbase Wallet works well with Arc. It's a good choice for users already in the Coinbase ecosystem.
+
+SOURCE:
+docs.arc.io/arc/references/connect-to-arc.md
+`
+  },
+
+  {
+    id: "community-wallet-3",
+    keywords: ["check arc transaction", "arcscan how to use", "find arc tx", "arc explorer guide"],
+    title: "How do I check my transactions on Arc Explorer (ArcScan)?",
+    content: `
+SHORT_ANSWER:
+Go to testnet.arcscan.app and search your wallet address or transaction hash to see all your Arc activity.
+
+GUIDE:
+Step 1: Go to https://testnet.arcscan.app
+Step 2: In the search bar, paste either:
+   - Your wallet address (0x...) — shows all transactions
+   - Transaction hash (0x...) — shows specific transaction
+
+WHAT YOU CAN SEE:
+For wallet address:
+- USDC balance
+- All transactions sent/received
+- Token transfers
+- Contract interactions
+- Gas used
+
+For transaction hash:
+- Status (Success/Pending/Failed)
+- Block number
+- From/To addresses
+- Amount transferred
+- Gas fee paid
+- Timestamp
+
+USEFUL LINKS:
+- Gas tracker: https://testnet.arcscan.app/gas-tracker
+- All transactions: https://testnet.arcscan.app/txs
+- Token list: https://testnet.arcscan.app/tokens
+
+TIP:
+Save your wallet address URL: testnet.arcscan.app/address/YOUR_ADDRESS for quick access.
+
+SOURCE:
+https://testnet.arcscan.app
+`
+  },
+
+  // ============================================================
+  // E. TESTNET DAPPS
+  // ============================================================
+  {
+    id: "dapps-1",
+    keywords: ["arc dapps", "arc ecosystem apps", "what to do arc testnet", "arc testnet apps", "arc dapp list"],
+    title: "What dApps are available on Arc Testnet?",
+    content: `
+SHORT_ANSWER:
+Arc Testnet has several active dApps including Zkcodex (contracts/NFTs), Omnihub (NFT marketplace), InfinityName (domains), and MicroAI (AI chatbot). More are launching regularly.
+
+AVAILABLE DAPPS (as of 2026):
+
+NFTs & CREATION:
+- Zkcodex: Deploy contracts and mint NFTs without coding
+- Omnihub: Create NFT collections
+- Ordinal Genesis: NFT collections on Arc
+
+DOMAINS:
+- InfinityName: Register .arc domain names
+
+AI & PAYMENTS:
+- MicroAI (microai-tan.vercel.app): Pay-per-use AI chatbot, $0.001 USDC per question, Arc & Circle knowledge hub
+
+DEFI & FINANCE:
+- StableFX: FX swaps with USDC/EURC (institutional)
+
+CROSS-CHAIN:
+- Arc App Kit: Bridge/Swap USDC from other chains
+
+HOW TO FIND MORE:
+- Check Arc Discord #ecosystem channel
+- Visit arc.house for listed projects
+- Follow @arc_xbt on Twitter for new announcements
+
+NOTE:
+Arc Testnet ecosystem is growing fast. New projects launch weekly. The best way to stay updated is Discord and Twitter.
+
+SOURCE:
+Arc Discord, cryptorank.io/drophunting/arc-chain-activity
+`
+  },
+
+  {
+    id: "dapps-2",
+    keywords: ["mint nft arc", "arc nft", "nft arc testnet", "cyan nft arc", "omnihub arc"],
+    title: "How do I mint an NFT on Arc Testnet?",
+    content: `
+SHORT_ANSWER:
+Use Omnihub or Zkcodex to mint NFTs on Arc Testnet. Connect your wallet, get testnet USDC, and mint — it's free except for tiny gas fees.
+
+USING OMNIHUB:
+Step 1: Go to Omnihub (search "Omnihub Arc" on Twitter for current link)
+Step 2: Connect MetaMask (on Arc Testnet)
+Step 3: Choose an NFT collection to mint
+Step 4: Click Mint
+Step 5: Confirm USDC gas fee in MetaMask
+Step 6: View your NFT on testnet.arcscan.app
+
+USING ZKCODEX (for creating your own collection):
+Step 1: Go to Zkcodex (search current link on Arc Discord)
+Step 2: Connect wallet
+Step 3: Click "Create" or "Deploy"
+Step 4: Follow steps to deploy NFT contract
+Step 5: Mint from your new collection
+
+WHAT IS CYAN NFT:
+The Cyan NFT was an early Arc testnet activity. Mint it to show early participation. Search "Cyan NFT Arc" on Twitter for current link.
+
+NOTE:
+NFT platforms' URLs may change. Always get links from official Arc Discord or @arc_xbt Twitter.
+
+SOURCE:
+Arc Discord, cryptorank.io/drophunting/arc-chain-activity
+`
+  },
+
+  {
+    id: "dapps-3",
+    keywords: ["infinity name arc", "arc domain", "register domain arc", "arc name service"],
+    title: "How do I register a domain on Arc (InfinityName)?",
+    content: `
+SHORT_ANSWER:
+InfinityName lets you register .arc domain names on Arc Testnet. Connect wallet, search for your name, and register with testnet USDC.
+
+GUIDE:
+Step 1: Find InfinityName current link on Arc Discord
+Step 2: Connect MetaMask (Arc Testnet)
+Step 3: Search for your desired domain name
+Step 4: Click Register if available
+Step 5: Confirm transaction in MetaMask
+Step 6: Your domain is registered on-chain
+
+TIPS:
+- Get a simple, memorable domain
+- Register your Twitter/brand name if available
+- Domain registration shows on-chain activity
+
+NOTE:
+InfinityName link may have changed. Check Arc Discord #ecosystem or @arc_xbt Twitter for current URL.
+
+SOURCE:
+Arc Discord ecosystem channels
+`
+  },
+
+  {
+    id: "dapps-4",
+    keywords: ["zkcodex arc", "deploy contract no code", "arc no code deploy", "zkcodex tutorial"],
+    title: "How do I deploy a smart contract on Arc without coding (Zkcodex)?",
+    content: `
+SHORT_ANSWER:
+Zkcodex lets you deploy simple contracts on Arc with a few clicks — no Solidity knowledge needed. Great for showing on-chain developer activity.
+
+GUIDE:
+Step 1: Find Zkcodex link on Arc Discord or Twitter
+Step 2: Connect MetaMask (Arc Testnet)
+Step 3: Click "Deploy" button
+Step 4: Choose a simple contract template
+Step 5: Confirm the transaction in MetaMask
+Step 6: View your deployed contract on testnet.arcscan.app
+
+WHAT THIS DOES:
+- Creates a real smart contract on Arc blockchain
+- Shows up in your wallet's transaction history
+- Counts as developer activity
+- No coding required
+
+NOTE:
+Even without coding knowledge, deploying contracts shows meaningful on-chain activity. For real development, use Hardhat or Foundry.
+
+SOURCE:
+Arc Discord, cryptorank.io drophunting guide
+`
+  },
+
+  // ============================================================
+  // F. ARC SOCIAL & CONTENT
+  // ============================================================
+  {
+    id: "social-1",
+    keywords: ["arc twitter", "arc social media", "arc xbt twitter", "follow arc", "arc official twitter"],
+    title: "What are Arc's official social media accounts?",
+    content: `
+SHORT_ANSWER:
+Arc's official Twitter is @arc_xbt. Circle's official Twitter is @circle. Always verify you're following official accounts to avoid scams.
+
+OFFICIAL ACCOUNTS:
+Twitter/X:
+- @arc_xbt (Arc official)
+- @circle (Circle official)
+- @jerallaire (Jeremy Allaire, Circle CEO)
+
+Discord:
+- Official Arc Discord (get link from arc.io or arc.house)
+
+Website:
+- arc.io (Arc official)
+- circle.com (Circle official)
+- arc.house (Community platform)
+
+Docs:
+- docs.arc.io
+
+CONTENT TO FOLLOW FOR:
+- New testnet dApp launches
+- Office Hours announcements
+- Token/airdrop news (when it comes)
+- Ecosystem partner announcements
+- Technical updates
+
+SCAM WARNING:
+Fake accounts exist. Never send USDC to anyone claiming to be Arc team. Arc will never DM you asking for your private key or seed phrase.
+
+SOURCE:
+arc.io official website
+`
+  },
+
+  {
+    id: "social-2",
+    keywords: ["content creator arc", "arc youtube", "arc blog", "arc content", "create arc content"],
+    title: "How do I create content about Arc and get recognized?",
+    content: `
+SHORT_ANSWER:
+Create YouTube tutorials, technical blogs, or Twitter threads about building on Arc. Share in Discord #user-made-things and apply for Creator role. Quality content gets retweeted by Arc team.
+
+CONTENT FORMATS THAT WORK:
+
+YOUTUBE (highest value):
+- "How to build [dApp type] on Arc" tutorials
+- Demo videos showing your project
+- "Getting started with Arc" for beginners
+- ERC-8004 and ERC-8183 explainers
+
+TWITTER/X (medium value):
+- Thread explaining how Arc works
+- Demo gif/video of your project
+- Building-in-public updates
+- Arc ecosystem reviews
+
+TECHNICAL BLOGS (medium value):
+- Medium or dev.to articles
+- Step-by-step build guides
+- Arc vs other chains comparison
+
+TIPS FOR GETTING NOTICED:
+Step 1: Tag @arc_xbt in your posts
+Step 2: Share in Arc Discord #user-made-things
+Step 3: Use hashtag #ArcBlockchain or #BuildOnArc
+Step 4: Include real transactions on Arc testnet
+Step 5: Apply for Creator role after 3-5 quality pieces
+
+WHAT QUALIFIES FOR CREATOR ROLE:
+- Multiple quality pieces of content
+- Technical accuracy about Arc
+- Real demonstrations, not just theory
+- Educational value for community
+
+SOURCE:
+Arc Discord guidelines, airdrops.io/arc
+`
+  },
+
+  // ============================================================
+  // G. ARC TOKEN DETAILS
+  // ============================================================
+  {
+    id: "token-details-1",
+    keywords: ["arc staking", "arc governance", "arc pos", "proof of stake arc", "arc validator"],
+    title: "Will Arc have staking and governance?",
+    content: `
+SHORT_ANSWER:
+Yes. Circle CEO confirmed Arc token will enable "governance, incentives, and economic alignment" and eventually transition to proof-of-stake. No implementation timeline yet.
+
+WHAT'S PLANNED:
+- Governance: ARC token holders vote on protocol decisions
+- Staking: Stake ARC to participate in consensus
+- Incentives: Token rewards for validators and contributors
+- Proof-of-Stake: Replace current Proof-of-Authority validator set
+
+CURRENT STATE (Testnet):
+- Proof-of-Authority: Arc uses a permissioned validator set of regulated institutions
+- No staking yet
+- No governance contracts yet
+
+WHAT CEO SAID (Seoul, April 2026):
+Arc token will "help provide mechanisms for governance, incentives, economic alignment, and to ultimately move it into a proof-of-stake system over time"
+
+WHAT THIS MEANS FOR USERS:
+- Future: Hold ARC to vote on changes
+- Future: Stake ARC to earn rewards
+- Future: Run a validator node (after PoS transition)
+
+SOURCE:
+Circle CEO Jeremy Allaire statement, April 14, 2026
+`
+  },
+
+  {
+    id: "token-details-2",
+    keywords: ["run arc node", "arc validator", "arc node setup", "arc node requirements"],
+    title: "Can I run an Arc node? How do I become a validator?",
+    content: `
+SHORT_ANSWER:
+Arc currently uses a permissioned Proof-of-Authority validator set of regulated institutions. Public node running is possible for non-validator nodes. PoS with open validators is planned for the future.
+
+CURRENT VALIDATOR SET:
+- Permissioned (not open to public yet)
+- Composed of regulated financial institutions
+- Managed by Arc/Circle
+- Will transition to Proof-of-Stake in the future
+
+RUN A NON-VALIDATOR NODE:
+Step 1: Check hardware requirements at docs.arc.io/arc/concepts/running-a-node.md
+Step 2: Follow setup guide at docs.arc.io/arc/tutorials/run-an-arc-node.md
+Step 3: Connect to Arc Testnet RPC
+Step 4: Sync the blockchain
+
+NODE PROVIDERS (if you don't want to run your own):
+- Check docs.arc.io/arc/tools/node-providers.md for list of RPC providers
+
+FUTURE PoS:
+After ARC token launches and PoS transition:
+- Stake ARC tokens to become validator
+- Earn rewards for validating
+- Participate in governance
+
+SOURCE:
+docs.arc.io/arc/concepts/running-a-node.md
+docs.arc.io/arc/tutorials/run-an-arc-node.md
+`
+  },
+
+  {
+    id: "token-details-3",
+    keywords: ["arc privacy", "opt-in privacy arc", "private transaction arc", "confidential arc"],
+    title: "What is opt-in privacy on Arc?",
+    content: `
+SHORT_ANSWER:
+Arc plans to offer opt-in confidential transactions — you choose whether your transaction amounts are public or private. This is planned but not yet live on testnet.
+
+WHAT IT MEANS:
+- Default: All transactions are public (like Ethereum)
+- Opt-in: You can make transaction amounts private
+- Selective disclosure: Share view key with specific people (e.g., auditors)
+- Amounts are encrypted on-chain
+- Sender/receiver may still be visible depending on implementation
+
+WHY IT MATTERS:
+- Businesses can keep payment amounts confidential
+- Institutions can comply with regulations while maintaining privacy
+- Individuals can protect financial privacy
+- Still compliant — view keys allow regulators/auditors access
+
+STATUS:
+- Privacy Module: PLANNED (not yet live)
+- Currently all Arc transactions are fully public
+- Expected post-mainnet launch
+
+SOURCE:
+docs.arc.io/arc/concepts/opt-in-privacy.md
+docs.arc.io/arc/concepts/system-overview.md
+`
+  },
+
+  // ============================================================
+  // H. USYC & ADVANCED
+  // ============================================================
+  {
+    id: "usyc-1",
+    keywords: ["usyc arc", "what is usyc", "usyc testnet", "tokenized treasury arc", "yield arc"],
+    title: "What is USYC on Arc and how do I get it?",
+    content: `
+SHORT_ANSWER:
+USYC is Circle's yield-bearing stablecoin representing shares in a US Treasury money market fund. It's available on Arc but requires allowlisting. Minimum $100,000 USD investment for mainnet (testnet is free with approval).
+
+WHAT IS USYC:
+- Issued by Circle International Bermuda Ltd.
+- Backed by short-duration US Treasury securities
+- Earns yield (like a money market fund on-chain)
+- Available on Arc Testnet and other chains
+
+GETTING TESTNET USYC:
+Step 1: Get testnet USDC from faucet.circle.com
+Step 2: Request allowlisting from Circle Support (support.circle.com)
+   - Include your Arc Testnet wallet address
+   - Requests processed in 24-48 hours
+Step 3: Once approved, go to USYC Portal (usyc.dev.hashnote.com)
+Step 4: Deposit testnet USDC to receive USYC
+Step 5: Or call the USYC Teller contract directly
+
+USYC CONTRACT ADDRESSES (Arc Testnet):
+- USYC: 0xe9185F0c5F296Ed1797AaE4238D26CCaBEadb86C
+- Entitlements: 0xcc205224862c7641930c87679e98999d23c26113
+- Teller: 0x9fdF14c5B14173D74C08Af27AebFf39240dC105A
+
+MAINNET RESTRICTIONS:
+- Only for institutions outside the US
+- $100,000 USD minimum investment
+- Full KYC/AML required
+
+SOURCE:
+docs.arc.io/arc/references/contract-addresses.md
+developers.circle.com/tokenized/usyc/overview
+`
+  },
+
+  {
+    id: "stablefx-1",
+    keywords: ["stablefx arc", "fx arc", "foreign exchange arc", "usdc eurc swap", "arc fx"],
+    title: "What is StableFX on Arc?",
+    content: `
+SHORT_ANSWER:
+StableFX is Circle's enterprise FX engine on Arc that lets institutions swap between USDC and EURC using a Request-for-Quote (RFQ) model with on-chain settlement.
+
+HOW IT WORKS:
+1. Institution requests a quote to swap USDC → EURC (or vice versa)
+2. Market makers provide quotes via RFQ
+3. Institution accepts best quote
+4. Swap settles instantly on Arc via escrow contract
+5. No slippage risk — price locked at quote time
+
+STABLEFX CONTRACTS (Arc Testnet):
+- FxEscrow: 0x867650F5eAe8df91445971f14d89fd84F0C9a9f8
+- Requires Permit2 for USDC approval
+- Permit2: 0x000000000022D473030F116dDEE9F6B43aC78BA3
+
+USE CASES:
+- Treasury management (convert USDC to EURC for EU operations)
+- International payments in local stablecoins
+- FX hedging for businesses
+- Cross-currency settlement
+
+NOTE:
+StableFX is designed for institutions and enterprise users. Individual users can use Arc App Kit for simpler swaps.
+
+SOURCE:
+docs.arc.io/arc/references/contract-addresses.md
+developers.circle.com/stablefx
+`
+  },
+
 ];
