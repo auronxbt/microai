@@ -71,7 +71,8 @@ export default function Home() {
           <div className="hidden md:flex" style={{ gap: 20, fontSize: 10, color: '#64748b', fontWeight: 700, letterSpacing: '0.08em', position: 'absolute', left: '50%', transform: 'translateX(-50%)' }}>
             <a href="#hub-sectors" style={{ textDecoration: 'none', color: 'inherit' }}>ECOSYSTEM</a>
             <a href="#features" style={{ textDecoration: 'none', color: 'inherit' }}>CAPABILITIES</a>
-            <a href="#pricing" style={{ textDecoration: 'none', color: 'inherit' }}>PRICING</a>
+<Link href="/grants" style={{ textDecoration: 'none', color: 'inherit' }}>GRANTS</Link>
+<a href="#pricing" style={{ textDecoration: 'none', color: 'inherit' }}>PRICING</a>
           </div>
           <Link href="/chat" style={{ padding: '7px 14px', borderRadius: 10, background: 'rgba(16,185,129,0.1)', border: '1px solid rgba(52,211,153,0.25)', color: '#34d399', fontSize: 11, fontWeight: 700, letterSpacing: '0.08em', textDecoration: 'none', whiteSpace: 'nowrap' }}>
             LAUNCH →
