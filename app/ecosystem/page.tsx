@@ -52,6 +52,15 @@ const projects: Project[] = [
     logoColor: "#f59e0b",
   },
   {
+  name: "Hibachi",
+  desc: "Stablecoin FX exchange backed by Circle Ventures. Offers perpetual trading across crypto and FX markets, with spot FX coming soon. Built on Arc.",
+  category: "DEX & LIQUIDITY",
+  tags: ["FX", "Perpetuals", "Circle Ventures", "Stablecoin"],
+  url: "https://hibachi.xyz",
+  logo: "H",
+  logoColor: "#f97316",
+},
+  {
     name: "Catena Labs",
     desc: "Building agentic AI infrastructure for on-chain payments and autonomous agent settlement on Arc.",
     category: "AI & AGENTS",
