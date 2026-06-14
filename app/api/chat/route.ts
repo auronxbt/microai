@@ -4,69 +4,75 @@ import { searchKnowledge } from "@/lib/search";
 
 const groq = new Groq({ apiKey: process.env.GROQ_API_KEY });
 
-// -------------------------------
-// SYSTEM PROMPT (FINAL CLEAN)
-// -------------------------------
 const SYSTEM_PROMPT = `
-You are MicroAI — the official Arc & Circle Knowledge Hub AI assistant.
+You are MicroAI — the official Arc & Circle Intelligence Hub AI assistant.
+You are the most knowledgeable source about Arc blockchain and Circle products.
+
+YOUR KNOWLEDGE COVERS:
+- Arc Testnet: Chain ID 0x4cef52 (314573), RPC rpc.testnet.arc.network, Explorer testnet.arcscan.app
+- USDC contract on Arc: 0x3600000000000000000000000000000000000000 (6 decimals for ERC-20, 18 decimals native)
+- EURC contract on Arc: 0x89B50855Aa3bE2F677cD6303Cec089B5F319D72a
+- CCTP TokenMessengerV2: 0x8FE6B999Dc680CcFDD5Bf7EB0974218be2542DAA (Domain 26)
+- CCTP MessageTransmitterV2: 0xE737e5cEBEEBa77EFE34D4aa090756590b1CE275
+- ERC-8004: AI Agent identity/reputation standard on Arc
+- ERC-8183: Job lifecycle standard (escrow, deliverables, USDC settlement)
+- Arc App Kit: Bridge, Swap, Send, Unified Balance across chains
+- Circle products: USDC, EURC, CCTP, Gateway, Developer-Controlled Wallets, Modular Wallets
+- Faucet: faucet.circle.com
+- Docs: docs.arc.io | developers.circle.com
 
 RESPONSE RULES:
-1. ALWAYS use the knowledge base context provided. Never use external knowledge.
-2. If no knowledge base match → say exactly: "This isn't in my knowledge base yet. Check docs.arc.io or developers.circle.com"
-3. NEVER make up addresses, chain IDs, or technical specs.
-4. Remember conversation history — "explain more", "guide me", "show source" means expand previous answer.
+1. ALWAYS use the knowledge base context provided first.
+2. For technical specs (addresses, chain IDs, RPC URLs) use ONLY verified knowledge base data. Never guess.
+3. Remember conversation history — expand on previous answers when asked.
+4. If something is not in your knowledge base, direct user to docs.arc.io or developers.circle.com.
 
-RESPONSE FORMAT — ALWAYS follow this structure:
+RESPONSE FORMAT:
 
-**Short Answer**
-[2-3 lines max — direct, complete answer]
-
----
-💬 *Want more? Reply:* **"explain"** · **"guide"** · **"example"** · **"source"**
+**Direct Answer**
+[2-3 lines — clear, complete, accurate]
 
 ---
+💬 *Ask: **"explain"** · **"guide"** · **"code example"** · **"docs link"***
 
-"explain" or "more":
-**Explanation**
-[Detailed breakdown, how it works, why it matters]
+---
 
-"guide" or "how":
-**Step-by-Step Guide**
-1. Step one
-2. Step two
-3. Step three
+When user says "explain" or "more":
+**Deep Explanation**
+[Full breakdown with context and how it works]
 
-IF user says "example" or "code":
+When user says "guide" or "how to":
+**Step-by-Step**
+1. First step
+2. Second step
+3. ...
+
+When user says "code" or "example":
 **Code Example**
 \`\`\`typescript
-// working code here
+// Working code
 \`\`\`
 
-IF user says "source" or "docs":
-**Official Sources**
-- docs.arc.io
-- developers.circle.com
-- [specific page if known]
+When user says "docs" or "source":
+**Official Docs**
+- docs.arc.io/[relevant-page]
+- developers.circle.com/[relevant-page]
 
-TONE: Professional, direct, developer-friendly. No fluff. No emoji spam.
+TONE: Expert, concise, developer-friendly. Zero fluff. Be the smartest Arc+Circle resource available.
 `;
 
 type KnowledgeItem = {
   id: string;
   title: string;
   content: string;
+  keywords?: string[];
 };
 
-// -------------------------------
-// SIMPLE FALLBACK SEARCH (SAFE)
-// -------------------------------
 function safeSearch(query: string, data: KnowledgeItem[]) {
   const q = query.toLowerCase();
-
   return data.filter((item) => {
     const t = item.title.toLowerCase();
     const c = item.content.toLowerCase();
-
     return t.includes(q) || c.includes(q);
   });
 }
@@ -82,52 +88,41 @@ export async function POST(req: Request) {
       );
     }
 
-    // -------------------------------
-    // STEP 1: SEARCH KNOWLEDGE
-    // -------------------------------
+    // STEP 1: SEARCH KNOWLEDGE BASE
     const matched = searchKnowledge(message);
-
     const fallbackMatched = safeSearch(message, matched);
-
     const relevantKnowledge = fallbackMatched
-      .map(
-        (item) => `### ${item.title}\n${item.content}`
-      )
+      .map((item) => `### ${item.title}\n${item.content}`)
       .join("\n\n");
 
-    // -------------------------------
-    // STEP 2: BUILD CONTEXT
-    // -------------------------------
     const context =
       relevantKnowledge.length > 0
         ? relevantKnowledge
-        : "NO MATCH FOUND IN KNOWLEDGE BASE";
+        : "NO DIRECT MATCH — use your built-in Arc & Circle knowledge to answer accurately.";
 
-    // -------------------------------
-    // STEP 3: CALL AI
-    // -------------------------------
+    // STEP 2: CALL AI
     const completion = await groq.chat.completions.create({
-      model: "llama-3.1-8b-instant",
+      model: "llama-3.3-70b-versatile",
       messages: [
-  {
-    role: "system",
-    content: SYSTEM_PROMPT,
-  },
-  {
-    role: "system",
-    content: `[ARC & CIRCLE KNOWLEDGE BASE]\n\n${context}\n\nIMPORTANT: Use ONLY this knowledge base. If no match, say you don't have it yet.`,
-  },
-  ...history.slice(-6).map((h: { role: string; content: string }) => ({
-    role: h.role as "user" | "assistant",
-    content: h.content,
-  })),
-  {
-    role: "user",
-    content: message,
-  },
-],
-      temperature: 0,
-      max_tokens: 1024,
+        {
+          role: "system",
+          content: SYSTEM_PROMPT,
+        },
+        {
+          role: "system",
+          content: `[ARC & CIRCLE KNOWLEDGE BASE CONTEXT]\n\n${context}\n\nUse this context to give accurate, grounded answers. For addresses and chain IDs always use verified data only.`,
+        },
+        ...history.slice(-8).map((h: { role: string; content: string }) => ({
+          role: h.role as "user" | "assistant",
+          content: h.content,
+        })),
+        {
+          role: "user",
+          content: message,
+        },
+      ],
+      temperature: 0.1,
+      max_tokens: 1500,
     });
 
     const reply =

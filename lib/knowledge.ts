@@ -2534,4 +2534,332 @@ developers.circle.com/stablefx
 `
   },
 
+  // ============================================================
+// NEW ENTRIES FROM REAL ARC DOCS — ADD TO END OF knowledgeBase
+// ============================================================
+
+  // CONTRACT ADDRESSES
+  {
+    id: "arc-contracts-usdc",
+    keywords: ["usdc contract", "usdc address", "contract address", "0x3600", "erc20 usdc", "native usdc", "decimals usdc"],
+    title: "USDC Contract Address on Arc Testnet",
+    content: `
+SHORT_ANSWER:
+USDC contract on Arc Testnet: 0x3600000000000000000000000000000000000000
+Important: ERC-20 interface uses 6 decimals. Native USDC gas token uses 18 decimals. Never mix these.
+
+DETAILS:
+- USDC is the native gas token AND ERC-20 token on Arc
+- Use ERC-20 interface for transferFrom, approve, allowance
+- Get testnet USDC from: faucet.circle.com (select Arc Testnet)
+- Explorer: testnet.arcscan.app/address/0x3600000000000000000000000000000000000000
+`,
+  },
+  {
+    id: "arc-contracts-eurc",
+    keywords: ["eurc", "euro stablecoin", "eurc address", "eurc contract", "euro usdc arc"],
+    title: "EURC Contract Address on Arc Testnet",
+    content: `
+SHORT_ANSWER:
+EURC (Euro stablecoin by Circle) on Arc Testnet: 0x89B50855Aa3bE2F677cD6303Cec089B5F319D72a
+Uses 6 decimals. Get testnet EURC from faucet.circle.com.
+`,
+  },
+  {
+    id: "arc-contracts-cctp",
+    keywords: ["cctp", "cross chain transfer", "token messenger", "message transmitter", "cctp address", "cctp arc", "domain 26", "bridge usdc"],
+    title: "CCTP Contract Addresses on Arc Testnet",
+    content: `
+SHORT_ANSWER:
+Circle Cross-Chain Transfer Protocol (CCTP) contracts on Arc Testnet (Domain 26):
+- TokenMessengerV2: 0x8FE6B999Dc680CcFDD5Bf7EB0974218be2542DAA
+- MessageTransmitterV2: 0xE737e5cEBEEBa77EFE34D4aa090756590b1CE275
+- TokenMinterV2: 0xb43db544E2c27092c107639Ad201b3dEfAbcF192
+- Arc CCTP Domain ID: 26
+
+HOW CCTP WORKS:
+1. Burns USDC on source chain
+2. Emits a message
+3. Circle attests the burn
+4. Mints native USDC on destination chain (Arc)
+No wrapped tokens — fully native USDC on both sides.
+`,
+  },
+  {
+    id: "arc-contracts-usyc",
+    keywords: ["usyc", "yield bearing", "tokenized fund", "money market", "usyc address", "treasury token"],
+    title: "USYC (Yield-Bearing Token) on Arc Testnet",
+    content: `
+SHORT_ANSWER:
+USYC is Circle's yield-bearing tokenized money market fund on Arc.
+- USYC: 0xe9185F0c5F296Ed1797AaE4238D26CCaBEadb86C
+- Teller (mint/redeem): 0x9fdF14c5B14173D74C08Af27AebFf39240dC105A
+- Entitlements (access control): 0xcc205224862c7641930c87679e98999d23c26113
+
+IMPORTANT: Only accessible to institutions outside the US. Minimum $100K USD. Requires allowlisting by Circle Support.
+`,
+  },
+
+  // CONNECT TO ARC
+  {
+    id: "arc-connect-network",
+    keywords: ["connect wallet", "add network", "metamask arc", "rpc url", "chain id arc", "network config", "testnet config", "add arc"],
+    title: "How to Connect to Arc Testnet (Network Config)",
+    content: `
+SHORT_ANSWER:
+Arc Testnet network config for MetaMask or any EVM wallet:
+- Network Name: Arc Testnet
+- RPC URL: https://rpc.testnet.arc.network
+- Chain ID: 314573 (hex: 0x4cef52)
+- Currency Symbol: USDC
+- Block Explorer: https://testnet.arcscan.app
+
+STEP BY STEP (MetaMask):
+1. Open MetaMask → Settings → Networks → Add Network
+2. Enter the config above
+3. Save and switch to Arc Testnet
+4. Get testnet USDC from faucet.circle.com
+`,
+  },
+
+  // APP KIT
+  {
+    id: "arc-app-kit-overview",
+    keywords: ["app kit", "appkit", "bridge sdk", "swap sdk", "unified balance", "send sdk", "circle sdk", "arc sdk"],
+    title: "Arc App Kit — Bridge, Swap, Send, Unified Balance",
+    content: `
+SHORT_ANSWER:
+Arc App Kit is Circle's SDK for payment and liquidity workflows across chains.
+Install: npm install @circle-fin/arc-app-kit
+
+CAPABILITIES:
+- Bridge: Transfer USDC across chains (EVM, Solana, Circle Wallets)
+- Swap: Token swaps on same chain
+- Send: Wallet-to-wallet transfers
+- Unified Balance: Combine USDC from multiple chains into one spendable balance
+
+Supported chains: Arc, Ethereum, Base, Solana, and more.
+Docs: docs.arc.io/app-kit
+
+ADAPTERS: Viem, Ethers, Solana, Circle Wallets
+`,
+  },
+  {
+    id: "arc-app-kit-unified-balance",
+    keywords: ["unified balance", "chain agnostic", "multichain usdc", "spendable balance", "cross chain balance"],
+    title: "Arc Unified Balance — Multichain USDC",
+    content: `
+SHORT_ANSWER:
+Unified Balance combines USDC from multiple blockchains (Ethereum, Base, Solana, Arc, etc.) into a single instantly spendable balance on Arc.
+
+HOW IT WORKS:
+1. User deposits USDC from any supported chain
+2. App Kit bridges it to Arc via CCTP/Gateway
+3. User can now spend from a single unified balance on Arc
+4. No need to manually bridge before every transaction
+
+USE CASE: dApps that want users to pay without worrying about which chain their USDC is on.
+Docs: docs.arc.io/app-kit/unified-balance
+`,
+  },
+
+  // AGENTIC ECONOMY DEEP DIVE
+  {
+    id: "arc-erc8004-deep",
+    keywords: ["erc8004", "erc-8004", "ai agent identity", "agent registry", "agent reputation", "register agent", "agent credential"],
+    title: "ERC-8004: AI Agent Identity & Reputation on Arc",
+    content: `
+SHORT_ANSWER:
+ERC-8004 is Arc's onchain standard for AI agent identity, reputation, and credential verification.
+
+KEY CONCEPTS:
+- Agent Registry: Onchain registry where agents register their identity
+- Reputation Events: Verifiable history of agent actions and outcomes
+- Credentials: Cryptographic proofs of agent capabilities
+- Unique Agent ID: Each agent gets a persistent onchain ID
+
+HOW TO REGISTER:
+1. Deploy or connect to the ERC-8004 registry contract on Arc Testnet
+2. Call registerAgent() with metadata (name, description, capabilities)
+3. Your agent receives a unique Agent ID
+4. Build reputation through completed ERC-8183 jobs
+
+MicroAI's ERC-8004 Agent ID: 69168 (on Arc Testnet)
+Tutorial: docs.arc.io/arc/tutorials/register-your-first-ai-agent
+`,
+  },
+  {
+    id: "arc-erc8183-deep",
+    keywords: ["erc8183", "erc-8183", "job contract", "escrow job", "agent job", "deliverable", "job settlement", "job lifecycle"],
+    title: "ERC-8183: Job Lifecycle & USDC Settlement on Arc",
+    content: `
+SHORT_ANSWER:
+ERC-8183 defines the full lifecycle for AI agent jobs on Arc: creation → escrow → deliverable → evaluation → USDC settlement.
+
+JOB LIFECYCLE:
+1. CREATE JOB: Employer creates job with requirements and USDC escrow amount
+2. FUND ESCROW: USDC locked in the job contract
+3. ACCEPT JOB: Agent accepts and begins work
+4. SUBMIT DELIVERABLE: Agent submits proof of work onchain
+5. EVALUATE: Employer or oracle evaluates deliverable
+6. SETTLE: USDC released to agent or refunded
+
+WHY IT MATTERS:
+- Trustless: No need to trust the agent or employer
+- Instant: USDC settlement in under 1 second (Arc's deterministic finality)
+- Auditable: Full job history onchain
+
+MicroAI's ERC-8183 Job ID: 110278 (on Arc Testnet)
+Tutorial: docs.arc.io/arc/tutorials/create-your-first-erc-8183-job
+GitHub example: github.com/circlefin/arc-escrow
+`,
+  },
+
+  // GAS & FEES
+  {
+    id: "arc-gas-fees-detail",
+    keywords: ["gas fees", "gas price", "usdc gas", "fee model", "stable fees", "transaction cost", "how much gas", "arc fees"],
+    title: "Gas & Fees on Arc — USDC-Native Model",
+    content: `
+SHORT_ANSWER:
+Arc uses USDC as the native gas token instead of ETH. Fees are predictable and stable.
+
+FEE MODEL:
+- Gas paid in USDC (not ETH/native token)
+- Based on EIP-1559 architecture with weighted moving average smoothing
+- Fees are low and deterministic — no gas price spikes
+- Fee revenue goes to Arc Treasury
+
+FOR DEVELOPERS:
+- Set gasPrice in USDC units when submitting transactions
+- Use ethers.js / viem normally — just ensure wallet has USDC for gas
+- No ETH needed at all on Arc
+
+PAYMASTER:
+- EURC can also be used as gas via paymaster contracts
+- Account abstraction (ERC-4337) supported via Pimlico, ZeroDev
+
+Docs: docs.arc.io/arc/references/gas-and-fees
+`,
+  },
+
+  // DEPLOY ON ARC
+  {
+    id: "arc-deploy-contracts",
+    keywords: ["deploy contract", "hardhat arc", "foundry arc", "remix arc", "deploy solidity", "contract deployment", "deploy dapp"],
+    title: "Deploy Smart Contracts on Arc Testnet",
+    content: `
+SHORT_ANSWER:
+Arc is fully EVM-compatible. Use Hardhat, Foundry, or Remix with Arc Testnet config.
+
+HARDHAT CONFIG:
+\`\`\`javascript
+networks: {
+  arcTestnet: {
+    url: "https://rpc.testnet.arc.network",
+    chainId: 314573,
+    accounts: [process.env.PRIVATE_KEY],
+  }
+}
+\`\`\`
+
+FOUNDRY:
+\`\`\`bash
+forge create --rpc-url https://rpc.testnet.arc.network \\
+  --private-key $PRIVATE_KEY \\
+  src/MyContract.sol:MyContract
+\`\`\`
+
+REQUIREMENTS:
+1. Arc Testnet USDC in wallet (for gas) — get from faucet.circle.com
+2. Private key of your deployer wallet
+3. Standard Solidity (0.8.x works perfectly)
+
+Tutorial: docs.arc.io/arc/tutorials/deploy-on-arc
+`,
+  },
+
+  // CIRCLE DEVELOPER CONTROLLED WALLETS
+  {
+    id: "circle-dev-wallets",
+    keywords: ["developer controlled wallet", "circle wallet", "programmable wallet", "custodial wallet", "circle api wallet", "wallet api"],
+    title: "Circle Developer-Controlled Wallets",
+    content: `
+SHORT_ANSWER:
+Circle's Developer-Controlled Wallets let you create and manage wallets programmatically via API — no user MetaMask needed.
+
+USE CASES:
+- Backend wallets for dApps
+- AI agent wallets (agents can hold and send USDC autonomously)
+- Custodial wallet infrastructure
+- Pay-per-use flows without user wallet setup
+
+KEY FEATURES:
+- REST API for wallet creation, transfers, signing
+- Supports Arc, Ethereum, Base, Solana, and more
+- MPC security (no single private key)
+- USDC transfers via simple API call
+
+HOW TO USE:
+1. Sign up at developers.circle.com
+2. Create API key
+3. POST /wallets to create wallet
+4. POST /wallets/{id}/transfers to send USDC
+
+Docs: developers.circle.com/w3s/developer-controlled-wallets
+`,
+  },
+
+  // PRIVACY
+  {
+    id: "arc-opt-in-privacy",
+    keywords: ["privacy arc", "confidential transfer", "private transaction", "opt in privacy", "confidential balance", "hide amount"],
+    title: "Opt-in Privacy on Arc — Confidential Transfers",
+    content: `
+SHORT_ANSWER:
+Arc supports opt-in privacy for confidential transfers — shields transaction AMOUNTS while keeping addresses visible.
+
+HOW IT WORKS:
+- Default: Fully transparent (amounts + addresses public)
+- Opt-in: Confidential transfers hide the amount transferred
+- Addresses remain visible for compliance
+- Built using ZK cryptography
+
+USE CASES:
+- B2B payments where amounts are sensitive
+- Treasury operations
+- Institutional trades
+
+Note: This is a premium/enterprise feature. Full privacy (hiding addresses too) is on the roadmap.
+Docs: docs.arc.io/arc/concepts/opt-in-privacy
+`,
+  },
+
+  // MICROAI SPECIFIC
+  {
+    id: "microai-project-details",
+    keywords: ["microai", "micro ai", "this app", "what is this", "about microai", "how does this work", "who built this"],
+    title: "About MicroAI — The Arc & Circle Intelligence Hub",
+    content: `
+SHORT_ANSWER:
+MicroAI is a pay-per-use AI chatbot dApp on Arc Testnet. You pay $0.001 USDC per question answered.
+
+TECHNICAL DETAILS:
+- Built by: @auronxbt (BuildOrbit) — solo developer
+- Stack: Next.js 15, Groq AI, Arc Testnet, Circle USDC
+- Live at: microai-tan.vercel.app
+- GitHub: github.com/sahmedonchain/microai
+- Agent ID (ERC-8004): 69168
+- Job ID (ERC-8183): 110278
+
+HOW IT WORKS:
+1. Connect EVM wallet (MetaMask) on Arc Testnet
+2. Ask any Arc or Circle question
+3. Wallet auto-signs 0.001 USDC payment to receiver wallet
+4. AI responds instantly with verified knowledge
+
+BUILT FOR: Arc Office Hours submission + Stablecoin Commerce Stack Challenge (Circle/Arc), Track 4 — Agentic Economy.
+`,
+  },
+
 ];
