@@ -6,6 +6,7 @@ export default function Home() {
   const [mousePos, setMousePos] = useState({ x: 0, y: 0 });
   const [chatInput, setChatInput] = useState('');
   const [chatResponse, setChatResponse] = useState('Ask me anything about Arc Chain deployment or Circle USDC integrations...');
+  const [menuOpen, setMenuOpen] = useState(false);
   const canvasRef = useRef<HTMLCanvasElement>(null);
 
   useEffect(() => {
@@ -43,8 +44,15 @@ export default function Home() {
 
   const presets = [
     { label: 'For Developers & Builders', key: 'ERC-8004', q: 'How do I implement ERC-8004 AI Agent on Arc?', r: 'To deploy ERC-8004 on Arc, initialize with Arc Agent Core SDK, specify runtime constraints, and use native USDC gas settlement.' },
-{ label: 'For Fintech & Startups', key: 'CCTP', q: 'How do I integrate Circle CCTP for cross-chain payments?', r: 'Circle CCTP burns USDC on source chain and mints native USDC on Arc — no wrapped tokens, fully native settlement.' },
-{ label: 'For Crypto Native & Traders', key: 'trades', q: 'How does DeFi and liquidity work on Arc?', r: 'Arc supports DeFi protocols with sub-second finality and USDC-native gas — ideal for liquidity pools and instant settlement.' },
+    { label: 'For Fintech & Startups', key: 'CCTP', q: 'How do I integrate Circle CCTP for cross-chain payments?', r: 'Circle CCTP burns USDC on source chain and mints native USDC on Arc — no wrapped tokens, fully native settlement.' },
+    { label: 'For Crypto Native & Traders', key: 'trades', q: 'How does DeFi and liquidity work on Arc?', r: 'Arc supports DeFi protocols with sub-second finality and USDC-native gas — ideal for liquidity pools and instant settlement.' },
+  ];
+
+  const navLinks = [
+    { label: 'ECOSYSTEM', href: '/#hub-sectors', external: false },
+    { label: 'CAPABILITIES', href: '/#features', external: false },
+    { label: 'GRANTS', href: '/grants', external: false },
+    { label: 'PRICING', href: '/#pricing', external: false },
   ];
 
   return (
@@ -59,25 +67,83 @@ export default function Home() {
       </div>
 
       {/* NAVBAR */}
-      <nav style={{ position: 'relative', top: 0, zIndex: 50, display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '12px 16px', background: 'rgba(3,18,10,0.95)', backdropFilter: 'blur(20px)', borderBottom: '1px solid rgba(16,185,129,0.1)' }}>
-        <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
-          <div style={{ width: 32, height: 32, borderRadius: 10, background: 'linear-gradient(135deg, #34d399, #10b981)', display: 'flex', alignItems: 'center', justifyContent: 'center', fontWeight: 900, fontSize: 13, color: '#000', flexShrink: 0, boxShadow: '0 0 12px rgba(16,185,129,0.3)' }}>M</div>
-          <div>
-            <div style={{ fontSize: 13, fontWeight: 800, color: '#fff', lineHeight: 1.2 }}>MICRO<span style={{ color: '#34d399' }}>AI</span></div>
-            <div style={{ fontSize: 7, color: 'rgba(52,211,153,0.5)', letterSpacing: '0.2em', fontFamily: 'monospace' }}>THE KNOWLEDGE HUB</div>
-          </div>
-        </div>
-        <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
-          <div className="hidden md:flex" style={{ gap: 20, fontSize: 10, color: '#64748b', fontWeight: 700, letterSpacing: '0.08em', position: 'absolute', left: '50%', transform: 'translateX(-50%)' }}>
-            <a href="#hub-sectors" style={{ textDecoration: 'none', color: 'inherit' }}>ECOSYSTEM</a>
-            <a href="#features" style={{ textDecoration: 'none', color: 'inherit' }}>CAPABILITIES</a>
-<Link href="/grants" style={{ textDecoration: 'none', color: 'inherit' }}>GRANTS</Link>
-<a href="#pricing" style={{ textDecoration: 'none', color: 'inherit' }}>PRICING</a>
-          </div>
-          <Link href="/chat" style={{ padding: '7px 14px', borderRadius: 10, background: 'rgba(16,185,129,0.1)', border: '1px solid rgba(52,211,153,0.25)', color: '#34d399', fontSize: 11, fontWeight: 700, letterSpacing: '0.08em', textDecoration: 'none', whiteSpace: 'nowrap' }}>
-            LAUNCH →
+      <nav style={{ position: 'sticky', top: 0, zIndex: 50, background: 'rgba(3,18,10,0.97)', backdropFilter: 'blur(20px)', borderBottom: '1px solid rgba(16,185,129,0.1)' }}>
+        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '12px 16px' }}>
+          {/* Logo */}
+          <Link href="/" style={{ display: 'flex', alignItems: 'center', gap: 10, textDecoration: 'none' }}>
+            <div style={{ width: 32, height: 32, borderRadius: 10, background: 'linear-gradient(135deg, #34d399, #10b981)', display: 'flex', alignItems: 'center', justifyContent: 'center', fontWeight: 900, fontSize: 13, color: '#000', flexShrink: 0, boxShadow: '0 0 12px rgba(16,185,129,0.3)' }}>M</div>
+            <div>
+              <div style={{ fontSize: 13, fontWeight: 800, color: '#fff', lineHeight: 1.2 }}>MICRO<span style={{ color: '#34d399' }}>AI</span></div>
+              <div style={{ fontSize: 7, color: 'rgba(52,211,153,0.5)', letterSpacing: '0.2em', fontFamily: 'monospace' }}>THE KNOWLEDGE HUB</div>
+            </div>
           </Link>
+
+          {/* Desktop nav links */}
+          <div style={{ display: 'none', gap: 20, fontSize: 10, color: '#64748b', fontWeight: 700, letterSpacing: '0.08em', position: 'absolute', left: '50%', transform: 'translateX(-50%)' }} className="desktop-nav">
+            {navLinks.map(link => (
+              <Link key={link.label} href={link.href} style={{ textDecoration: 'none', color: link.label === 'GRANTS' ? '#34d399' : '#64748b' }}>
+                {link.label}
+              </Link>
+            ))}
+          </div>
+
+          {/* Right side */}
+          <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
+            <Link href="/chat" style={{ padding: '7px 14px', borderRadius: 10, background: 'rgba(16,185,129,0.1)', border: '1px solid rgba(52,211,153,0.25)', color: '#34d399', fontSize: 11, fontWeight: 700, letterSpacing: '0.08em', textDecoration: 'none', whiteSpace: 'nowrap' }}>
+              LAUNCH →
+            </Link>
+            {/* Hamburger — mobile only */}
+            <button
+              onClick={() => setMenuOpen(!menuOpen)}
+              className="hamburger-btn"
+              style={{ display: 'flex', flexDirection: 'column', justifyContent: 'center', alignItems: 'center', gap: 5, width: 36, height: 36, background: 'rgba(16,185,129,0.06)', border: '1px solid rgba(16,185,129,0.15)', borderRadius: 9, cursor: 'pointer', padding: 0, flexShrink: 0 }}
+            >
+              <span style={{ display: 'block', width: 16, height: 1.5, background: menuOpen ? '#34d399' : '#64748b', borderRadius: 2, transition: 'all 0.2s', transform: menuOpen ? 'rotate(45deg) translate(0px, 4.5px)' : 'none' }} />
+              <span style={{ display: 'block', width: 16, height: 1.5, background: menuOpen ? 'transparent' : '#64748b', borderRadius: 2, transition: 'all 0.2s', opacity: menuOpen ? 0 : 1 }} />
+              <span style={{ display: 'block', width: 16, height: 1.5, background: menuOpen ? '#34d399' : '#64748b', borderRadius: 2, transition: 'all 0.2s', transform: menuOpen ? 'rotate(-45deg) translate(0px, -4.5px)' : 'none' }} />
+            </button>
+          </div>
         </div>
+
+        {/* Mobile dropdown menu */}
+        {menuOpen && (
+          <div style={{ borderTop: '1px solid rgba(16,185,129,0.08)', padding: '8px 0 12px', background: 'rgba(3,18,10,0.99)' }} className="mobile-menu">
+            {navLinks.map(link => (
+              <Link
+                key={link.label}
+                href={link.href}
+                onClick={() => setMenuOpen(false)}
+                style={{
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'space-between',
+                  padding: '12px 20px',
+                  fontSize: 11,
+                  fontWeight: 700,
+                  letterSpacing: '0.1em',
+                  fontFamily: 'monospace',
+                  color: link.label === 'GRANTS' ? '#34d399' : '#94a3b8',
+                  textDecoration: 'none',
+                  borderBottom: '1px solid rgba(16,185,129,0.04)',
+                }}
+              >
+                <span>{link.label}</span>
+                {link.label === 'GRANTS' && (
+                  <span style={{ fontSize: 8, background: 'rgba(16,185,129,0.1)', border: '1px solid rgba(52,211,153,0.2)', color: '#34d399', padding: '2px 7px', borderRadius: 4, letterSpacing: '0.1em' }}>NEW</span>
+                )}
+              </Link>
+            ))}
+            <div style={{ padding: '12px 20px 4px' }}>
+              <Link
+                href="/chat"
+                onClick={() => setMenuOpen(false)}
+                style={{ display: 'block', textAlign: 'center', padding: '11px', borderRadius: 10, background: '#10b981', color: '#000', fontSize: 12, fontWeight: 800, letterSpacing: '0.08em', textDecoration: 'none' }}
+              >
+                LAUNCH CHAT TERMINAL →
+              </Link>
+            </div>
+          </div>
+        )}
       </nav>
 
       {/* HERO */}
@@ -157,9 +223,9 @@ export default function Home() {
         <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(240px, 1fr))', gap: 12 }}>
           {[
             { n: '01', title: 'Developers & Builders', points: ['Smart Contract Development', 'Frontend dApp Building', 'AI Agent Development (ERC-8004)', 'Agentic Commerce (ERC-8183)'] },
-{ n: '02', title: 'Fintech & Startups', points: ['Payment App Building', 'Cross-border Remittance Apps', 'Treasury & Payroll Systems', 'FX & Stablecoin Settlement'] },
-{ n: '03', title: 'Crypto Native', points: ['DeFi Protocol Building', 'Liquidity & Trading', 'Cross-chain Bridge Integration', 'Chainlink & Oracle Setup'] },
-{ n: '04', title: 'Community & New Users', points: ['Arc House & Discord Help', 'Hackathon & Grant Guidance', 'Beginner Setup Guides', 'Merchants & Freelancers'] },
+            { n: '02', title: 'Fintech & Startups', points: ['Payment App Building', 'Cross-border Remittance Apps', 'Treasury & Payroll Systems', 'FX & Stablecoin Settlement'] },
+            { n: '03', title: 'Crypto Native', points: ['DeFi Protocol Building', 'Liquidity & Trading', 'Cross-chain Bridge Integration', 'Chainlink & Oracle Setup'] },
+            { n: '04', title: 'Community & New Users', points: ['Arc House & Discord Help', 'Hackathon & Grant Guidance', 'Beginner Setup Guides', 'Merchants & Freelancers'] },
           ].map(sector => (
             <div key={sector.n} style={{ padding: '18px', borderRadius: 14, background: 'rgba(3,17,10,0.2)', border: '1px solid rgba(16,185,129,0.08)' }}>
               <div style={{ width: 28, height: 28, borderRadius: 8, background: 'rgba(16,185,129,0.05)', border: '1px solid rgba(16,185,129,0.12)', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 10, fontWeight: 800, color: '#34d399', fontFamily: 'monospace', marginBottom: 10 }}>{sector.n}</div>
@@ -276,8 +342,13 @@ export default function Home() {
         body { background: #010503; margin: 0; }
         * { box-sizing: border-box; }
         @keyframes pulse { 0%, 100% { opacity: 1; } 50% { opacity: 0.4; } }
-        .hidden { display: none; }
-        @media (min-width: 768px) { .hidden { display: flex !important; } }
+        .desktop-nav { display: none !important; }
+        .hamburger-btn { display: flex !important; }
+        .mobile-menu { display: block; }
+        @media (min-width: 768px) {
+          .desktop-nav { display: flex !important; }
+          .hamburger-btn { display: none !important; }
+        }
       `}</style>
     </div>
   );
