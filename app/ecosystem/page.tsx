@@ -40,16 +40,7 @@ const projects: Project[] = [
     logoColor: "#10b981",
     featured: true,
   },
-  {
-    name: "ShadowPay",
-    desc: "Privacy-first payroll and treasury dApp built on Miden ZK blockchain. Role-based access, employer/employee flows, privacy-preserving payments.",
-    category: "COMMUNITY BUILDS",
-    tags: ["Payroll", "Privacy", "Miden", "ZK"],
-    url: "https://shadowpay-41nn.vercel.app",
-    logo: "S",
-    logoColor: "#8b5cf6",
-    featured: true,
-  },
+
   // AI & AGENTS
   {
     name: "Anthropic",
@@ -469,7 +460,6 @@ export default function EcosystemPage() {
           {[
             { l: "ECOSYSTEM", h: "/ecosystem", active: true },
             { l: "GRANTS", h: "/grants", active: false },
-            { l: "PRICING", h: "/#pricing", active: false },
           ].map((n) => (
             <Link key={n.l} href={n.h} style={{ textDecoration: "none", color: n.active ? "#34d399" : "#64748b" }}>{n.l}</Link>
           ))}
@@ -630,6 +620,7 @@ export default function EcosystemPage() {
         ::-webkit-scrollbar { display: none; }
         .desktop-nav { display: none !important; }
         @media (min-width: 768px) { .desktop-nav { display: flex !important; } }
+        html, body { overflow-x: hidden; scrollbar-width: none; }
       `}</style>
     </div>
   );

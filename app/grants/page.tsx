@@ -182,10 +182,8 @@ export default function GrantsPage() {
             transform: "translateX(-50%)",
           }}
         >
-          <Link href="/#hub-sectors" style={{ textDecoration: "none", color: "inherit" }}>ECOSYSTEM</Link>
-          <Link href="/#features" style={{ textDecoration: "none", color: "inherit" }}>CAPABILITIES</Link>
+          <Link href="/ecosystem" style={{ textDecoration: "none", color: "inherit" }}>ECOSYSTEM</Link>
           <Link href="/grants" style={{ textDecoration: "none", color: "#34d399" }}>GRANTS</Link>
-          <Link href="/#pricing" style={{ textDecoration: "none", color: "inherit" }}>PRICING</Link>
         </div>
 
         <Link
@@ -706,6 +704,8 @@ export default function GrantsPage() {
         @keyframes pulse { 0%, 100% { opacity: 1; } 50% { opacity: 0.4; } }
         .hidden { display: none; }
         @media (min-width: 768px) { .hidden { display: flex !important; } }
+        html, body { overflow-x: hidden; scrollbar-width: none; }
+::-webkit-scrollbar { display: none; }
       `}</style>
     </div>
   );

@@ -49,11 +49,9 @@ export default function Home() {
   ];
 
   const navLinks = [
-    { label: 'ECOSYSTEM', href: '/#hub-sectors', external: false },
-    { label: 'CAPABILITIES', href: '/#features', external: false },
-    { label: 'GRANTS', href: '/grants', external: false },
-    { label: 'PRICING', href: '/#pricing', external: false },
-  ];
+  { label: 'ECOSYSTEM', href: '/ecosystem' },
+  { label: 'GRANTS', href: '/grants' },
+];
 
   return (
     <div style={{ minHeight: '100vh', background: '#010503', color: '#e2e8f0', overflowX: 'hidden', fontFamily: "'Plus Jakarta Sans', sans-serif" }}>
@@ -349,6 +347,8 @@ export default function Home() {
           .desktop-nav { display: flex !important; }
           .hamburger-btn { display: none !important; }
         }
+          html, body { overflow-x: hidden; scrollbar-width: none; }
+::-webkit-scrollbar { display: none; }
       `}</style>
     </div>
   );
