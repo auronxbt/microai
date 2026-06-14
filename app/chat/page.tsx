@@ -14,9 +14,6 @@ const STORAGE_KEY = "microai_chat_history";
 interface EthereumProvider {
   request: (args: { method: string; params?: unknown[] }) => Promise<unknown>;
 }
-declare global {
-  interface Window { ethereum?: EthereumProvider; }
-}
 interface Message {
   role: "user" | "assistant";
   text: string;
