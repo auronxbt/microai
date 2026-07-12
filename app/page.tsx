@@ -50,9 +50,10 @@ export default function Home() {
   ];
 
   const navLinks = [
-    { label: 'ECOSYSTEM', href: '/ecosystem' },
-    { label: 'GRANTS', href: '/grants' },
-  ];
+  { label: 'ECOSYSTEM', href: '/ecosystem' },
+  { label: 'GRANTS', href: '/grants' },
+  { label: 'DEBUGGER', href: '/debug' },
+];
 
   return (
     <div style={{ minHeight: '100vh', background: '#010503', color: '#e2e8f0', overflowX: 'hidden', fontFamily: "'Plus Jakarta Sans', sans-serif" }}>
