@@ -420,6 +420,33 @@ const projects: Project[] = [
     logo: "CB",
     logoColor: "#2563eb",
   },
+  {
+    name: "Pulsar",
+    desc: "Consumer stablecoin money app building on Arc. Designed around USDC and EURC balances, payments, card activity, FX, and multi-currency flows. Brings stablecoin finance to everyday users.",
+    category: "PAYMENTS",
+    tags: ["Consumer", "USDC", "EURC", "FX", "Card"],
+    url: "https://community.arc.io/public/clubs/arc-ecosystem/blog/arc-x-pulsar-consumer-stablecoin-money-movement-on-arc",
+    logo: "PL",
+    logoColor: "#10b981",
+  },
+  {
+    name: "Canteen",
+    desc: "Builder platform and hackathon organizer on Arc. Runs Agora and Lepton Agents hackathons — AI agents that pay, receive, and orchestrate USDC nanopayments on Arc.",
+    category: "AI & AGENTS",
+    tags: ["Hackathons", "AI Agents", "Nanopayments", "Community"],
+    url: "https://thecanteenapp.com",
+    logo: "CT",
+    logoColor: "#f59e0b",
+  },
+  {
+    name: "Intuit",
+    desc: "Major financial software company (QuickBooks, TurboTax) exploring Arc for programmable payments and financial automation for small businesses.",
+    category: "INSTITUTIONS",
+    tags: ["Fintech", "SMB", "Payments", "Automation"],
+    url: "https://intuit.com",
+    logo: "IN",
+    logoColor: "#0077c5",
+  },
 ];
 
 const CATEGORY_COLORS: Record<string, string> = {
