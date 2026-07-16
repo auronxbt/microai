@@ -1,6 +1,7 @@
 "use client";
 import { useState } from "react";
 import Link from "next/link";
+import { Navbar } from "@/app/components/Navbar";
 
 const ARC_EXPLORER_API = "https://testnet.arcscan.app/api/v2";
 const USDC_CONTRACT = "0x3600000000000000000000000000000000000000";
@@ -60,7 +61,6 @@ export default function DebugPage() {
     setResult(null);
 
     try {
-      // Fetch tx from Arc Explorer
       const res = await fetch(`${ARC_EXPLORER_API}/transactions/${hash}`);
       const data = await res.json();
 
@@ -73,7 +73,6 @@ export default function DebugPage() {
       const txData: TxData = data;
       setStatus("analyzing");
 
-      // Send to AI for analysis
       const aiRes = await fetch("/api/chat", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
@@ -148,37 +147,7 @@ If it failed, identify the root cause from: insufficient USDC balance, wrong cha
         fontFamily: "'Plus Jakarta Sans', sans-serif",
       }}
     >
-      {/* NAVBAR */}
-      <nav
-        style={{
-          position: "sticky",
-          top: 0,
-          zIndex: 50,
-          display: "flex",
-          alignItems: "center",
-          justifyContent: "space-between",
-          padding: "12px 16px",
-          background: "rgba(3,18,10,0.97)",
-          backdropFilter: "blur(20px)",
-          borderBottom: "1px solid rgba(16,185,129,0.1)",
-        }}
-      >
-        <Link href="/" style={{ display: "flex", alignItems: "center", gap: 10, textDecoration: "none" }}>
-          <div style={{ width: 32, height: 32, borderRadius: 10, background: "linear-gradient(135deg,#34d399,#10b981)", display: "flex", alignItems: "center", justifyContent: "center", fontWeight: 900, fontSize: 13, color: "#000", boxShadow: "0 0 12px rgba(16,185,129,0.3)" }}>M</div>
-          <div>
-            <div style={{ fontSize: 13, fontWeight: 800, color: "#fff", lineHeight: 1.2 }}>MICRO<span style={{ color: "#34d399" }}>AI</span></div>
-            <div style={{ fontSize: 7, color: "rgba(52,211,153,0.5)", letterSpacing: "0.2em", fontFamily: "monospace" }}>THE KNOWLEDGE HUB</div>
-          </div>
-        </Link>
-        <div style={{ display: "flex", gap: 16, fontSize: 10, fontWeight: 700, letterSpacing: "0.08em" }}>
-          <Link href="/ecosystem" style={{ textDecoration: "none", color: "#64748b" }}>ECOSYSTEM</Link>
-          <Link href="/grants" style={{ textDecoration: "none", color: "#64748b" }}>GRANTS</Link>
-          <Link href="/debug" style={{ textDecoration: "none", color: "#34d399" }}>DEBUGGER</Link>
-        </div>
-        <Link href="/chat" style={{ padding: "7px 14px", borderRadius: 10, background: "rgba(16,185,129,0.1)", border: "1px solid rgba(52,211,153,0.25)", color: "#34d399", fontSize: 11, fontWeight: 700, letterSpacing: "0.08em", textDecoration: "none" }}>
-          LAUNCH →
-        </Link>
-      </nav>
+      <Navbar />
 
       {/* HERO */}
       <section style={{ padding: "48px 20px 32px", textAlign: "center", borderBottom: "1px solid rgba(16,185,129,0.06)" }}>
@@ -243,14 +212,12 @@ If it failed, identify the root cause from: insufficient USDC balance, wrong cha
             </button>
           </div>
 
-          {/* Error */}
           {errorMsg && (
             <div style={{ marginTop: 10, padding: "8px 12px", borderRadius: 8, background: "rgba(239,68,68,0.06)", border: "1px solid rgba(239,68,68,0.12)", fontSize: 11, color: "#f87171", fontFamily: "monospace" }}>
               {errorMsg}
             </div>
           )}
 
-          {/* Loading */}
           {(status === "fetching" || status === "analyzing") && (
             <div style={{ marginTop: 12, display: "flex", alignItems: "center", gap: 10 }}>
               <div style={{ display: "flex", gap: 4 }}>
@@ -269,7 +236,6 @@ If it failed, identify the root cause from: insufficient USDC balance, wrong cha
         {result && status === "done" && (
           <div style={{ display: "flex", flexDirection: "column", gap: 12 }}>
 
-            {/* Status banner */}
             <div style={{
               padding: "14px 18px",
               borderRadius: 12,
@@ -288,7 +254,6 @@ If it failed, identify the root cause from: insufficient USDC balance, wrong cha
               </div>
             </div>
 
-            {/* Root cause */}
             <div style={{ padding: "18px", borderRadius: 14, background: "rgba(3,17,10,0.25)", border: "1px solid rgba(16,185,129,0.08)" }}>
               <div style={{ fontSize: 9, color: severity_color(result.severity), fontWeight: 700, letterSpacing: "0.15em", fontFamily: "monospace", marginBottom: 8 }}>
                 ROOT CAUSE · {result.severity.toUpperCase()} SEVERITY
@@ -296,7 +261,6 @@ If it failed, identify the root cause from: insufficient USDC balance, wrong cha
               <p style={{ fontSize: 13, color: "#94a3b8", lineHeight: 1.7, margin: 0 }}>{result.rootCause}</p>
             </div>
 
-            {/* Solution */}
             <div style={{ padding: "18px", borderRadius: 14, background: "rgba(16,185,129,0.04)", border: "1px solid rgba(52,211,153,0.1)" }}>
               <div style={{ fontSize: 9, color: "#34d399", fontWeight: 700, letterSpacing: "0.15em", fontFamily: "monospace", marginBottom: 8 }}>
                 HOW TO FIX
@@ -304,7 +268,6 @@ If it failed, identify the root cause from: insufficient USDC balance, wrong cha
               <p style={{ fontSize: 13, color: "#94a3b8", lineHeight: 1.7, margin: 0 }}>{result.solution}</p>
             </div>
 
-            {/* Raw tx data */}
             <div style={{ padding: "18px", borderRadius: 14, background: "rgba(0,0,0,0.2)", border: "1px solid rgba(255,255,255,0.04)" }}>
               <div style={{ fontSize: 9, color: "#475569", fontWeight: 700, letterSpacing: "0.15em", fontFamily: "monospace", marginBottom: 12 }}>
                 TRANSACTION DETAILS
@@ -338,7 +301,6 @@ If it failed, identify the root cause from: insufficient USDC balance, wrong cha
           </div>
         )}
 
-        {/* History */}
         {history.length > 0 && (
           <div style={{ marginTop: 24 }}>
             <div style={{ fontSize: 9, color: "#334155", fontWeight: 700, letterSpacing: "0.15em", fontFamily: "monospace", marginBottom: 10 }}>
@@ -369,7 +331,6 @@ If it failed, identify the root cause from: insufficient USDC balance, wrong cha
           </div>
         )}
 
-        {/* Empty state tips */}
         {status === "idle" && !result && (
           <div style={{ marginTop: 8 }}>
             <div style={{ fontSize: 9, color: "#334155", fontWeight: 700, letterSpacing: "0.15em", fontFamily: "monospace", marginBottom: 12 }}>

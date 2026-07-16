@@ -1,4 +1,5 @@
 "use client";
+import { Navbar } from "@/app/components/Navbar";
 import React, { useState } from "react";
 import Link from "next/link";
 
@@ -192,7 +193,6 @@ const TYPE_COLORS: Record<string, string> = {
   EVENT:     "#60a5fa",
 };
 
-
 export default function GrantsPage() {
   const [filter, setFilter] = useState("ALL");
 
@@ -207,94 +207,7 @@ export default function GrantsPage() {
         fontFamily: "'Plus Jakarta Sans', sans-serif",
       }}
     >
-      {/* NAVBAR */}
-      <nav
-        style={{
-          position: "sticky",
-          top: 0,
-          zIndex: 50,
-          display: "flex",
-          alignItems: "center",
-          justifyContent: "space-between",
-          padding: "12px 16px",
-          background: "rgba(3,18,10,0.97)",
-          backdropFilter: "blur(20px)",
-          borderBottom: "1px solid rgba(16,185,129,0.1)",
-        }}
-      >
-        {/* Logo */}
-        <Link href="/" style={{ display: "flex", alignItems: "center", gap: 10, textDecoration: "none" }}>
-          <div
-            style={{
-              width: 32,
-              height: 32,
-              borderRadius: 10,
-              background: "linear-gradient(135deg, #34d399, #10b981)",
-              display: "flex",
-              alignItems: "center",
-              justifyContent: "center",
-              fontWeight: 900,
-              fontSize: 13,
-              color: "#000",
-              flexShrink: 0,
-              boxShadow: "0 0 12px rgba(16,185,129,0.3)",
-            }}
-          >
-            M
-          </div>
-          <div>
-            <div style={{ fontSize: 13, fontWeight: 800, color: "#fff", lineHeight: 1.2 }}>
-              MICRO<span style={{ color: "#34d399" }}>AI</span>
-            </div>
-            <div
-              style={{
-                fontSize: 7,
-                color: "rgba(52,211,153,0.5)",
-                letterSpacing: "0.2em",
-                fontFamily: "monospace",
-              }}
-            >
-              THE KNOWLEDGE HUB
-            </div>
-          </div>
-        </Link>
-
-        {/* Nav links */}
-        <div
-          className="hidden md:flex"
-          style={{
-            gap: 20,
-            fontSize: 10,
-            color: "#64748b",
-            fontWeight: 700,
-            letterSpacing: "0.08em",
-            position: "absolute",
-            left: "50%",
-            transform: "translateX(-50%)",
-          }}
-        >
-          <Link href="/ecosystem" style={{ textDecoration: "none", color: "inherit" }}>ECOSYSTEM</Link>
-          <Link href="/grants" style={{ textDecoration: "none", color: "#34d399" }}>GRANTS</Link>
-        </div>
-
-        <Link
-          href="/chat"
-          style={{
-            padding: "7px 14px",
-            borderRadius: 10,
-            background: "rgba(16,185,129,0.1)",
-            border: "1px solid rgba(52,211,153,0.25)",
-            color: "#34d399",
-            fontSize: 11,
-            fontWeight: 700,
-            letterSpacing: "0.08em",
-            textDecoration: "none",
-            whiteSpace: "nowrap",
-          }}
-        >
-          LAUNCH →
-        </Link>
-      </nav>
+      <Navbar />
 
       {/* HERO */}
       <section
@@ -452,7 +365,6 @@ export default function GrantsPage() {
                   overflow: "hidden",
                 }}
               >
-                {/* Top shimmer */}
                 {(grant.status === "OPEN" || grant.status === "LIVE NOW") && (
                   <div
                     style={{
@@ -475,7 +387,6 @@ export default function GrantsPage() {
                     flexWrap: "wrap",
                   }}
                 >
-                  {/* Logo */}
                   <div
                     style={{
                       width: 40,
@@ -496,7 +407,6 @@ export default function GrantsPage() {
                     {grant.logo}
                   </div>
 
-                  {/* Content */}
                   <div style={{ flex: 1, minWidth: 200 }}>
                     <div
                       style={{
@@ -507,7 +417,6 @@ export default function GrantsPage() {
                         marginBottom: 6,
                       }}
                     >
-                      {/* Type badge */}
                       <span
                         style={{
                           fontSize: 8,
@@ -524,7 +433,6 @@ export default function GrantsPage() {
                         {grant.type}
                       </span>
 
-                      {/* Status badge */}
                       <span
                         style={{
                           fontSize: 8,
@@ -588,7 +496,6 @@ export default function GrantsPage() {
                       {grant.desc}
                     </p>
 
-                    {/* Tags */}
                     <div style={{ display: "flex", flexWrap: "wrap", gap: 6, marginBottom: 14 }}>
                       {grant.tags.map((tag) => (
                         <span
@@ -608,7 +515,6 @@ export default function GrantsPage() {
                       ))}
                     </div>
 
-                    {/* Bottom row */}
                     <div
                       style={{
                         display: "flex",
@@ -790,13 +696,10 @@ export default function GrantsPage() {
       <style>{`
         @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800;900&display=swap');
         html { scroll-behavior: smooth; }
-        body { background: #010503; margin: 0; }
+        html, body { background: #010503; margin: 0; overflow-x: hidden; scrollbar-width: none; }
+        ::-webkit-scrollbar { display: none; }
         * { box-sizing: border-box; }
         @keyframes pulse { 0%, 100% { opacity: 1; } 50% { opacity: 0.4; } }
-        .hidden { display: none; }
-        @media (min-width: 768px) { .hidden { display: flex !important; } }
-        html, body { overflow-x: hidden; scrollbar-width: none; }
-::-webkit-scrollbar { display: none; }
       `}</style>
     </div>
   );

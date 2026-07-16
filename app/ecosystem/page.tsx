@@ -1,4 +1,5 @@
 "use client";
+import { Navbar } from "@/app/components/Navbar";
 import React, { useState } from "react";
 import Link from "next/link";
 
@@ -29,7 +30,6 @@ const categories = [
 ];
 
 const projects: Project[] = [
-  // COMMUNITY BUILDS — featured first
   {
     name: "MicroAI",
     desc: "Pay-per-use AI chatbot dApp on Arc Testnet. Ask any Arc or Circle question for $0.001 USDC. The Arc & Circle Intelligence Hub.",
@@ -40,8 +40,6 @@ const projects: Project[] = [
     logoColor: "#10b981",
     featured: true,
   },
-
-  // AI & AGENTS
   {
     name: "Anthropic",
     desc: "Enriching the developer experience on Arc with Claude Code-powered builder tools and AI integrations.",
@@ -52,14 +50,14 @@ const projects: Project[] = [
     logoColor: "#f59e0b",
   },
   {
-  name: "Hibachi",
-  desc: "Stablecoin FX exchange backed by Circle Ventures. Offers perpetual trading across crypto and FX markets, with spot FX coming soon. Built on Arc.",
-  category: "DEX & LIQUIDITY",
-  tags: ["FX", "Perpetuals", "Circle Ventures", "Stablecoin"],
-  url: "https://hibachi.xyz",
-  logo: "H",
-  logoColor: "#f97316",
-},
+    name: "Hibachi",
+    desc: "Stablecoin FX exchange backed by Circle Ventures. Offers perpetual trading across crypto and FX markets, with spot FX coming soon. Built on Arc.",
+    category: "DEX & LIQUIDITY",
+    tags: ["FX", "Perpetuals", "Circle Ventures", "Stablecoin"],
+    url: "https://hibachi.xyz",
+    logo: "H",
+    logoColor: "#f97316",
+  },
   {
     name: "Catena Labs",
     desc: "Building agentic AI infrastructure for on-chain payments and autonomous agent settlement on Arc.",
@@ -69,7 +67,6 @@ const projects: Project[] = [
     logo: "C",
     logoColor: "#f59e0b",
   },
-  // WALLETS
   {
     name: "MetaMask",
     desc: "The leading EVM browser wallet. Fully compatible with Arc Testnet for connecting dApps and managing USDC.",
@@ -124,7 +121,6 @@ const projects: Project[] = [
     logo: "E",
     logoColor: "#10b981",
   },
-  // DEX & LIQUIDITY
   {
     name: "Uniswap Labs",
     desc: "The leading decentralized exchange. Deploying on Arc to enable USDC-native swaps with deep liquidity.",
@@ -161,7 +157,6 @@ const projects: Project[] = [
     logo: "FL",
     logoColor: "#06b6d4",
   },
-  // BRIDGES
   {
     name: "Wormhole",
     desc: "Cross-chain messaging and token bridge connecting Arc to major blockchain networks including Ethereum and Solana.",
@@ -198,7 +193,6 @@ const projects: Project[] = [
     logo: "AC",
     logoColor: "#10b981",
   },
-  // DEV TOOLS
   {
     name: "Alchemy",
     desc: "Node infrastructure and developer platform. Powers Arc RPC endpoints and blockchain data for builders.",
@@ -253,7 +247,6 @@ const projects: Project[] = [
     logo: "PI",
     logoColor: "#ec4899",
   },
-  // PAYMENTS
   {
     name: "Mastercard",
     desc: "Global payment network exploring Arc for stablecoin settlement rails and programmable payment flows.",
@@ -290,7 +283,6 @@ const projects: Project[] = [
     logo: "YC",
     logoColor: "#f59e0b",
   },
-  // STABLECOINS
   {
     name: "USDC (Circle)",
     desc: "The native gas token and primary stablecoin of Arc. USDC powers every transaction on the network.",
@@ -327,7 +319,6 @@ const projects: Project[] = [
     logo: "BR",
     logoColor: "#10b981",
   },
-  // INFRASTRUCTURE
   {
     name: "Blockdaemon",
     desc: "Enterprise blockchain node infrastructure and staking. Running Arc validator and node infrastructure.",
@@ -364,7 +355,6 @@ const projects: Project[] = [
     logo: "EL",
     logoColor: "#06b6d4",
   },
-  // LENDING
   {
     name: "Aave",
     desc: "Largest decentralized lending protocol. Deploying on Arc to enable USDC-native borrowing and lending.",
@@ -392,7 +382,6 @@ const projects: Project[] = [
     logo: "MP",
     logoColor: "#10b981",
   },
-  // INSTITUTIONS
   {
     name: "BlackRock",
     desc: "World's largest asset manager exploring tokenized funds and RWA issuance on Arc infrastructure.",
@@ -482,28 +471,7 @@ export default function EcosystemPage() {
 
   return (
     <div style={{ minHeight: "100vh", background: "#010503", color: "#e2e8f0", fontFamily: "'Plus Jakarta Sans', sans-serif" }}>
-
-      {/* NAVBAR */}
-      <nav style={{ position: "sticky", top: 0, zIndex: 50, display: "flex", alignItems: "center", justifyContent: "space-between", padding: "12px 16px", background: "rgba(3,18,10,0.97)", backdropFilter: "blur(20px)", borderBottom: "1px solid rgba(16,185,129,0.1)" }}>
-        <Link href="/" style={{ display: "flex", alignItems: "center", gap: 10, textDecoration: "none" }}>
-          <div style={{ width: 32, height: 32, borderRadius: 10, background: "linear-gradient(135deg, #34d399, #10b981)", display: "flex", alignItems: "center", justifyContent: "center", fontWeight: 900, fontSize: 13, color: "#000", flexShrink: 0, boxShadow: "0 0 12px rgba(16,185,129,0.3)" }}>M</div>
-          <div>
-            <div style={{ fontSize: 13, fontWeight: 800, color: "#fff", lineHeight: 1.2 }}>MICRO<span style={{ color: "#34d399" }}>AI</span></div>
-            <div style={{ fontSize: 7, color: "rgba(52,211,153,0.5)", letterSpacing: "0.2em", fontFamily: "monospace" }}>THE KNOWLEDGE HUB</div>
-          </div>
-        </Link>
-        <div className="desktop-nav" style={{ gap: 20, fontSize: 10, fontWeight: 700, letterSpacing: "0.08em", position: "absolute", left: "50%", transform: "translateX(-50%)" }}>
-          {[
-            { l: "ECOSYSTEM", h: "/ecosystem", active: true },
-            { l: "GRANTS", h: "/grants", active: false },
-          ].map((n) => (
-            <Link key={n.l} href={n.h} style={{ textDecoration: "none", color: n.active ? "#34d399" : "#64748b" }}>{n.l}</Link>
-          ))}
-        </div>
-        <Link href="/chat" style={{ padding: "7px 14px", borderRadius: 10, background: "rgba(16,185,129,0.1)", border: "1px solid rgba(52,211,153,0.25)", color: "#34d399", fontSize: 11, fontWeight: 700, letterSpacing: "0.08em", textDecoration: "none", whiteSpace: "nowrap" }}>
-          LAUNCH →
-        </Link>
-      </nav>
+      <Navbar />
 
       {/* HERO */}
       <section style={{ padding: "48px 20px 36px", textAlign: "center", borderBottom: "1px solid rgba(16,185,129,0.06)" }}>
@@ -533,7 +501,6 @@ export default function EcosystemPage() {
 
       {/* SEARCH + FILTERS */}
       <section style={{ padding: "24px 16px 0", maxWidth: 1100, margin: "0 auto" }}>
-        {/* Search */}
         <div style={{ position: "relative", marginBottom: 16 }}>
           <span style={{ position: "absolute", left: 14, top: "50%", transform: "translateY(-50%)", fontSize: 12, color: "#475569", fontFamily: "monospace" }}>⌕</span>
           <input
@@ -545,7 +512,6 @@ export default function EcosystemPage() {
           />
         </div>
 
-        {/* Category filter — horizontal scroll on mobile */}
         <div style={{ display: "flex", gap: 8, overflowX: "auto", paddingBottom: 8, scrollbarWidth: "none" }}>
           {categories.map((cat) => {
             const color = CATEGORY_COLORS[cat] ?? "#34d399";
@@ -581,7 +547,7 @@ export default function EcosystemPage() {
         </div>
       </section>
 
-      {/* FEATURED — Community Builds */}
+      {/* FEATURED */}
       {featured.length > 0 && (
         <section style={{ padding: "20px 16px 0", maxWidth: 1100, margin: "0 auto" }}>
           <div style={{ fontSize: 9, color: "#34d399", fontWeight: 700, letterSpacing: "0.2em", fontFamily: "monospace", marginBottom: 12 }}>
@@ -649,14 +615,11 @@ export default function EcosystemPage() {
       <style>{`
         @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800;900&display=swap');
         html { scroll-behavior: smooth; }
-        body { background: #010503; margin: 0; }
+        html, body { background: #010503; margin: 0; overflow-x: hidden; scrollbar-width: none; }
+        ::-webkit-scrollbar { display: none; }
         * { box-sizing: border-box; }
         @keyframes pulse { 0%, 100% { opacity: 1; } 50% { opacity: 0.4; } }
         input::placeholder { color: #475569; }
-        ::-webkit-scrollbar { display: none; }
-        .desktop-nav { display: none !important; }
-        @media (min-width: 768px) { .desktop-nav { display: flex !important; } }
-        html, body { overflow-x: hidden; scrollbar-width: none; }
       `}</style>
     </div>
   );
@@ -679,7 +642,6 @@ function ProjectCard({ project: p, highlight }: { project: Project; highlight?: 
       {highlight && (
         <div style={{ position: "absolute", top: 0, left: 0, right: 0, height: 1, background: "linear-gradient(90deg, transparent, rgba(52,211,153,0.3), transparent)" }} />
       )}
-      {/* Header */}
       <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
         <div style={{ width: 36, height: 36, borderRadius: 10, background: `${p.logoColor}18`, border: `1px solid ${p.logoColor}30`, display: "flex", alignItems: "center", justifyContent: "center", fontSize: 11, fontWeight: 900, color: p.logoColor, flexShrink: 0, fontFamily: "monospace" }}>
           {p.logo}
@@ -691,15 +653,12 @@ function ProjectCard({ project: p, highlight }: { project: Project; highlight?: 
           </span>
         </div>
       </div>
-      {/* Desc */}
       <p style={{ fontSize: 11, color: "#64748b", lineHeight: 1.65, margin: 0, flex: 1 }}>{p.desc}</p>
-      {/* Tags */}
       <div style={{ display: "flex", flexWrap: "wrap", gap: 5 }}>
         {p.tags.map((t) => (
           <span key={t} style={{ fontSize: 9, color: "#475569", background: "rgba(255,255,255,0.03)", border: "1px solid rgba(255,255,255,0.06)", padding: "2px 7px", borderRadius: 4, fontFamily: "monospace" }}>{t}</span>
         ))}
       </div>
-      {/* Link */}
       <a href={p.url} target="_blank" rel="noreferrer" style={{ fontSize: 10, color: catColor, fontWeight: 700, fontFamily: "monospace", letterSpacing: "0.08em", textDecoration: "none" }}>
         VISIT →
       </a>
