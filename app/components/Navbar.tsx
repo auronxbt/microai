@@ -7,6 +7,7 @@ const navLinks = [
   { label: "ECOSYSTEM", href: "/ecosystem" },
   { label: "GRANTS", href: "/grants" },
   { label: "DEBUGGER", href: "/debug" },
+  { label: "STATS", href: "/stats" },
 ];
 
 export function Navbar() {
