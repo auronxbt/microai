@@ -8,6 +8,7 @@ const navLinks = [
   { label: "GRANTS", href: "/grants" },
   { label: "DEBUGGER", href: "/debug" },
   { label: "STATS", href: "/stats" },
+  { label: "BUILD", href: "/build-status" },
 ];
 
 export function Navbar() {
