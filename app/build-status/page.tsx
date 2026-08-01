@@ -30,7 +30,7 @@ const REPOS: Omit<RepoStatus, "pushedAt" | "stars" | "status" | "daysAgo">[] = [
   { name: "Pimlico", org: "Pimlico", repo: "pimlicolabs/permissionless.js", url: "https://github.com/pimlicolabs/permissionless.js", projectUrl: "https://pimlico.io", category: "DEV TOOLS" },
   { name: "Maple Finance", org: "Maple", repo: "maple-labs/maple-core-v2", url: "https://github.com/maple-labs/maple-core-v2", projectUrl: "https://maple.finance", category: "LENDING" },
   { name: "Aerodrome", org: "Aerodrome", repo: "aerodrome-finance/contracts", url: "https://github.com/aerodrome-finance/contracts", projectUrl: "https://aerodrome.finance", category: "DEX & LIQUIDITY" },
-  { name: "Fluid", org: "Fluid", repo: "Instadapp/fluid", url: "https://github.com/Instadapp/fluid", projectUrl: "https://fluid.cx", category: "DEX & LIQUIDITY" },
+  { name: "Fluid", org: "Fluid", repo: "fluid-contracts/public", url: "https://github.com/Instadapp/fluid", projectUrl: "https://fluid.cx", category: "DEX & LIQUIDITY" },
 ];
 
 function getDaysAgo(dateStr: string): number {
